@@ -1,11 +1,13 @@
 docs/site/
 
-# personal, project-specific files
-
-
 # Large datafiles
-/data/*
-/results/*
+/data/imported/*
+/data/interim/*
+/data/processed/*
+/data/raw/*
+/results/all_plots/*
+/results/analysis_output/*
+/results/gams_output/*
 
 # vs code
 .vscode/*
