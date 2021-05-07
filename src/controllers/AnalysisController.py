@@ -6,15 +6,15 @@ import pandas as pd
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 
+sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
-from ML_Biogeography_2021.models.gams import AnalyseGams
+from src.models.gams import AnalyseGams
 
-base_path = Path(os.path.abspath(__file__)).parents[1] / "all_outputs"
-
-GAMS_PREDICTIONS_PRESENT = base_path / "gams_output" / "predictions_present"
-GAMS_PREDICTIONS_FUTURE = base_path / "gams_output" / "predictions_future"
-DARWIN_TARGET = base_path / "validation_sets" / "plankton"
-ANALYSIS_SAVE = base_path / "analysis_output"
+base_path = Path(os.path.abspath(__file__)).parents[2]
+GAMS_PRESENT = base_path / "results" / "gams_output" / "predictions_present"
+GAMS_FUTURE = base_path / "results" / "gams_output" / "predictions_future"
+DARWIN_TARGET = base_path / "data" / "processed" / "validation_sets" / "plankton"
+ANALYSIS_SAVE = base_path / "results" / "analysis_output"
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -23,15 +23,15 @@ t = time.sleep(0.05)
 
 print("Getting GAMs predictions and Darwin target data...")
 with alive_bar(3) as bar:
-    with open(f"{GAMS_PREDICTIONS_PRESENT}/predictions_p.pkl", "rb") as handle:
+    with open(f"{GAMS_PRESENT}/predictions_p.pkl", "rb") as handle:
         gams_predictions_p = pickle.load(handle)
-    with open(f"{GAMS_PREDICTIONS_PRESENT}/predictions_random_p.pkl", "rb") as handle:
+    with open(f"{GAMS_PRESENT}/predictions_random_p.pkl", "rb") as handle:
         gams_predictions_random_p = pickle.load(handle)
     bar()
     t
-    with open(f"{GAMS_PREDICTIONS_FUTURE}/predictions_f.pkl", "rb") as handle:
+    with open(f"{GAMS_FUTURE}/predictions_f.pkl", "rb") as handle:
         gams_predictions_f = pickle.load(handle)
-    with open(f"{GAMS_PREDICTIONS_FUTURE}/predictions_random_f.pkl", "rb") as handle:
+    with open(f"{GAMS_FUTURE}/predictions_random_f.pkl", "rb") as handle:
         gams_predictions_random_f = pickle.load(handle)
     bar()
     t

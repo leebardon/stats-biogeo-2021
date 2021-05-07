@@ -1,7 +1,6 @@
 import pandas as pd
 import statistics
 import pickle
-from prettytable import PrettyTable
 
 
 def cut_off(predictions, target, cutoff):
