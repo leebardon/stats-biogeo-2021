@@ -3,13 +3,11 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
 import xarray as xr
-import pandas as pd
-import numpy as np
 import time
 from pathlib import Path
 from random import randint
 from alive_progress import alive_bar, config_handler
-from src.models.generate_plots import MatrixPlots
+from src.views import MatrixPlots
 from src.models.sample_measurements import (
     CleanData,
     AddMonthsColumn,
