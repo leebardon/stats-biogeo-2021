@@ -10,14 +10,29 @@ def column_coordinates(ocean_df):
     return X, Y, T
 
 
-def matrix_coordinates(matrix):
-    X = matrix[:, 0]
-    Y = matrix[:, 1]
-    T = matrix[:, 2]
-    return X, Y, T
+def raw_matrix(X, Y, T):
+    return np.vstack([X, Y, T]).T
 
 
-def grid_matrix(grid):
+def clean_matrix(raw_matrix):
+    out_of_bounds = np.where(raw_ocean_matrix > 360)
+    return np.delete(raw_ocean_matrix, out_of_bounds[0], axis=0)
+
+
+def matrix_coordinates(matrix, type):
+    if type == 1:
+        lon = matrix[:, 0]
+        lat = matrix[:, 1]
+        months = matrix[:, 2]
+    else:
+        lon = matrix["X"].data
+        lat = matrix["Y"].data
+        months = np.arange(1, 265, 1)
+
+    return lon, lat, months
+
+
+def darwin_matrix_ccordinates(grid):
     x = grid["X"].data
     y = grid["Y"].data
     t = np.arange(1, 265, 1)

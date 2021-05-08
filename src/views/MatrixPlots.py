@@ -5,10 +5,11 @@ import seaborn as sns
 import os
 
 
-def matrix_scatter_plot_3D(measurement_locations, filename, dtype):
-    x = measurement_locations[0]
-    y = measurement_locations[1]
-    t = measurement_locations[2]
+def matrix_scatter_plot_3D(matrix, filename, dtype):
+    coordinates = np.where(matrix == 1)
+    x = coordinates[0]
+    y = coordinates[1]
+    t = coordinates[2]
     sns.set_style("whitegrid", {"axes.grid": False})
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection="3d")
@@ -28,7 +29,8 @@ def matrix_scatter_plot_3D(measurement_locations, filename, dtype):
     os.chdir(owd)
 
 
-def matrix_histogram(measurements, filename, dtype):
+def matrix_histogram(matrix, filename, dtype):
+
     plt.figure(figsize=(8, 5))
     plt.hist(measurements[2], 264)
     plt.xlabel("Month", fontsize=11)

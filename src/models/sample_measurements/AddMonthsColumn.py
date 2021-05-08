@@ -44,8 +44,10 @@ def months():
 
 
 def create_months_column(ocean_data):
+    ocean_data["Month"] = 0
     years_list = years()
     months_list = months()
     for year in years_list:
         assign_months(year, months_list, ocean_data)
         months_list = months_list + 12
+    return ocean_data

@@ -11,15 +11,20 @@ def decode_single_column(column):
     return decoded_rows
 
 
-def decode_all_columns(columns_to_decode, ocean_data):
+def decode_all_columns(ocean_data):
+    columns_to_decode = [
+        "Phosphate",
+        "Nitrite_Nitrate",
+        "Temperature",
+        "Prochlorococcus",
+        "Pico_eukaryotes",
+    ]
     for i in columns_to_decode:
         ocean_data[i] = decode_single_column(ocean_data[i])
     return ocean_data
 
 
-def save_cleaned_df(ocean_df):
-    owd = os.getcwd()
-    os.chdir("../all_outputs/ocean_measurement_data")
-    path = os.getcwd()
-    ocean_df.to_csv(os.path.join(path, r"cleaned_ocean_measurement_data.csv"))
-    os.chdir(owd)
+def drop_erroneous(ocean_measurements):
+    ocean_measurements = ocean_measurements.query("Year <= 2.008e+03")
+    ocean_measurements = ocean_measurements.query("Day <= 9.96e+30")
+    return ocean_measurements
