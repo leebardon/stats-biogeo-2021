@@ -1,28 +1,26 @@
-# import os, sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os, sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
 import xarray as xr
 import pandas as pd
 import numpy as np
-import importlib.machinery
 from pathlib import Path
 from random import randint
-
-from ML_Biogeography_2021.models.sample_measurements import (
+from src.models.generate_plots import MatrixPlots
+from src.models.sample_measurements import (
     CleanData,
     AddMonthsColumn,
     CreateSamplingMatrix,
 )
 
-from ML_Biogeography_2021.models.generate_plots import MatrixPlots
+base_path = Path(os.path.abspath(__file__)).parents[2]
 
-base_path = Path(os.path.abspath(__file__)).parents[1]
-
-OCEAN_DATA_PATH = base_path / "test_data" / "ocean_observations.netcdf"
-GRID_CELL_PATH = base_path / "test_data" / "grid_igsm.nc"
+OCEAN_OBVS = base_path / "test_data" / "ocean_observations.netcdf"
+GRID_CELL = base_path / "test_data" / "grid_igsm.nc"
 
 # Ocean Measurements Dataset
-ocean_measurements_data = xr.open_dataset(OCEAN_DATA_PATH)
+ocean_measurements_data = xr.open_dataset(OCEAN_OBVS)
 ocean_measurements_df = ocean_measurements_data.to_dataframe()
 
 # In this instance, columns to decode are known, but could add an interactive
