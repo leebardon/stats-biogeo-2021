@@ -10,12 +10,13 @@ docs/site/
 /results/gams_output/*
 
 # vs code
+**/.vscode/
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.code-workspace
 
 # local history for vs code
 .history/

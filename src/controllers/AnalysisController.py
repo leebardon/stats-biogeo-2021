@@ -1,13 +1,13 @@
+import os, sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
+
 import time
 import pickle
-import os, sys
 import numpy as np
 import pandas as pd
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
 from src.models.gams import AnalyseGams
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
