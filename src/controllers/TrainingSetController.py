@@ -1,31 +1,21 @@
+import os, sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
+
 import numpy as np
 import pandas as pd
 import xarray as xr
-from alive_progress import alive_bar, config_handler
 import time
-import os, sys
+from alive_progress import alive_bar, config_handler
 from pathlib import Path
+from src.models import Save
+from src.models.build_training_sets import TrainingSetBuilder as TSB
 
-from ML_Biogeography_2021.models.build_training_sets import TrainingSetBuilder as TSB
-
-base_path = Path(os.path.abspath(__file__)).parents[1] / "all_outputs"
+base_path = Path(os.path.abspath(__file__)).parents[2]
 
 # data paths
-ECOSYS_SAMPLE = base_path / "model_sampled_data" / "ecosys_sample_3586.pkl"
-ECOSYS_RANDOM_SAMPLE = (
-    base_path / "model_sampled_data" / "random_ecosys_sample_3586.pkl"
-)
-ECOSYS_OCEAN = base_path / "model_whole_ocean_data" / "present" / "ecosys_ocean_p.pkl"
-ECOSYS_OCEAN_FUTURE = (
-    base_path / "model_whole_ocean_data" / "future" / "ecosys_ocean_f.pkl"
-)
-SALINITY_OCEAN = base_path / "model_whole_ocean_data" / "present" / "sss_ocean_p.pkl"
-SALINITY_OCEAN_FUTURE = (
-    base_path / "model_whole_ocean_data" / "future" / "sss_ocean_f.pkl"
-)
-SST_OCEAN = base_path / "model_whole_ocean_data" / "present" / "sst_ocean_p.pkl"
-SST_OCEAN_FUTURE = base_path / "model_whole_ocean_data" / "future" / "sst_ocean_f.pkl"
-PAR_OCEAN = base_path / "model_whole_ocean_data" / "par_ocean.pkl"
+SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
+DARWIN = base_path / "data" / "processed" / "model_whole_ocean_data"
 
 # save paths
 TS_SAVE_PATH = base_path / "training_sets"
@@ -40,13 +30,13 @@ t = time.sleep(0.05)
 
 print("Building predictor variable training sets...")
 with alive_bar(4) as bar:
-    ecosys_samp = pd.read_pickle(ECOSYS_SAMPLE)
-    ecosys_samp_r = pd.read_pickle(ECOSYS_RANDOM_SAMPLE)
+    ecosys_samp = pd.read_pickle(f"{SAMPLES}/ecosys_sample_3586.pkl")
+    ecosys_samp_r = pd.read_pickle(f"{SAMPLES}/random_ecosys_sample_3586.pkl")
     bar()
     t
-    salinity_oce = pd.read_pickle(SALINITY_OCEAN)
-    sst_oce = pd.read_pickle(SST_OCEAN)
-    par = pd.read_pickle(PAR_OCEAN)
+    salinity_oce = pd.read_pickle(f"{DARWIN}/present/sss_ocean_p.pkl")
+    sst_oce = pd.read_pickle(f"{DARWIN}/present/sst_ocean_p.pkl")
+    par = pd.read_pickle(f"{DARWIN}/par_ocean.pkl")
     bar()
     t
     training_set = TSB.return_predictor_dataset(ecosys_samp, salinity_oce, sst_oce, par)
@@ -54,10 +44,9 @@ with alive_bar(4) as bar:
         ecosys_samp_r, salinity_oce, sst_oce, par
     )
     bar()
-    t
-    training_set.to_pickle(f"{TS_SAVE_PATH}/predictors/predictors_X_3586.pkl")
-    random_training_set.to_pickle(
-        f"{TS_SAVE_PATH}/predictors/random_predictors_X_3586.pkl"
+    Save.save_to_pkl(training_set, f"{DARWIN}/predictors", "predictors_X_3586.pkl")
+    Save.save_to_pkl(
+        random_training_set, f"{DARWIN}/predictors", "random_predictors_X_3586.pkl"
     )
     bar()
     t

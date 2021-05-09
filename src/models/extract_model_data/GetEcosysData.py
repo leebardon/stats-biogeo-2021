@@ -4,6 +4,7 @@ import xarray as xr
 
 base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
 
+
 def get_ecosys_surface_data(ecosys_data_path):
     all_surface_data = []
     month = 1
@@ -35,7 +36,6 @@ def build_combined_surface_df(all_surface_data, col_names):
     combined_df = pd.DataFrame(
         np.concatenate([df.values for df in all_surface_data]), columns=col_names
     )
-    # df = pd.DataFrame(np.concatenate([df1.values, df2.values, df3.values]), columns=df1.columns)
     return combined_df
 
 
@@ -47,12 +47,13 @@ def add_grid_coords(ecosys):
     save_degrees_coords(ecosys)
     return ecosys
 
+
 def get_degrees_columns(ecosys):
     x_deg = ecosys["X"][:]
     y_deg = ecosys["Y"][:]
     return x_deg, y_deg
 
+
 def save_degrees_coords(ecosys):
     degrees_coords = ecosys[["x_deg", "y_deg"]]
     degrees_coords.to_pickle(f"{base_path}/model_whole_ocean_data/degrees_coords.pkl")
-

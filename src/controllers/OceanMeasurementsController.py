@@ -8,6 +8,7 @@ from pathlib import Path
 from random import randint
 from alive_progress import alive_bar, config_handler
 from src.views import MatrixPlots
+from src.models import Save
 from src.models.sample_measurements import (
     CleanData,
     AddMonthsColumn,
@@ -28,29 +29,33 @@ print("Obtaining ocean measurements dataset...")
 with alive_bar(1) as bar:
     ocean_measurements_data = xr.open_dataset(OCEAN_OBVS)
     raw_measurements_df = ocean_measurements_data.to_dataframe()
-    bar
+    bar()
     t
 
 print("Decoding bytes objects and coercing to floats...")
 with alive_bar(1) as bar:
     ocean_measurements_df = CleanData.decode_all_columns(raw_measurements_df)
-    bar
+    bar()
     t
 
 print("Drop erroneous data (Year > 2.008e+03 ; Day > 9.96e+30)...")
 with alive_bar(1) as bar:
     ocean_measurements_df = CleanData.drop_erroneous(ocean_measurements_df)
-    bar
+    bar()
     t
 
 print("Adding 'Months' column and saving processed dataset...")
 with alive_bar(2) as bar:
     processed_ocean_df = AddMonthsColumn.create_months_column(ocean_measurements_df)
-    bar
+    bar()
     t
-    processed_ocean_df.to_pickle(
-        f"{SAVEPATH}/ocean_measurement_data/cleaned_meas_data.pkl"
+    Save.save_to_pkl(
+        processed_ocean_df,
+        f"{SAVEPATH}/ocean_measurement_data",
+        "cleaned_meas_data.pkl",
     )
+    bar()
+    t
 
 
 print("Obtaining vectors of ocean measurements' lon, lat & time (mon 1 -> 264)...")
@@ -67,7 +72,7 @@ print("Obtaining vectors of Darwin cell centre's lon, lat & time (mon 1 -> 264).
 with alive_bar(1) as bar:
     grid_cell_centres = xr.open_dataset(GRID_CELL)
     x, y, t = CreateSamplingMatrix.matrix_coordinates(grid_cell_centres, type=2)
-    bar
+    bar()
     t
 
 
@@ -75,17 +80,17 @@ print("Generating and saving sampling matrices...")
 with alive_bar(3) as bar:
     I_zero = CreateSamplingMatrix.matrix_of_zeros()
     I = CreateSamplingMatrix.sampling_matrix(I_zero, X, Y, T, x, y)
-    bar
+    bar()
     t
     # RANDOM SAMPLING MATRIX
     Ir_zero = np.zeros(shape=(144, 90, 265))
     Ir = CreateSamplingMatrix.random_matrix(Ir_zero)
-    bar
+    bar()
     t
     CreateSamplingMatrix.save_matrix(
         I, Ir, "ocean_measurements_matrix", "random_sample_matrix"
     )
-    bar
+    bar()
     t
 
 print("Generating and saving sample distribution plots...")
@@ -96,7 +101,7 @@ with alive_bar(4) as bar:
         "ocean_measurements_scatterplot",
         dtype="Observational",
     )
-    bar
+    bar()
     t
     MatrixPlots.matrix_histogram(
         I,
@@ -104,15 +109,15 @@ with alive_bar(4) as bar:
         "ocean_measurements_histogram",
         dtype="Observational",
     )
-    bar
+    bar()
     t
     MatrixPlots.matrix_scatter_plot_3D(
         Ir, PLOTPATH, "random_sample_scatterplot", dtype="Random"
     )
-    bar
+    bar()
     t
     MatrixPlots.matrix_histogram(
         Ir, PLOTPATH, "random_sample_histogram", dtype="Random"
     )
-    bar
+    bar()
     t
