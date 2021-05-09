@@ -33,15 +33,13 @@ def group_plankton(ecosys, *nums):
     return group_summed
 
 
-def save_plankton_sets(save_path, plankton_arr, set_type):
-    plankton = {
-        "proko": plankton_arr[0],
-        "pico": plankton_arr[1],
-        "cocco": plankton_arr[2],
-        "diazo": plankton_arr[3],
-        "diatom": plankton_arr[4],
-        "dino": plankton_arr[5],
-        "zoo": plankton_arr[6],
-    }
-    with open(f"{save_path}/plankton_{set_type}.pkl", "wb") as handle:
-        pickle.dump(plankton, handle, protocol=pickle.HIGHEST_PROTOCOL)
+def get_arr(type):
+    plank = [prok, pico, cocco, diazo, diatom, dino, zoo]
+    if type == 1:
+        return plank
+    elif type == 2:
+        return [f"{p}_r" for p in plank]
+    elif type == 3:
+        return [f"{p}_val" for p in plank]
+    else:
+        return [f"{p}_val_f" for p in plank]

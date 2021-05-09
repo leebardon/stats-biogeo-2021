@@ -7,15 +7,13 @@ import pandas as pd
 import time
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
-
 from src.models.sample_model import Sampling
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
 DARWIN = base_path / "data" / "processed" / "model_whole_ocean_data"
 MATRICES = base_path / "data" / "processed" / "sampling_matrices"
-SAVE_PATH = base_path / "data" / "processed" / "model_sampled_data"
-
+SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.02)
@@ -54,7 +52,7 @@ with alive_bar(2) as bar:
     sampled_set = Sampling.make_equal(sampled_set, randomly_sampled_set)
     bar()
     t
-    sampled_set.to_pickle(f"{SAVE_PATH}/ecosys_sample_3586.pkl")
-    randomly_sampled_set.to_pickle(f"{SAVE_PATH}/random_ecosys_sample_3586.pkl")
+    sampled_set.to_pickle(f"{SAMPLES}/ecosys_sample_3586.pkl")
+    randomly_sampled_set.to_pickle(f"{SAMPLES}/random_ecosys_sample_3586.pkl")
     bar()
     t

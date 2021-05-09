@@ -13,16 +13,10 @@ from src.models.build_training_sets import TrainingSetBuilder as TSB
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
-# data paths
 SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
-DARWIN = base_path / "data" / "processed" / "model_whole_ocean_data"
-
-# save paths
-TS_SAVE_PATH = base_path / "training_sets"
-PLANKTON_TRAINING_SAVE = base_path / "training_sets" / "plankton"
-PLANKTON_VAL_SAVE = base_path / "validation_sets" / "plankton"
-PREDICTORS_OCEAN_SAVE = base_path / "validation_sets" / "predictors"
-
+DARWIN = base_path / "data" / "processed" / "model_ocean_data"
+T_SET = base_path / "data" / "processed" / "training_sets"
+V_SET = base_path / "data" / "processed" / "validation_sets"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.05)
@@ -44,9 +38,9 @@ with alive_bar(4) as bar:
         ecosys_samp_r, salinity_oce, sst_oce, par
     )
     bar()
-    Save.save_to_pkl(training_set, f"{DARWIN}/predictors", "predictors_X_3586.pkl")
+    Save.save_to_pkl(training_set, f"{T_SET}/predictors", "predictors_X_3586.pkl")
     Save.save_to_pkl(
-        random_training_set, f"{DARWIN}/predictors", "random_predictors_X_3586.pkl"
+        random_training_set, f"{T_SET}/predictors", "random_predictors_X_3586.pkl"
     )
     bar()
     t
@@ -76,30 +70,18 @@ with alive_bar(2) as bar:
     zoo_r = TSB.group_plankton(ecosys_samp_r, *np.arange(56, 72))
     bar()
     t
-    plank_train_measurements = [prok, pico, cocco, diazo, diatom, dino, zoo]
-    plank_train_rand = [
-        prok_r,
-        pico_r,
-        cocco_r,
-        diazo_r,
-        diatom_r,
-        dino_r,
-        zoo_r,
-    ]
-    TSB.save_plankton_sets(
-        PLANKTON_TRAINING_SAVE, plankton_train_measurements, "training_measurements"
-    )
-    TSB.save_plankton_sets(
-        PLANKTON_TRAINING_SAVE, plankton_train_random, "training_random"
-    )
+    plank_train_meas = TSB.get_arr(type=1)
+    plank_train_rand = TSB.get_arr(type=2)
+    Save.plankton_sets(f"{T_SET}/plankton", plank_train_meas, "training_measurements")
+    Save, plankton_sets(f"{T_SET}/plankton", plank_train_rand, "training_random")
     bar()
     t
 
 
 print("Building whole-ocean validation sets for plankton functional groups...")
 with alive_bar(3) as bar:
-    ecosys_oce = pd.read_pickle(ECOSYS_OCEAN)
-    ecosys_oce_f = pd.read_pickle(ECOSYS_OCEAN_FUTURE)
+    ecosys_oce = pd.read_pickle(f"{DARWIN}/present/ecosys_ocean_p.pkl")
+    ecosys_oce_f = pd.read_pickle(f"{DARWIN}/future/ecosys_ocean_f.pkl")
     bar()
     t
     prok_val, prok_val_f = TSB.group_plankton(ecosys_oce, 21, 22), TSB.group_plankton(
@@ -124,33 +106,19 @@ with alive_bar(3) as bar:
     zoo_val_f = TSB.group_plankton(ecosys_oce_f, *np.arange(56, 72))
     bar()
     t
-    plankton_val_present = [
-        prok_val,
-        pico_val,
-        cocco_val,
-        diazo_val,
-        diatom_val,
-        dino_val,
-        zoo_val,
-    ]
-    plankton_val_future = [
-        prok_val_f,
-        pico_val_f,
-        cocco_val_f,
-        diazo_val_f,
-        diatom_val_f,
-        dino_val_f,
-        zoo_val_f,
-    ]
-    TSB.save_plankton_sets(PLANKTON_VAL_SAVE, plankton_val_present, "ocean_present")
-    TSB.save_plankton_sets(PLANKTON_VAL_SAVE, plankton_val_future, "ocean_future")
+    plank_val_pres = TSB.get_arr(type=3)
+    plank_val_fut = TSB.get_arr(type=4)
+    Save.plankton_sets(f"{V_SET}/plankton", plank_val_pres, "ocean_present")
+    Save.plankton_sets(f"{V_SET}/plankton", plank_val_fut, "ocean_future")
     bar()
     t
 
-print("Building whole-ocean predictor sets (model ocean of 1987-2008 and 2079-2100)...")
-with alive_bar(3) as bar:
-    salinity_oce_f = pd.read_pickle(SALINITY_OCEAN_FUTURE)
-    sst_oce_f = pd.read_pickle(SST_OCEAN_FUTURE)
+print(
+    "Building whole-ocean predictor sets (Darwin ocean of 1987-2008 and 2079-2100)..."
+)
+with alive_bar(2) as bar:
+    salinity_oce_f = pd.read_pickle(f"{DARWIN}/future/sss_ocean_f.pkl")
+    sst_oce_f = pd.read_pickle(f"{DARWIN}/future/sst_ocean_f.pkl")
     bar()
     t
     predictor_set_p = TSB.return_predictor_dataset(
@@ -159,9 +127,7 @@ with alive_bar(3) as bar:
     predictor_set_f = TSB.return_predictor_dataset(
         ecosys_oce_f, salinity_oce_f, sst_oce_f, par
     )
-    bar()
-    t
-    predictor_set_p.to_pickle(f"{PREDICTORS_OCEAN_SAVE}/ocean_X_present.pkl")
-    predictor_set_f.to_pickle(f"{PREDICTORS_OCEAN_SAVE}/ocean_X_future.pkl")
+    Save.save_to_pkl(predictor_set_p, f"{V_SET}/predictors", "ocean_X_present.pkl")
+    Save.save_to_pkl(predictor_set_f, f"{V_SET}/predictors", "ocean_X_future.pkl")
     bar()
     t
