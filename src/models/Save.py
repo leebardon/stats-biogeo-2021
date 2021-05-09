@@ -1,4 +1,5 @@
 import os
+import pickle
 import numpy as np
 
 
@@ -24,3 +25,17 @@ def save_matrix(matrix, path, filename):
         matrix,
         allow_pickle=True,
     )
+
+
+def plankton_sets(save_path, plankton_arr, set_type):
+    plankton = {
+        "proko": plankton_arr[0],
+        "pico": plankton_arr[1],
+        "cocco": plankton_arr[2],
+        "diazo": plankton_arr[3],
+        "diatom": plankton_arr[4],
+        "dino": plankton_arr[5],
+        "zoo": plankton_arr[6],
+    }
+    with open(f"{save_path}/plankton_{set_type}.pkl", "wb") as handle:
+        pickle.dump(plankton, handle, protocol=pickle.HIGHEST_PROTOCOL)
