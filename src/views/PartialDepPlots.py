@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-def partial_dependency_plots(predictors, plankton_gams_dict, SAVE_PATH, pathnum):
+def partial_dependency_plots(predictors, plankton_gams_dict, SAVE_PATH):
     for group_name, gam in plankton_gams_dict.items():
         plot_pdp(predictors, gam, group_name, SAVE_PATH, pathnum)
 
@@ -32,15 +32,9 @@ def plot_pdp(predictors, gam, group_name, SAVE_PATH, pathnum):
             ax.set_ylabel(y_label, fontsize=12)
         ax.set_xlabel(labels[i], fontsize=12)
         plt.suptitle(title, fontsize=18, y=1.1)
-        if pathnum == 1:
-            plt.savefig(
-                f"{SAVE_PATH}/partial_dep_plots/from_measurements/{filename}",
-                format="pdf",
-                dpi=1200,
-            )
-        else:
-            plt.savefig(
-                f"{SAVE_PATH}/partial_dep_plots/from_random/{filename}",
-                format="pdf",
-                dpi=1200,
-            )
+
+        plt.savefig(
+            f"{SAVE_PATH}/{filename}",
+            format="pdf",
+            dpi=1200,
+        )
