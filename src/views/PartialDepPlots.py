@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 
 def partial_dependency_plots(predictors, plankton_gams_dict, SAVE_PATH):
     for group_name, gam in plankton_gams_dict.items():
-        plot_pdp(predictors, gam, group_name, SAVE_PATH, pathnum)
+        plot_pdp(predictors, gam, group_name, SAVE_PATH)
 
 
-def plot_pdp(predictors, gam, group_name, SAVE_PATH, pathnum):
+def plot_pdp(predictors, gam, group_name, SAVE_PATH):
     y_label = "Biomass ($\mathregular{mmol\ C/m^3}$)"
     title = "Partial Dependency of Biomass to Predictors (1987-2008)"
     labels = [

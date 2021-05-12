@@ -11,7 +11,7 @@ from src.models.sample_model import Sampling
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
-DARWIN = base_path / "data" / "processed" / "model_whole_ocean_data"
+DARWIN = base_path / "data" / "processed" / "model_ocean_data"
 MATRICES = base_path / "data" / "processed" / "sampling_matrices"
 SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
 
@@ -37,6 +37,10 @@ print("Merging sampling matrices with ecosystem data...")
 with alive_bar(1) as bar:
     merged_df = Sampling.merge_matrix_and_ecosys_data(I_df, ecosys)
     merged_random_df = Sampling.merge_matrix_and_ecosys_data(Ir_df, ecosys)
+    merged_df_future = Sampling.merge_matrix_and_ecosys_data(I_df, ecosys_future)
+    merged_random_df_future = Sampling.merge_matrix_and_ecosys_data(
+        Ir_df, ecosys_future
+    )
     bar()
     t
 
@@ -44,15 +48,22 @@ print("Removing data over land (pCO2 == 0)...")
 with alive_bar(1) as bar:
     sampled_set = Sampling.remove_land(merged_df)
     randomly_sampled_set = Sampling.remove_land(merged_random_df)
+    sampled_set_future = Sampling.remove_land(merged_df_future)
+    randomly_sampled_set_future = Sampling.remove_land(merged_random_df_future)
     bar()
     t
 
 print("Ensuring sampled subsets are equal size and saving...")
 with alive_bar(2) as bar:
     sampled_set = Sampling.make_equal(sampled_set, randomly_sampled_set)
+    sampled_set_future = Sampling.make_equal(
+        sampled_set_future, randomly_sampled_set_future
+    )
     bar()
     t
     sampled_set.to_pickle(f"{SAMPLES}/ecosys_sample_3586.pkl")
     randomly_sampled_set.to_pickle(f"{SAMPLES}/random_ecosys_sample_3586.pkl")
+    sampled_set_future.to_pickle(f"{SAMPLES}/ecosys_f_sample_3586.pkl")
+    randomly_sampled_set_future.to_pickle(f"{SAMPLES}/random_ecosys_f_sample_3586.pkl")
     bar()
     t
