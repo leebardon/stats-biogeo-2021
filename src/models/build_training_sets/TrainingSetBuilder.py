@@ -5,9 +5,9 @@ NO3, PO4, Si, Fe = "TRAC04", "TRAC05", "TRAC06", "TRAC07"
 
 
 def return_predictor_dataset(ecosys, sss, sst, par):
-    nutrients = ecosys[["Month", "X", "Y", NO3, PO4, Si, Fe]]
-    predictor_dataset = add_predictor(nutrients, sss)
-    predictor_dataset = add_predictor(predictor_dataset, sst)
+    nutrients = ecosys[["Month", "X", "Y", PO4, NO3, Fe, Si]]
+    predictor_dataset = add_predictor(nutrients, sst)
+    predictor_dataset = add_predictor(predictor_dataset, sss)
     predictor_dataset = add_predictor(predictor_dataset, par)
     predictor_dataset.rename(
         {"TRAC04": "NO3", "TRAC05": "PO4", "TRAC06": "Si", "TRAC07": "Fe"},

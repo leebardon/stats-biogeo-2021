@@ -8,14 +8,14 @@ def partial_dependency_plots(predictors, plankton_gams_dict, SAVE_PATH):
 
 def plot_pdp(predictors, gam, group_name, SAVE_PATH):
     y_label = "Biomass ($\mathregular{mmol\ C/m^3}$)"
-    title = "Partial Dependency of Biomass to Predictors (1987-2008)"
+    title = "Partial Dependency of Biomass to Predictors"
     labels = [
-        "$\mathregular{NO_3}$",
         "$\mathregular{PO_4}$",
-        "Si",
+        "$\mathregular{NO_3}$",
         "Fe",
-        "SSS",
+        "Si",
         "SST",
+        "SSS",
         "PAR",
     ]
     filename = f"{group_name}_pdp.pdf"
@@ -23,13 +23,27 @@ def plot_pdp(predictors, gam, group_name, SAVE_PATH):
     fig.tight_layout(pad=3.4)
 
     for i, ax in enumerate(axs):
-        XX = gam.generate_X_grid(term=i)
-        ax.plot(XX[:, i], gam.partial_dependence(term=i, X=XX))
+        XX1 = gam1.generate_X_grid(term=i)
+        XX2 = gam2.generate_X_grid(term=i)
         ax.plot(
-            XX[:, i], gam.partial_dependence(term=i, X=XX, width=0.95)[1], c="r", ls="-"
+            XX1[:, i],
+            gam1.partial_dependence(term=i, X=XX1),
+            c="r",
+            ls="--",
+            linewidth=3,
         )
+        ax.plot(
+            XX1[:, i],
+            gam1.partial_dependence(term=i, X=XX1, width=0.95)[1],
+            c="lightgrey",
+            ls="-",
+            linewidth=1.5,
+        )
+        ax.plot(XX2[:, i], gam2.partial_dependence(term=i, X=XX2), linewidth=3)
+
         if i == 0:
             ax.set_ylabel(y_label, fontsize=12)
+
         ax.set_xlabel(labels[i], fontsize=12)
         plt.suptitle(title, fontsize=18, y=1.1)
 

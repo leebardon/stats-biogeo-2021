@@ -2,30 +2,28 @@ import os
 import pickle
 import numpy as np
 
+# ADD SOMETHING TO SAVE OUTPUT FILE DETAILING E.G. SHAPE, MIN AND MAX X/Y
+
 
 def check_dir_exists(path):
     if not os.path.exists(path):
         os.mkdir(path)
-        # try:
-        #     os.mkdir(path)
-        # except OSError:
-        #     print(f"Creation of the directory {path} failed")
-    # else:
-    #     continue
 
 
-def save_to_pkl(df, path, filename):
+def save_to_pkl(path, **kwargs):
     check_dir_exists(path)
-    df.to_pickle(f"{path}/{filename}")
+    for filename, df in kwargs.items():
+        df.to_pickle(f"{path}/{filename}")
 
 
-def save_matrix(matrix, path, filename):
+def save_matrix(path, **kwargs):
     check_dir_exists(path)
-    np.save(
-        f"{path}/{filename}",
-        matrix,
-        allow_pickle=True,
-    )
+    for filename, matrix in kwargs.items():
+        np.save(
+            f"{path}/{filename}",
+            matrix,
+            allow_pickle=True,
+        )
 
 
 def plankton_sets(save_path, plankton_arr, set_type):

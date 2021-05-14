@@ -21,37 +21,37 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	conda env update --file environment-dev.yaml
+	@conda env update --file environment-dev.yaml
 
 # Delete unnecessary python compiled files
 clean:
-	find . -type f -name "*.py[co]" -delete
-	find . -type d -name "__pycache__" -delete
+	@find . -type f -name "*.py[co]" -delete
+	@find . -type d -name "__pycache__" -delete
 
 ## Lint using black
 lint:
-	black src
+	@black src
 
 
 ## Set up python interpreter environment
 create_environment:
 ifeq (True,$(HAS_CONDA))
-		@echo ">>> Creating conda virtual environment."
+		echo ">>> Creating conda virtual environment."
 ifeq (3,$(findstring 3,$(PYTHON_VERSION)))
 	conda create --name $(PROJECT_NAME) python=3
 else
 	conda create --name $(PROJECT_NAME) python=2.7
 endif
-		@echo ">>> VIRTUAL ENVIRONMENT CREATED." 
-		@echo ""
-		@echo "PLEASE RUN:  conda activate $(PROJECT_NAME)"
+		echo ">>> VIRTUAL ENVIRONMENT CREATED." 
+		echo ""
+		echo "PLEASE RUN:  conda activate $(PROJECT_NAME)"
 else
-		@echo ">>> FAILED!! Conda not found. Please download and run command again." 
+		echo ">>> FAILED!! Conda not found. Please download and run command again." 
 endif
 
 
 test_environment:
-	$(PYTHON_VERSION) test_environment.py
+	@$(PYTHON_VERSION) test_environment.py
 
 #################################################################################
 # PROJECT RULES                                                                 #

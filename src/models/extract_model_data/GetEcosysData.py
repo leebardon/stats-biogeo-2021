@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
 import xarray as xr
+import os
+from pathlib import Path
 
-base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
+base_path = Path(os.path.abspath(__file__)).parents[3] / "data" / "processed"
 
 
 def get_ecosys_surface_data(ecosys_data_path):
@@ -42,8 +44,8 @@ def build_combined_surface_df(all_surface_data, col_names):
 def add_grid_coords(ecosys):
     x_deg, y_deg = get_degrees_columns(ecosys)
     ecosys.rename({"X": "x_deg", "Y": "y_deg"}, axis=1, inplace=True)
-    ecosys["X"] = ((2 * x_deg) / 5 + 0.5).astype(int)
-    ecosys["Y"] = ((y_deg + 92) / 2).astype(int)
+    ecosys["X"] = ((2 * x_deg) / 5 + 0.5).astype(int) - 1
+    ecosys["Y"] = ((y_deg + 92) / 2).astype(int) - 1
     save_degrees_coords(ecosys)
     return ecosys
 
@@ -56,4 +58,4 @@ def get_degrees_columns(ecosys):
 
 def save_degrees_coords(ecosys):
     degrees_coords = ecosys[["x_deg", "y_deg"]]
-    degrees_coords.to_pickle(f"{base_path}/model_whole_ocean_data/degrees_coords.pkl")
+    degrees_coords.to_pickle(f"{base_path}/model_ocean_data/degrees_coords.pkl")
