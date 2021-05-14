@@ -22,6 +22,9 @@ PLOTS = base_path / "results" / "all_plots"
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.05)
 
+# ALL NEEDS REFACTORED - CODE SMELLS EVERYWHERE
+# CODE TO PRODUCE THE "FUTURE" TRAINING SETS NEEDS IMPLEMENTED
+
 
 print("Obtaining plankton and predictor training datasets...")
 with alive_bar(1) as bar:
@@ -29,27 +32,54 @@ with alive_bar(1) as bar:
         plankton = pickle.load(handle)
     with open(f"{T_SETS}/plankton/plankton_training_random.pkl", "rb") as handle:
         plankton_random = pickle.load(handle)
+    with open(f"{T_SETS}/plankton/plankton_training_meas_fut.pkl", "rb") as handle:
+        plankton_fut = pickle.load(handle)
+    with open(f"{T_SETS}/plankton/plankton_training_rand_fut.pkl", "rb") as handle:
+        plankton_rand_fut = pickle.load(handle)
 
-    predictors, predictors_random = TrainGams.get_predictors(f"{T_SETS}/predictors")
+    predictors, predictors_rand = TrainGams.get_predictors(f"{T_SETS}/predictors")
+    predictors_f, predictors_rand_f = TrainGams.get_predictors(f"{T_SETS}/predictors")
     bar()
     t
 
-print("Fitting generalised additive models...")
+print("Fitting GAMs to sampled Darwin datasets (1987-2008) ...")
 with alive_bar(3) as bar:
     plankton = TrainGams.set_min_vals(plankton)
     plankton_random = TrainGams.set_min_vals(plankton_random)
     bar()
     t
-    plankton_gams_dict = TrainGams.fit_gams(plankton, predictors)
-    plankton_random_gams_dict = TrainGams.fit_gams(plankton_random, predictors_random)
+    plankton_gams = TrainGams.fit_gams(plankton, predictors)
+    plankton_random_gams = TrainGams.fit_gams(plankton_random, predictors_random)
     bar()
     t
     with open(
         f"{RESULTS}/fitted_models/from_measurements/gams_dict.pkl", "wb"
     ) as handle:
-        pickle.dump(plankton_gams_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(plankton_gams, handle, protocol=pickle.HIGHEST_PROTOCOL)
     with open(f"{RESULTS}/fitted_models/from_random/gams_r_dict.pkl", "wb") as handle:
-        pickle.dump(plankton_random_gams_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(plankton_random_gams, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    bar()
+    t
+
+
+print("Fitting GAMs on 2079-2100 samples to assess stability of relationships...")
+with alive_bar(3) as bar:
+    plankton_f = TrainGams.set_min_vals(plankton)
+    plankton_rand_f = TrainGams.set_min_vals(plankton_random)
+    bar()
+    t
+    plankton_f_gams = TrainGams.fit_gams(plankton_f, predictors_f)
+    plankton_rand_f_gams = TrainGams.fit_gams(plankton_rand_f, predictors_rand_f)
+    bar()
+    t
+    with open(
+        f"{RESULTS}/fitted_models/from_measurements/gams_fut_dict.pkl", "wb"
+    ) as handle:
+        pickle.dump(plankton_fut_gams, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    with open(
+        f"{RESULTS}/fitted_models/from_random/gams_r_fut_dict.pkl", "wb"
+    ) as handle:
+        pickle.dump(plankton_rand_fut_gams, handle, protocol=pickle.HIGHEST_PROTOCOL)
     bar()
     t
 
