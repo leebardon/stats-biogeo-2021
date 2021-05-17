@@ -16,7 +16,7 @@ MATRICES = base_path / "data" / "processed" / "sampling_matrices"
 SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.02)
+t = time.sleep(0.2)
 
 print("Obtaining sampling matrices and Darwin model ecosystem data...")
 with alive_bar(3) as bar:
@@ -36,34 +36,30 @@ with alive_bar(3) as bar:
 print("Merging sampling matrices with ecosystem data...")
 with alive_bar(1) as bar:
     merged_df = Sampling.merge_matrix_and_ecosys_data(I_df, ecosys)
-    merged_random_df = Sampling.merge_matrix_and_ecosys_data(Ir_df, ecosys)
-    merged_df_future = Sampling.merge_matrix_and_ecosys_data(I_df, ecosys_future)
-    merged_random_df_future = Sampling.merge_matrix_and_ecosys_data(
-        Ir_df, ecosys_future
-    )
+    merged_rand_df = Sampling.merge_matrix_and_ecosys_data(Ir_df, ecosys)
+    merged_df_fut = Sampling.merge_matrix_and_ecosys_data(I_df, ecosys_future)
+    merged_rand_df_fut = Sampling.merge_matrix_and_ecosys_data(Ir_df, ecosys_future)
     bar()
     t
 
 print("Removing data over land (pCO2 == 0)...")
 with alive_bar(1) as bar:
-    sampled_set = Sampling.remove_land(merged_df)
-    randomly_sampled_set = Sampling.remove_land(merged_random_df)
-    sampled_set_future = Sampling.remove_land(merged_df_future)
-    randomly_sampled_set_future = Sampling.remove_land(merged_random_df_future)
+    samp_oce = Sampling.remove_land(merged_df)
+    rand_samp_oce = Sampling.remove_land(merged_rand_df)
+    samp_oce_fut = Sampling.remove_land(merged_df_fut)
+    rand_samp_oce_fut = Sampling.remove_land(merged_rand_df_fut)
     bar()
     t
 
-print("Ensuring sampled subsets are equal size and saving...")
+print("Ensuring random sample is equal size to obvs sample and saving...")
 with alive_bar(2) as bar:
-    sampled_set = Sampling.make_equal(sampled_set, randomly_sampled_set)
-    sampled_set_future = Sampling.make_equal(
-        sampled_set_future, randomly_sampled_set_future
-    )
+    rand_samp_oce = Sampling.make_equal(samp_oce, rand_samp_oce)
+    rand_samp_oce_fut = Sampling.make_equal(samp_oce_fut, rand_samp_oce_fut)
     bar()
     t
-    sampled_set.to_pickle(f"{SAMPLES}/ecosys_sample_3586.pkl")
-    randomly_sampled_set.to_pickle(f"{SAMPLES}/random_ecosys_sample_3586.pkl")
-    sampled_set_future.to_pickle(f"{SAMPLES}/ecosys_f_sample_3586.pkl")
-    randomly_sampled_set_future.to_pickle(f"{SAMPLES}/random_ecosys_f_sample_3586.pkl")
+    samp_oce.to_pickle(f"{SAMPLES}/eco_samp_p.pkl")
+    rand_samp_oce.to_pickle(f"{SAMPLES}/rand_eco_samp_p.pkl")
+    samp_oce_fut.to_pickle(f"{SAMPLES}/eco_samp_f.pkl")
+    rand_samp_oce_fut.to_pickle(f"{SAMPLES}/rand_eco_samp_f.pkl")
     bar()
     t

@@ -5,10 +5,8 @@ import pandas as pd
 import xarray as xr
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-import matplotlib.ticker as mticker
 import matplotlib.pyplot as plt
 from pathlib import Path
-from netCDF4 import Dataset as NCF
 from matplotlib.axes import Axes
 from cartopy.mpl.geoaxes import GeoAxes
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
