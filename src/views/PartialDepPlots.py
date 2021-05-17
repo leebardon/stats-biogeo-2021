@@ -6,7 +6,7 @@ def partial_dependency_plots(predictors, plankton_gams_dict, SAVE_PATH):
         plot_pdp(predictors, gam, group_name, SAVE_PATH)
 
 
-def plot_pdp(predictors, gam, group_name, SAVE_PATH):
+def plot_pdp(X1, X2, gam1, gam2, filename):
     y_label = "Biomass ($\mathregular{mmol\ C/m^3}$)"
     title = "Partial Dependency of Biomass to Predictors"
     labels = [
@@ -28,7 +28,7 @@ def plot_pdp(predictors, gam, group_name, SAVE_PATH):
         ax.plot(
             XX1[:, i],
             gam1.partial_dependence(term=i, X=XX1),
-            c="r",
+            c="red",
             ls="--",
             linewidth=3,
         )
