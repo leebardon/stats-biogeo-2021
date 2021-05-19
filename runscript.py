@@ -51,8 +51,8 @@ class ChoiceOption(click.Option):
     type=click.Choice(
         [
             "Build sampling matrices from ocean measurements",
-            "Obtain Darwin Model surface data",
-            "Sample Darwin Model output",
+            "Extract Darwin surface data and build dataframes",
+            "Create samples from Darwin Model output",
             "Build training sets for GAMs",
             "Train GAMs models and make predictions",
             "Analyse results from GAMs predictions",
@@ -70,13 +70,13 @@ def cli(hash_type):
         print("-- done --")
         cli()
 
-    elif hash_type == "Obtain Darwin Model surface data":
+    elif hash_type == "Extract Darwin surface data and build dataframes":
         print("\n", "Obtaining Darwin surface data...", "\n")
         run(["python", f"{controllers}/ModelDataController.py"])
         print("-- done --")
         cli()
 
-    elif hash_type == "Sample Darwin Model output":
+    elif hash_type == "Create samples from Darwin Model output":
         print("\n", "Sampling Darwin model...", "\n")
         run(["python", f"{controllers}/ModelSamplingController.py"])
         print("-- done --")

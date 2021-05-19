@@ -34,3 +34,4 @@ def dcorr_heatmap():
         dpi=1200,
         bbox_inches="tight",
     )
+    plt.close(fig)
