@@ -28,7 +28,7 @@ def save_matrix(path, **kwargs):
 
 def plankton_sets(save_path, plankton_arr, set_type):
     plankton = {
-        "proko": plankton_arr[0],
+        "pro": plankton_arr[0],
         "pico": plankton_arr[1],
         "cocco": plankton_arr[2],
         "diazo": plankton_arr[3],

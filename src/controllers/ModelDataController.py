@@ -24,7 +24,7 @@ DEPTH = 0
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.02)
 
-# note
+# Note:
 # Here we start with surface data that has already been extracted
 # from remote MIT servers that store raw Darwin outputs.
 # The relevant code is in GetEcosysData.py and GetPhysicalData.py
@@ -52,7 +52,7 @@ with alive_bar(2) as bar:
     bar()
     t
     Save.save_to_pkl(
-        f"{DARWIN}/model_ocean_data/present", **{"ecosys_ocean_p.pkl": ecosys}
+        f"{DARWIN}/model_ocean_data/present", **{"test_ecosys_ocean_p.pkl": ecosys}
     )
     Save.save_to_pkl(
         f"{DARWIN}/model_ocean_data/future",
@@ -63,14 +63,14 @@ with alive_bar(2) as bar:
 
 # print("Extracting surface physical data from Darwin model, removing land (x == 0)...")
 # with alive_bar(4) as bar:
-# salinity_df, salinity_matrix = GetPhysicalData.get_phys_surface_data(
-#     f"{RAW}/physical/SSS/present", "SSS"
-# )
-# salinity_f_df, salinity_f_matrix = GetPhysicalData.get_phys_surface_data(
-#     f"{RAW}/physical/SSS/future", "SSS"
-# )
-# bar()
-# t
+#     salinity_df, salinity_matrix = GetPhysicalData.get_phys_surface_data(
+#         f"{RAW}/physical/SSS/present", "SSS"
+#     )
+#     salinity_f_df, salinity_f_matrix = GetPhysicalData.get_phys_surface_data(
+#         f"{RAW}/physical/SSS/future", "SSS"
+#     )
+#     bar()
+#     t
 # sst_df, sst_matrix = GetPhysicalData.get_phys_surface_data(
 #     f"{RAW}/physical/SST/present", "SST"
 # )
@@ -111,7 +111,7 @@ with alive_bar(2) as bar:
 # Save.save_matrix(
 #     f"{DARWIN}/model_ocean_data/future",
 #     **{
-#         "sss_mtrix_f.npy": salinity_f_matrix,
+#         "sss_matrix_f.npy": salinity_f_matrix,
 #         "sst_matrix_f.npy": sst_f_matrix,
 #         "par_matrix.npy": par_matrix,
 #     },
