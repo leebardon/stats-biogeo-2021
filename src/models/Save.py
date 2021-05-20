@@ -8,6 +8,7 @@ import numpy as np
 def check_dir_exists(path):
     if not os.path.exists(path):
         os.mkdir(path)
+    return path
 
 
 def save_to_pkl(path, **kwargs):

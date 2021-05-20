@@ -15,10 +15,12 @@ def get_sample_sets(*paths):
 def calculate_dcorrs(predictors, f_groups):
     dcorrs = dcorr_df()
     cols = ["PO4", "NO3", "Fe", "Si", "SST", "SSS", "PAR"]
+    predictors[["PAR", "SSS", "SST"]] = np.float64(predictors[["PAR", "SSS", "SST"]])
+    predictors.reset_index(drop=True, inplace=True)
     for groupname, plankton_data in f_groups.items():
         for i in range(len(cols)):
             dcorrs.loc[groupname, cols[i]] = distance_correlation(
-                predictors[cols[i]], plankton_data
+                predictors[cols[i]].values, plankton_data.values
             )
     return dcorrs
 
@@ -30,5 +32,4 @@ def dcorr_df():
 
 
 def distance_correlation(predictor, plankton):
-
-    return dcor.distance_correlation(predictor.values, plankton.values)
+    return dcor.distance_correlation(predictor, plankton)
