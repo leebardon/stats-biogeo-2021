@@ -42,6 +42,14 @@ def calculate_pearsons(predictors, plankton):
     return pearsons_trimmed.T
 
 
+def calculate_ln_pearsons(predictors, plankton):
+    pear_df = get_df(predictors, plankton)
+    ln_pear_df = np.log(pear_df)
+    ln_pearsons = ln_pear_df.corr(method="pearson")
+    ln_pearsons_trimmed = ln_pearsons[INDEX].iloc[0:7]
+    return ln_pearsons_trimmed.T
+
+
 def calculate_spearmans(predictors, plankton):
     spear_df = get_df(predictors, plankton)
     spearmans = spear_df.corr(method="spearman")
