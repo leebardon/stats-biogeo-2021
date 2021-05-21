@@ -13,8 +13,8 @@ from src.models.build_training_sets import TrainingSetBuilder as TSB
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
-SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
-DARWIN = base_path / "data" / "processed" / "model_ocean_data"
+SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
+OCEAN = base_path / "data" / "processed" / "model_ocean_data"
 T_SET = base_path / "data" / "processed" / "training_sets"
 V_SET = base_path / "data" / "processed" / "validation_sets"
 
@@ -24,13 +24,15 @@ t = time.sleep(0.05)
 
 print("Building predictor variable training sets...")
 with alive_bar(4) as bar:
-    ecosys_samp = pd.read_pickle(f"{SAMPLES}/ecosys_sample_3586.pkl")
-    ecosys_samp_r = pd.read_pickle(f"{SAMPLES}/random_ecosys_sample_3586.pkl")
+    ecosys_samp = pd.read_pickle(f"{SAMPLES}/eco_samp_p.pkl")
+    ecosys_samp_r = pd.read_pickle(f"{SAMPLES}/rand_eco_samp_p.pkl")
+    ecosys_samp_f = pd.read_pickle(f"{SAMPLES}/eco_samp_f.pkl")
+    ecosys_samp_r_f = pd.read_pickle(f"{SAMPLES}/rand_eco_samp_f.pkl")
     bar()
     t
-    salinity_oce = pd.read_pickle(f"{DARWIN}/present/sss_ocean_p.pkl")
-    sst_oce = pd.read_pickle(f"{DARWIN}/present/sst_ocean_p.pkl")
-    par = pd.read_pickle(f"{DARWIN}/par_ocean.pkl")
+    salinity_oce = pd.read_pickle(f"{OCEAN}/present/sss_ocean_p.pkl")
+    sst_oce = pd.read_pickle(f"{OCEAN}/present/sst_ocean_p.pkl")
+    par = pd.read_pickle(f"{OCEAN}/par_ocean.pkl")
     bar()
     t
     training_set = TSB.return_predictor_dataset(ecosys_samp, salinity_oce, sst_oce, par)

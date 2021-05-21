@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 
-from ML_Biogeography_2021.models.generate_plots import (
+from src.views import (
     Maps,
     RelativeDiffMaps,
     ScatterPlots,
