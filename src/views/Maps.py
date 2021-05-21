@@ -1,5 +1,4 @@
-import cartopy
-import os, sys
+import os
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -9,7 +8,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from matplotlib.axes import Axes
 from cartopy.mpl.geoaxes import GeoAxes
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER
 
 GeoAxes._pcolormesh_patched = Axes.pcolormesh
 

@@ -22,7 +22,7 @@ def matrix_scatter_plot_3D(matrix, filepath, filename, dtype):
     )
 
     plt.savefig(f"{filepath}/{filename}", format="pdf", dpi=1200)
-    os.chdir(owd)
+    # os.chdir(owd)
 
 
 def matrix_histogram(matrix, filepath, filename, dtype):

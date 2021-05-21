@@ -1,11 +1,11 @@
 import pandas as pd
 import pickle
 
-NO3, PO4, Si, Fe = "TRAC04", "TRAC05", "TRAC06", "TRAC07"
+NO3, PO4, SI, FE = "TRAC04", "TRAC05", "TRAC06", "TRAC07"
 
 
 def return_predictor_dataset(ecosys, sss, sst, par):
-    nutrients = ecosys[["Month", "X", "Y", PO4, NO3, Fe, Si]]
+    nutrients = ecosys[["Month", "X", "Y", PO4, NO3, FE, SI]]
     predictor_dataset = add_predictor(nutrients, sst)
     predictor_dataset = add_predictor(predictor_dataset, sss)
     predictor_dataset = add_predictor(predictor_dataset, par)

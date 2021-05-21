@@ -5,12 +5,16 @@ sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 import time
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
-from src.models.correlations import Dcorrs
+from src.models.correlations import Correlations
 from src.models import Save
+from src.views import HeatMaps
+
 
 BASEPATH = Path(os.path.abspath(__file__)).parents[2]
 DATASETS = f"{BASEPATH}/data/processed"
-SAVEPATH = Save.check_dir_exists(f"{DATASETS}/correlations")
+CORRSAVE = Save.check_dir_exists(f"{DATASETS}/correlations")
+PLOTSAVE = Save.check_dir_exists(f"{BASEPATH}/results/all_plots/heatmaps")
+
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.05)
@@ -18,7 +22,7 @@ t = time.sleep(0.05)
 
 print("Getting plankton and predictors sample sets...")
 with alive_bar(2) as bar:
-    plankton, plankton_r, plankton_f, plankton_r_f = Dcorrs.get_sample_sets(
+    plankton, plankton_r, plankton_f, plankton_r_f = Correlations.get_sample_sets(
         f"{DATASETS}/sampled_plankton/plankton.pkl",
         f"{DATASETS}/sampled_plankton/plankton_r.pkl",
         f"{DATASETS}/sampled_plankton/plankton_f.pkl",
@@ -26,7 +30,12 @@ with alive_bar(2) as bar:
     )
     bar()
     t
-    (predictors, predictors_r, predictors_f, predictors_r_f,) = Dcorrs.get_sample_sets(
+    (
+        predictors,
+        predictors_r,
+        predictors_f,
+        predictors_r_f,
+    ) = Correlations.get_sample_sets(
         f"{DATASETS}/sampled_predictors/predictors_X.pkl",
         f"{DATASETS}/sampled_predictors/rand_predictors_X.pkl",
         f"{DATASETS}/sampled_predictors/predictors_X_f.pkl",
@@ -35,21 +44,93 @@ with alive_bar(2) as bar:
     bar()
     t
 
-print("Calculating distance correlations...")
+# print("Calculating distance correlations...")
+# with alive_bar(4) as bar:
+#     dcorrs = Correlations.calculate_dcorrs(predictors, plankton)
+#     bar()
+#     t
+#     dcorrs_r = Correlations.calculate_dcorrs(predictors_r, plankton_r)
+#     bar()
+#     t
+#     dcorrs_f = Correlations.calculate_dcorrs(predictors_f, plankton_f)
+#     bar()
+#     t
+#     dcorrs_r_f = Correlations.calculate_dcorrs(predictors_r_f, plankton_r_f)
+
+#     Save.save_to_pkl(
+#         Save.check_dir_exists(f"{CORRSAVE}/dcorrs"),
+#         **{
+#             "dcorrs.pkl": dcorrs,
+#             "dcorrs_r.pkl": dcorrs_r,
+#             "dcorrs_f.pkl": dcorrs_f,
+#             "dcorrs_r_f.pkl": dcorrs_r_f,
+#         },
+#     )
+#     bar()
+#     t
+
+
+print("Calculating Pearson's correlation coefficients...")
 with alive_bar(4) as bar:
-    dcorrs = Dcorrs.calculate_dcorrs(predictors, plankton)
-    Save.save_to_pkl(f"{SAVEPATH}/dcorrs", **{"dcorrs.pkl": dcorrs})
+    pearsons = Correlations.calculate_pearsons(predictors, plankton)
     bar()
     t
-    dcorrs_r = Dcorrs.calculate_dcorrs(predictors_r, plankton_r)
-    Save.save_to_pkl(f"{SAVEPATH}/dcorrs", **{"dcorrs_r.pkl": dcorrs_r})
+    pearsons_r = Correlations.calculate_pearsons(predictors_r, plankton_r)
     bar()
     t
-    dcorrs_f = Dcorrs.calculate_dcorrs(predictors_f, plankton_f)
-    Save.save_to_pkl(f"{SAVEPATH}/dcorrs", **{"dcorrs_f.pkl": dcorrs_f})
+    pearsons_f = Correlations.calculate_pearsons(predictors_f, plankton_f)
     bar()
     t
-    dcorrs_r_f = Dcorrs.calculate_dcorrs(predictors_r_f, plankton_r_f)
-    Save.save_to_pkl(f"{SAVEPATH}/dcorrs", **{"dcorrs_r_f.pkl": dcorrs_r_f})
+    pearsons_r_f = Correlations.calculate_pearsons(predictors_r_f, plankton_r_f)
+
+    Save.save_to_pkl(
+        f"{CORRSAVE}/pearsons",
+        **{
+            "pearsons.pkl": pearsons,
+            "pearsons_r.pkl": pearsons_r,
+            "pearsons_f.pkl": pearsons_f,
+            "pearsons_r_f.pkl": pearsons_r_f,
+        },
+    )
     bar()
     t
+
+print("Calculating Spearman's Rank correlations...")
+with alive_bar(4) as bar:
+    spearmans = Correlations.calculate_spearmans(predictors, plankton)
+    bar()
+    t
+    spearmans_r = Correlations.calculate_spearmans(predictors_r, plankton_r)
+    bar()
+    t
+    spearmans_f = Correlations.calculate_spearmans(predictors_f, plankton_f)
+    bar()
+    t
+    spearmans_r_f = Correlations.calculate_spearmans(predictors_r_f, plankton_r_f)
+
+    # spearmans.to_pkl(f"{CORRSAVE}/spearmans/spearmans.pkl")
+    Save.save_to_pkl(
+        f"{CORRSAVE}",
+        **{
+            "spearmans.pkl": spearmans,
+            "spearmans_r.pkl": spearmans_r,
+            "spearmans_f.pkl": spearmans_f,
+            "spearmans_r_f.pkl": spearmans_r_f,
+        },
+    )
+    bar()
+    t
+
+# print("Plotting Distance Correlation heatmaps...")
+# with alive_bar(4) as bar:
+
+#     HeatMaps.correlation_heatmap(
+#         "coolwarm",
+#         PLOTSAVE,
+#         **{
+#             "hmap_dcorrs": dcorrs,
+#             "hmap_dcorrs_r": dcorrs_r,
+#             "hmap_dcorrs_f": dcorrs_f,
+#             "hmap_dcorrs_r_f": dcorrs_r_f,
+#         },
+#     )
