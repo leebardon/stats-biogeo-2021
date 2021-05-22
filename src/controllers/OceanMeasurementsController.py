@@ -11,7 +11,7 @@ from src.views import MatrixPlots
 from src.models import Save
 from src.models.sample_measurements import (
     CleanData,
-    AddMonthsColumn,
+    AddColumns,
     CreateSamplingMatrix,
 )
 
@@ -20,6 +20,7 @@ OCEAN_OBVS = base_path / "data" / "raw" / "ocean_observations.netcdf"
 GRID_CELL = base_path / "data" / "raw" / "grid_igsm.nc"
 SAVEPATH = base_path / "data" / "processed"
 PLOTPATH = base_path / "results" / "all_plots" / "sample_distributions"
+
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(0.05)
@@ -44,15 +45,15 @@ with alive_bar(1) as bar:
     bar()
     t
 
-print("Adding 'Months' column and saving processed dataset...")
+print("Adding 'Months' and 'Seasons' columns and saving processed dataset...")
 with alive_bar(2) as bar:
-    processed_ocean_df = AddMonthsColumn.create_months_column(ocean_measurements_df)
+    processed_ocean_df = AddColumns.create_months_column(ocean_measurements_df)
+    processed_ocean_df = AddColumns.create_seasons_column(ocean_measurements_df)
     bar()
     t
     Save.save_to_pkl(
-        processed_ocean_df,
         f"{SAVEPATH}/ocean_measurement_data",
-        "cleaned_meas_data.pkl",
+        **{"cleaned_meas_data.pkl": processed_ocean_df},
     )
     bar()
     t
@@ -76,48 +77,48 @@ with alive_bar(1) as bar:
     t
 
 
-# print("Generating and saving sampling matrices...")
-# with alive_bar(3) as bar:
-#     I_zero = CreateSamplingMatrix.matrix_of_zeros()
-#     I = CreateSamplingMatrix.sampling_matrix(I_zero, X, Y, T, x, y)
-#     bar()
-#     t
-#     # RANDOM SAMPLING MATRIX
-#     Ir_zero = np.zeros(shape=(144, 90, 265))
-#     Ir = CreateSamplingMatrix.random_matrix(Ir_zero)
-#     bar()
-#     t
-#     CreateSamplingMatrix.save_matrix(
-#         I, Ir, "ocean_measurements_matrix", "random_sample_matrix"
-#     )
-#     bar()
-#     t
+print("Generating and saving sampling matrices...")
+with alive_bar(3) as bar:
+    I_zero = CreateSamplingMatrix.matrix_of_zeros()
+    I = CreateSamplingMatrix.sampling_matrix(I_zero, X, Y, T, x, y)
+    bar()
+    t
+    # RANDOM SAMPLING MATRIX
+    Ir_zero = np.zeros(shape=(144, 90, 265))
+    Ir = CreateSamplingMatrix.random_matrix(Ir_zero)
+    bar()
+    t
+    CreateSamplingMatrix.save_matrix(
+        I, Ir, "ocean_measurements_matrix", "random_sample_matrix"
+    )
+    bar()
+    t
 
-# print("Generating and saving sample distribution plots...")
-# with alive_bar(4) as bar:
-#     MatrixPlots.matrix_scatter_plot_3D(
-#         I,
-#         PLOTPATH,
-#         "ocean_measurements_scatterplot",
-#         dtype="Observational",
-#     )
-#     bar()
-#     t
-#     MatrixPlots.matrix_histogram(
-#         I,
-#         PLOTPATH,
-#         "ocean_measurements_histogram",
-#         dtype="Observational",
-#     )
-#     bar()
-#     t
-#     MatrixPlots.matrix_scatter_plot_3D(
-#         Ir, PLOTPATH, "random_sample_scatterplot", dtype="Random"
-#     )
-#     bar()
-#     t
-#     MatrixPlots.matrix_histogram(
-#         Ir, PLOTPATH, "random_sample_histogram", dtype="Random"
-#     )
-#     bar()
-#     t
+print("Generating and saving sample distribution plots...")
+with alive_bar(4) as bar:
+    MatrixPlots.matrix_scatter_plot_3D(
+        I,
+        PLOTPATH,
+        "ocean_measurements_scatterplot",
+        dtype="Observational",
+    )
+    bar()
+    t
+    MatrixPlots.matrix_histogram(
+        I,
+        PLOTPATH,
+        "ocean_measurements_histogram",
+        dtype="Observational",
+    )
+    bar()
+    t
+    MatrixPlots.matrix_scatter_plot_3D(
+        Ir, PLOTPATH, "random_sample_scatterplot", dtype="Random"
+    )
+    bar()
+    t
+    MatrixPlots.matrix_histogram(
+        Ir, PLOTPATH, "random_sample_histogram", dtype="Random"
+    )
+    bar()
+    t
