@@ -4,6 +4,13 @@ import pickle
 NO3, PO4, SI, FE = "TRAC04", "TRAC05", "TRAC06", "TRAC07"
 
 
+def get_data(path, *filenames):
+    data = []
+    for name in filenames:
+        data.append(pd.read_pickle(f"{path}/{name}"))
+    return [data[i] for i in range(len(data))]
+
+
 def return_predictor_dataset(ecosys, sss, sst, par):
     nutrients = ecosys[["Month", "X", "Y", PO4, NO3, FE, SI]]
     predictor_dataset = add_predictor(nutrients, sst)
@@ -27,16 +34,29 @@ def add_predictor(predictor_df, new_predictor):
     )
 
 
-def group_plankton(ecosys, *nums):
-    group_members = ["TRAC" + str(num) for num in nums]
-    group_summed = sum([ecosys[member] for member in group_members])
-    return group_summed
+def group_plankton(eco, eco_r, eco_f, eco_rf, *nums):
+    group = ["TRAC" + str(num) for num in nums]
+    return (
+        sum([eco[g] for g in group]),
+        sum([eco_r[g] for g in group]),
+        sum([eco_f[g] for g in group]),
+        sum([eco_rf[g] for g in group]),
+    )
+
+
+def group_oce_plank(eco_oce, eco_oce_f, *nums):
+    group = ["TRAC" + str(num) for num in nums]
+    return (
+        sum([eco_oce[g] for g in group]),
+        sum([eco_oce_f[g] for g in group]),
+    )
 
 
 def get_arr(type):
     plank = [prok, pico, cocco, diazo, diatom, dino, zoo]
+    return
     if type == 1:
-        return plank
+        return [f"{p}" for p in plank]
     elif type == 2:
         return [f"{p}_r" for p in plank]
     elif type == 3:

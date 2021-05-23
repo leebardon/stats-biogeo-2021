@@ -31,7 +31,7 @@ def months():
 
 def assign_months(year, months_list, ocean_data):
     _year = ocean_data["Year"] == year
-    month_masks = get_month_masks()
+    month_masks = get_month_masks(ocean_data)
     for i in range(0, len(months_list)):
         _month = month_masks[i]
         _mask = _year & _month
@@ -40,14 +40,14 @@ def assign_months(year, months_list, ocean_data):
 
 def assign_seasons(year, seasons_list, ocean_data):
     _year = ocean_data["Year"] == year
-    season_masks = get_season_masks()
+    season_masks = get_season_masks(ocean_data)
     for i in range(0, len(seasons_list)):
         _season = season_masks[i]
         _mask = _year & _season
         ocean_data["Season"] = ocean_data["Season"].where(~_mask, other=seasons_list[i])
 
 
-def get_month_masks():
+def get_month_masks(ocean_data):
     masks = [
         ocean_data["Day"].between(1.0, 32.0, inclusive=True),
         ocean_data["Day"].between(32.0, 60.0, inclusive=True),
@@ -65,7 +65,7 @@ def get_month_masks():
     return masks
 
 
-def get_season_masks():
+def get_season_masks(ocean_data):
     masks = [
         ocean_data["Day"].between(336.0, 366.0, inclusive=True)
         | ocean_data["Day"].between(1.0, 60.0, inclusive=True),

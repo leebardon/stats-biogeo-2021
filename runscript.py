@@ -65,43 +65,43 @@ class ChoiceOption(click.Option):
 )
 def cli(hash_type):
     if hash_type == "Build sampling matrices from ocean measurements":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/OceanMeasurementsController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Extract Darwin surface data and build dataframes":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/ModelDataController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Create samples from Darwin Model output":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/ModelSamplingController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Build training sets for GAMs":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/TrainingSetController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Train GAMs models and make predictions":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/GamsController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Analyse results from GAMs predictions":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/AnalysisController.py"])
         print("-- done --")
         cli()
 
     elif hash_type == "Generate figures":
-        print("\n")
+        print("\n Loading ... ")
         run(["python", f"{controllers}/FinalFigsController.py"])
         print("-- done --")
         cli()
