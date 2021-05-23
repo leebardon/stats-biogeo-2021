@@ -2,6 +2,8 @@ import numpy as np
 import os
 from random import randint
 
+SEED = 2021_1
+
 
 def column_coordinates(ocean_df):
     X = ocean_df["Longitude"][:]
@@ -14,7 +16,7 @@ def raw_matrix(X, Y, T):
     return np.vstack([X, Y, T]).T
 
 
-def clean_matrix(raw_matrix):
+def clean_matrix(raw_ocean_matrix):
     out_of_bounds = np.where(raw_ocean_matrix > 360)
     return np.delete(raw_ocean_matrix, out_of_bounds[0], axis=0)
 
@@ -53,18 +55,10 @@ def sampling_matrix(I, X, Y, T, x, y):
 
 
 def random_matrix(Ir):
+    rng = np.random.default_rng(SEED)
     for _ in range(10000):
-        rx = randint(1, 143)
-        ry = randint(1, 89)
-        rt = randint(1, 264)
+        rx = rng.integers(low=0, high=144)
+        ry = rng.integers(low=0, high=90)
+        rt = rng.integers(low=0, high=264)
         Ir[rx, ry, rt] = 1
     return Ir
-
-
-def save_matrix(ocean_matrix, random_matrix, filename1, filename2):
-    owd = os.getcwd()
-    os.chdir("../all_outputs/sampling_matrices")
-    path = os.getcwd()
-    np.save(f"{path}/{filename1}", ocean_matrix)
-    np.save(f"{path}/{filename2}", random_matrix)
-    os.chdir(owd)

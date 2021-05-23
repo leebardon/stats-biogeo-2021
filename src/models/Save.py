@@ -17,9 +17,9 @@ def save_to_pkl(path, **kwargs):
         df.to_pickle(f"{path}/{filename}")
 
 
-def save_matrix(path, **kwargs):
+def save_matrix(path, **matrices):
     check_dir_exists(path)
-    for filename, matrix in kwargs.items():
+    for filename, matrix in matrices.items():
         np.save(
             f"{path}/{filename}",
             matrix,
@@ -27,15 +27,16 @@ def save_matrix(path, **kwargs):
         )
 
 
-def plankton_sets(save_path, plankton_arr, set_type):
-    plankton = {
-        "pro": plankton_arr[0],
-        "pico": plankton_arr[1],
-        "cocco": plankton_arr[2],
-        "diazo": plankton_arr[3],
-        "diatom": plankton_arr[4],
-        "dino": plankton_arr[5],
-        "zoo": plankton_arr[6],
-    }
-    with open(f"{save_path}/plankton_{set_type}.pkl", "wb") as handle:
-        pickle.dump(plankton, handle, protocol=pickle.HIGHEST_PROTOCOL)
+def plankton_sets(path, **plankton_tsets):
+    for filename, arr in plankton_tsets.items():
+        plankton = {
+            "Pro": arr[0],
+            "Pico": arr[1],
+            "Cocco": arr[2],
+            "Diazo": arr[3],
+            "Diatom": arr[4],
+            "Dino": arr[5],
+            "Zoo": arr[6],
+        }
+        with open(f"{path}/{filename}.pkl", "wb") as handle:
+            pickle.dump(plankton, handle, protocol=pickle.HIGHEST_PROTOCOL)

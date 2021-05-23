@@ -8,15 +8,16 @@ import time
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models.sample_model import Sampling
+from src.models import Save
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
 DARWIN = base_path / "data" / "processed" / "model_ocean_data"
 MATRICES = base_path / "data" / "processed" / "sampling_matrices"
-SAMPLES = base_path / "data" / "processed" / "model_sampled_data"
+SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.2)
+t = time.sleep(1)
 
 print("Obtaining sampling matrices and Darwin model ecosystem data...")
 with alive_bar(3) as bar:
@@ -57,9 +58,15 @@ with alive_bar(2) as bar:
     rand_samp_oce_fut = Sampling.make_equal(samp_oce_fut, rand_samp_oce_fut)
     bar()
     t
-    samp_oce.to_pickle(f"{SAMPLES}/eco_samp_p.pkl")
-    rand_samp_oce.to_pickle(f"{SAMPLES}/rand_eco_samp_p.pkl")
-    samp_oce_fut.to_pickle(f"{SAMPLES}/eco_samp_f.pkl")
-    rand_samp_oce_fut.to_pickle(f"{SAMPLES}/rand_eco_samp_f.pkl")
+
+    Save.save_to_pkl(
+        f"{SAMPLES}",
+        **{
+            "eco_samp_p.pkl": samp_oce,
+            "rand_eco_samp_p.pkl": rand_samp_oce,
+            "eco_samp_f.pkl": samp_oce_fut,
+            "rand_eco_samp_f.pkl": rand_samp_oce_fut,
+        },
+    )
     bar()
     t

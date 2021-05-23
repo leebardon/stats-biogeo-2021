@@ -59,3 +59,31 @@ def get_degrees_columns(ecosys):
 def save_degrees_coords(ecosys):
     degrees_coords = ecosys[["x_deg", "y_deg"]]
     degrees_coords.to_pickle(f"{base_path}/model_ocean_data/degrees_coords.pkl")
+
+
+# METHOD NOT WORKING
+
+# def add_seasons_col(darwin_data):
+#     darwin_data["Season"] = None
+#     seasons_list = ["winter", "spring", "summer", "autumn"]
+#     return assign_seasons(seasons_list, darwin_data)
+
+
+# def assign_seasons(seasons_list, darwin_data):
+#     season_masks = get_season_masks(darwin_data)
+#     for i in range(0, len(seasons_list)):
+#         _mask = season_masks[i]
+#         darwin_data["Season"] = darwin_data["Season"].where(
+#             ~_mask, other=seasons_list[i]
+#         )
+
+
+# def get_season_masks(darwin_data):
+#     masks = [
+#         darwin["Month"][3::12] | darwin["Month"][4::12] | darwin["Month"][5::12],
+#         darwin["Month"][6::12] | darwin["Month"][7::12] | darwin["Month"][8::12],
+#         darwin["Month"][9::12] | darwin["Month"][10::12] | darwin["Month"][11::12],
+#         darwin["Month"][12::12] | darwin["Month"][13::12] | darwin["Month"][14::12],
+#     ]
+#     ]
+#     return masks

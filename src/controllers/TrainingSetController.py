@@ -15,121 +15,179 @@ base_path = Path(os.path.abspath(__file__)).parents[2]
 
 SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
 OCEAN = base_path / "data" / "processed" / "model_ocean_data"
-T_SET = base_path / "data" / "processed" / "training_sets"
-V_SET = base_path / "data" / "processed" / "validation_sets"
+TARGETS_TSETS = base_path / "data" / "processed" / "sampled_plankton"
+PREDICTORS_TSETS = base_path / "data" / "processed" / "sampled_predictors"
+VSETS = base_path / "data" / "processed" / "validation_sets"
+
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.05)
+t = time.sleep(1)
 
 
 print("Building predictor variable training sets...")
-with alive_bar(4) as bar:
-    ecosys_samp = pd.read_pickle(f"{SAMPLES}/eco_samp_p.pkl")
-    ecosys_samp_r = pd.read_pickle(f"{SAMPLES}/rand_eco_samp_p.pkl")
-    ecosys_samp_f = pd.read_pickle(f"{SAMPLES}/eco_samp_f.pkl")
-    ecosys_samp_r_f = pd.read_pickle(f"{SAMPLES}/rand_eco_samp_f.pkl")
-    bar()
-    t
-    salinity_oce = pd.read_pickle(f"{OCEAN}/present/sss_ocean_p.pkl")
-    sst_oce = pd.read_pickle(f"{OCEAN}/present/sst_ocean_p.pkl")
-    par = pd.read_pickle(f"{OCEAN}/par_ocean.pkl")
-    bar()
-    t
-    training_set = TSB.return_predictor_dataset(ecosys_samp, salinity_oce, sst_oce, par)
-    random_training_set = TSB.return_predictor_dataset(
-        ecosys_samp_r, salinity_oce, sst_oce, par
+with alive_bar(6) as bar:
+    eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf = TSB.get_data(
+        f"{SAMPLES}",
+        *[
+            "eco_samp_p.pkl",
+            "rand_eco_samp_p.pkl",
+            "eco_samp_f.pkl",
+            "rand_eco_samp_f.pkl",
+        ],
+    )
+    salinity_oce, sst_oce, par_oce = TSB.get_data(
+        f"{OCEAN}/present",
+        *[
+            "sss_ocean_p.pkl",
+            "sst_ocean_p.pkl",
+            "par_ocean.pkl",
+        ],
+    )
+    salinity_oce_f, sst_oce_f, par_oce = TSB.get_data(
+        f"{OCEAN}/future",
+        *[
+            "sss_ocean_f.pkl",
+            "sst_ocean_f.pkl",
+            "par_ocean.pkl",
+        ],
     )
     bar()
-    Save.save_to_pkl(training_set, f"{T_SET}/predictors", "predictors_X_3586.pkl")
+    t
+    predictors_X = TSB.return_predictor_dataset(
+        eco_samp, salinity_oce, sst_oce, par_oce
+    )
+    bar()
+    t
+    rand_predictors_X = TSB.return_predictor_dataset(
+        eco_samp_r, salinity_oce, sst_oce, par_oce
+    )
+    bar()
+    t
+    predictors_X_f = TSB.return_predictor_dataset(
+        eco_samp_f, salinity_oce_f, sst_oce_f, par_oce
+    )
+    bar()
+    t
+    rand_predictors_X = TSB.return_predictor_dataset(
+        eco_samp_rf, salinity_oce_f, sst_oce_f, par_oce
+    )
+    bar()
+    t
     Save.save_to_pkl(
-        random_training_set, f"{T_SET}/predictors", "random_predictors_X_3586.pkl"
+        f"{PREDICTORS_TSETS}",
+        **{
+            "t_predictors_X.pkl": predictors_X,
+            "t_rand_predictors_X.pkl": rand_predictors_X,
+            "t_predictors_Xf.pkl": predictors_X_f,
+            "t_rand_predictors_Xf.pkl": rand_predictors_X,
+        },
     )
     bar()
     t
 
-# # This all needs refactored ...
-# print("Building training sets for plankton functional groups...")
-# with alive_bar(2) as bar:
-#     prok, prok_r = TSB.group_plankton(ecosys_samp, 21, 22), TSB.group_plankton(
-#         ecosys_samp_r, 21, 22
-#     )
-#     pico, pico_r = TSB.group_plankton(ecosys_samp, 23, 24), TSB.group_plankton(
-#         ecosys_samp_r, 23, 24
-#     )
-#     cocco, cocco_r = (
-#         TSB.group_plankton(ecosys_samp, *np.arange(25, 30)),
-#         TSB.group_plankton(ecosys_samp_r, *np.arange(25, 30)),
-#     )
-#     diazo, diazo_r = (
-#         TSB.group_plankton(ecosys_samp, *np.arange(30, 35)),
-#         TSB.group_plankton(ecosys_samp_r, *np.arange(30, 35)),
-#     )
-#     diatom = TSB.group_plankton(ecosys_samp, *np.arange(35, 46))
-#     diatom_r = TSB.group_plankton(ecosys_samp_r, *np.arange(35, 46))
-#     dino = TSB.group_plankton(ecosys_samp, *np.arange(46, 56))
-#     dino_r = TSB.group_plankton(ecosys_samp_r, *np.arange(46, 56))
-#     zoo = TSB.group_plankton(ecosys_samp, *np.arange(56, 72))
-#     zoo_r = TSB.group_plankton(ecosys_samp_r, *np.arange(56, 72))
-#     bar()
-#     t
-#     plank_train_meas = TSB.get_arr(type=1)
-#     plank_train_rand = TSB.get_arr(type=2)
-#     Save.plankton_sets(f"{T_SET}/plankton", plank_train_meas, "training_measurements")
-#     Save, plankton_sets(f"{T_SET}/plankton", plank_train_rand, "training_random")
-#     bar()
-#     t
+print("Building training sets for plankton functional groups...")
+with alive_bar(2) as bar:
+    pro, pro_r, pro_f, pro_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, 21, 22
+    )
+    pico, pico_r, pico_f, pico_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, 23, 24
+    )
+    cocco, cocco_r, cocco_f, cocco_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(25, 30)
+    )
+    diazo, diazo_r, diazo_f, diazo_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(30, 35)
+    )
+    diatom, diatom_r, diatom_f, diatom_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(35, 46)
+    )
+    dino, dino_r, dino_f, dino_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(46, 56)
+    )
+    zoo, zoo_r, zoo_f, zoo_rf = TSB.group_plankton(
+        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(56, 72)
+    )
+    bar()
+    t
 
+    pl_tsets = [pro, pico, cocco, diazo, diatom, dino, zoo]
+    pl_tsets_r = [pro_r, pico_r, cocco_r, diazo_r, diatom_r, dino_r, zoo_r]
+    pl_tsets_f = [pro_f, pico_f, cocco_f, diazo_f, diatom_f, dino_f, zoo_f]
+    pl_tsets_rf = [pro_rf, pico_rf, cocco_rf, diazo_rf, diatom_rf, dino_rf, zoo_rf]
 
-# print("Building whole-ocean validation sets for plankton functional groups...")
-# with alive_bar(3) as bar:
-#     ecosys_oce = pd.read_pickle(f"{DARWIN}/present/ecosys_ocean_p.pkl")
-#     ecosys_oce_f = pd.read_pickle(f"{DARWIN}/future/ecosys_ocean_f.pkl")
-#     bar()
-#     t
-#     prok_val, prok_val_f = TSB.group_plankton(ecosys_oce, 21, 22), TSB.group_plankton(
-#         ecosys_oce_f, 21, 22
-#     )
-#     pico_val, pico_val_f = TSB.group_plankton(ecosys_oce, 23, 24), TSB.group_plankton(
-#         ecosys_oce_f, 23, 24
-#     )
-#     cocco_val, cocco_val_f = (
-#         TSB.group_plankton(ecosys_oce, *np.arange(25, 30)),
-#         TSB.group_plankton(ecosys_oce_f, *np.arange(25, 30)),
-#     )
-#     diazo_val, diazo_val_f = (
-#         TSB.group_plankton(ecosys_oce, *np.arange(30, 35)),
-#         TSB.group_plankton(ecosys_oce_f, *np.arange(30, 35)),
-#     )
-#     diatom_val = TSB.group_plankton(ecosys_oce, *np.arange(35, 46))
-#     diatom_val_f = TSB.group_plankton(ecosys_oce_f, *np.arange(35, 46))
-#     dino_val = TSB.group_plankton(ecosys_oce, *np.arange(46, 56))
-#     dino_val_f = TSB.group_plankton(ecosys_oce_f, *np.arange(46, 56))
-#     zoo_val = TSB.group_plankton(ecosys_oce, *np.arange(56, 72))
-#     zoo_val_f = TSB.group_plankton(ecosys_oce_f, *np.arange(56, 72))
-#     bar()
-#     t
-#     plank_val_pres = TSB.get_arr(type=3)
-#     plank_val_fut = TSB.get_arr(type=4)
-#     Save.plankton_sets(f"{V_SET}/plankton", plank_val_pres, "ocean_present")
-#     Save.plankton_sets(f"{V_SET}/plankton", plank_val_fut, "ocean_future")
-#     bar()
-#     t
+    Save.plankton_sets(
+        f"{TARGETS_TSETS}",
+        **{
+            "plankton": pl_tsets,
+            "plankton_r": pl_tsets_r,
+            "plankton_f": pl_tsets_f,
+            "plankton_rf": pl_tsets_rf,
+        },
+    )
+    bar()
+    t
 
-# print(
-#     "Building whole-ocean predictor sets (Darwin ocean of 1987-2008 and 2079-2100)..."
-# )
-# with alive_bar(2) as bar:
-#     salinity_oce_f = pd.read_pickle(f"{DARWIN}/future/sss_ocean_f.pkl")
-#     sst_oce_f = pd.read_pickle(f"{DARWIN}/future/sst_ocean_f.pkl")
-#     bar()
-#     t
-#     predictor_set_p = TSB.return_predictor_dataset(
-#         ecosys_oce, salinity_oce, sst_oce, par
-#     )
-#     predictor_set_f = TSB.return_predictor_dataset(
-#         ecosys_oce_f, salinity_oce_f, sst_oce_f, par
-#     )
-#     Save.save_to_pkl(predictor_set_p, f"{V_SET}/predictors", "ocean_X_present.pkl")
-#     Save.save_to_pkl(predictor_set_f, f"{V_SET}/predictors", "ocean_X_future.pkl")
-#     bar()
-#     t
+print("Building whole-ocean validation sets for plankton functional groups...")
+with alive_bar(3) as bar:
+    eco_oce, eco_oce_f = TSB.get_data(
+        f"{OCEAN}",
+        *[
+            "present/ecosys_ocean_p.pkl",
+            "future/ecosys_ocean_f.pkl",
+        ],
+    )
+    bar()
+    t
+    pro_oce, pro_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, 21, 22)
+    pico_oce, pico_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, 23, 24)
+    cocco_oce, cocco_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(25, 30))
+    diazo_oce, diazo_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(30, 35))
+    diatom_oce, diatom_oce_f = TSB.group_oce_plank(
+        eco_oce, eco_oce_f, *np.arange(35, 46)
+    )
+    dino_oce, dino_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(46, 56))
+    zoo_oce, zoo_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(56, 72))
+    bar()
+    t
+
+    pl_oce = [pro_oce, pico_oce, cocco_oce, diazo_oce, diatom_oce, dino_oce, zoo_oce]
+    pl_oce_f = [
+        pro_oce_f,
+        pico_oce_f,
+        cocco_oce_f,
+        diazo_oce_f,
+        diatom_oce_f,
+        dino_oce_f,
+        zoo_oce_f,
+    ]
+
+    Save.plankton_sets(
+        f"{VSETS}",
+        **{
+            "plankton/plankton_oce.pkl": pl_oce,
+            "plankton/plankton_oce_f.pkl": pl_oce_f,
+        },
+    )
+    bar()
+    t
+
+print("Building whole-ocean predictor sets (Darwin ocean 1987-2008, 2079-2100)...")
+with alive_bar(2) as bar:
+    predictors_oce_X = TSB.return_predictor_dataset(
+        eco_oce, salinity_oce, sst_oce, par_oce
+    )
+    predictors_oce_Xf = TSB.return_predictor_dataset(
+        eco_oce_f, salinity_oce_f, sst_oce_f, par_oce
+    )
+    bar()
+    t
+    Save.save_to_pkl(
+        f"{VSETS}",
+        **{
+            "predictors/t_predictors_oce_X.pkl": predictors_oce_X,
+            "predictors/t_predictors_oce_Xf.pkl": predictors_oce_Xf,
+        },
+    )
+    bar()
+    t

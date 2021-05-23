@@ -3,9 +3,9 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
 import xarray as xr
+import numpy as np
 import time
 from pathlib import Path
-from random import randint
 from alive_progress import alive_bar, config_handler
 from src.views import MatrixPlots
 from src.models import Save
@@ -23,7 +23,7 @@ PLOTPATH = base_path / "results" / "all_plots" / "sample_distributions"
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.05)
+t = time.sleep(1)
 
 
 print("Obtaining ocean measurements dataset...")
@@ -51,6 +51,7 @@ with alive_bar(2) as bar:
     processed_ocean_df = AddColumns.create_seasons_column(ocean_measurements_df)
     bar()
     t
+
     Save.save_to_pkl(
         f"{SAVEPATH}/ocean_measurement_data",
         **{"cleaned_meas_data.pkl": processed_ocean_df},
@@ -65,7 +66,7 @@ with alive_bar(1) as bar:
     raw_matrix = CreateSamplingMatrix.raw_matrix(X, Y, T)
     ocean_measurements_matrix = CreateSamplingMatrix.clean_matrix(raw_matrix)
     X, Y, T = CreateSamplingMatrix.matrix_coordinates(ocean_measurements_matrix, type=1)
-    bar
+    bar()
     t
 
 
@@ -83,20 +84,22 @@ with alive_bar(3) as bar:
     I = CreateSamplingMatrix.sampling_matrix(I_zero, X, Y, T, x, y)
     bar()
     t
-    # RANDOM SAMPLING MATRIX
+
     Ir_zero = np.zeros(shape=(144, 90, 265))
     Ir = CreateSamplingMatrix.random_matrix(Ir_zero)
     bar()
     t
-    CreateSamplingMatrix.save_matrix(
-        I, Ir, "ocean_measurements_matrix", "random_sample_matrix"
+
+    Save.save_matrix(
+        f"{SAVEPATH}/sampling_matrices",
+        **{"ocean_sample_matrix.npy": I, "random_sample_matrix.npy": Ir},
     )
     bar()
     t
 
 print("Generating and saving sample distribution plots...")
 with alive_bar(4) as bar:
-    MatrixPlots.matrix_scatter_plot_3D(
+    MatrixPlots.matrix_scatter_plot(
         I,
         PLOTPATH,
         "ocean_measurements_scatterplot",
@@ -104,6 +107,7 @@ with alive_bar(4) as bar:
     )
     bar()
     t
+
     MatrixPlots.matrix_histogram(
         I,
         PLOTPATH,
@@ -112,11 +116,13 @@ with alive_bar(4) as bar:
     )
     bar()
     t
-    MatrixPlots.matrix_scatter_plot_3D(
+
+    MatrixPlots.matrix_scatter_plot(
         Ir, PLOTPATH, "random_sample_scatterplot", dtype="Random"
     )
     bar()
     t
+
     MatrixPlots.matrix_histogram(
         Ir, PLOTPATH, "random_sample_histogram", dtype="Random"
     )
