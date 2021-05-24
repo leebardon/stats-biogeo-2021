@@ -52,14 +52,14 @@ def group_oce_plank(eco_oce, eco_oce_f, *nums):
     )
 
 
-def get_arr(type):
-    plank = [prok, pico, cocco, diazo, diatom, dino, zoo]
-    return
-    if type == 1:
-        return [f"{p}" for p in plank]
-    elif type == 2:
-        return [f"{p}_r" for p in plank]
-    elif type == 3:
-        return [f"{p}_val" for p in plank]
-    else:
-        return [f"{p}_val_f" for p in plank]
+# def get_arr(type):
+#     plank = [prok, pico, cocco, diazo, diatom, dino, zoo]
+#     return
+#     if type == 1:
+#         return [f"{p}" for p in plank]
+#     elif type == 2:
+#         return [f"{p}_r" for p in plank]
+#     elif type == 3:
+#         return [f"{p}_val" for p in plank]
+#     else:
+#         return [f"{p}_val_f" for p in plank]

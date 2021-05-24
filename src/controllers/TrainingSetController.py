@@ -76,10 +76,10 @@ with alive_bar(6) as bar:
     Save.save_to_pkl(
         f"{PREDICTORS_TSETS}",
         **{
-            "t_predictors_X.pkl": predictors_X,
-            "t_rand_predictors_X.pkl": rand_predictors_X,
-            "t_predictors_Xf.pkl": predictors_X_f,
-            "t_rand_predictors_Xf.pkl": rand_predictors_X,
+            "predictors_X.pkl": predictors_X,
+            "rand_predictors_X.pkl": rand_predictors_X,
+            "predictors_Xf.pkl": predictors_X_f,
+            "rand_predictors_Xf.pkl": rand_predictors_X,
         },
     )
     bar()
@@ -88,25 +88,25 @@ with alive_bar(6) as bar:
 print("Building training sets for plankton functional groups...")
 with alive_bar(2) as bar:
     pro, pro_r, pro_f, pro_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, 21, 22
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, 21, 22
     )
     pico, pico_r, pico_f, pico_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, 23, 24
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, 23, 24
     )
     cocco, cocco_r, cocco_f, cocco_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(25, 30)
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, *np.arange(25, 30)
     )
     diazo, diazo_r, diazo_f, diazo_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(30, 35)
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, *np.arange(30, 35)
     )
     diatom, diatom_r, diatom_f, diatom_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(35, 46)
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, *np.arange(35, 46)
     )
     dino, dino_r, dino_f, dino_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(46, 56)
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, *np.arange(46, 56)
     )
     zoo, zoo_r, zoo_f, zoo_rf = TSB.group_plankton(
-        eco_samp, eco_samp_r, eco_samp_r, eco_samp_rf, *np.arange(56, 72)
+        eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf, *np.arange(56, 72)
     )
     bar()
     t
@@ -116,7 +116,7 @@ with alive_bar(2) as bar:
     pl_tsets_f = [pro_f, pico_f, cocco_f, diazo_f, diatom_f, dino_f, zoo_f]
     pl_tsets_rf = [pro_rf, pico_rf, cocco_rf, diazo_rf, diatom_rf, dino_rf, zoo_rf]
 
-    Save.plankton_sets(
+    Save.plankton_dicts(
         f"{TARGETS_TSETS}",
         **{
             "plankton": pl_tsets,
@@ -162,7 +162,7 @@ with alive_bar(3) as bar:
         zoo_oce_f,
     ]
 
-    Save.plankton_sets(
+    Save.plankton_dicts(
         f"{VSETS}",
         **{
             "plankton/plankton_oce.pkl": pl_oce,
@@ -185,8 +185,8 @@ with alive_bar(2) as bar:
     Save.save_to_pkl(
         f"{VSETS}",
         **{
-            "predictors/t_predictors_oce_X.pkl": predictors_oce_X,
-            "predictors/t_predictors_oce_Xf.pkl": predictors_oce_Xf,
+            "predictors/predictors_oce_X.pkl": predictors_oce_X,
+            "predictors/predictors_oce_Xf.pkl": predictors_oce_Xf,
         },
     )
     bar()

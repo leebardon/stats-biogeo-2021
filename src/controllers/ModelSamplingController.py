@@ -14,10 +14,10 @@ base_path = Path(os.path.abspath(__file__)).parents[2]
 
 DARWIN = base_path / "data" / "processed" / "model_ocean_data"
 MATRICES = base_path / "data" / "processed" / "sampling_matrices"
-SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
+INTERIM = base_path / "data" / "interim" / "sampled_ecosys"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(1)
+t = time.sleep(2)
 
 print("Obtaining sampling matrices and Darwin model ecosystem data...")
 with alive_bar(3) as bar:
@@ -29,6 +29,7 @@ with alive_bar(3) as bar:
     I_df, Ir_df = Sampling.return_dataframes(I, Ir)
     bar()
     t
+
     ecosys = pd.read_pickle(f"{DARWIN}/present/ecosys_ocean_p.pkl")
     ecosys_future = pd.read_pickle(f"{DARWIN}/future/ecosys_ocean_f.pkl")
     bar()
@@ -60,7 +61,7 @@ with alive_bar(2) as bar:
     t
 
     Save.save_to_pkl(
-        f"{SAMPLES}",
+        f"{INTERIM}",
         **{
             "eco_samp_p.pkl": samp_oce,
             "rand_eco_samp_p.pkl": rand_samp_oce,
