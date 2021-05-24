@@ -3,7 +3,8 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
 import time
-import pickle
+
+# import pickle
 from alive_progress import alive_bar, config_handler
 from pathlib import Path
 from src.models import Save
@@ -83,67 +84,65 @@ with alive_bar(2) as bar:
     t
 
 
-print("Generating partial dependency plots...")
-with alive_bar(2) as bar:
-    PartialDepPlots.partial_dependency_plots(
-        f"{PLOTS}/partial_dep_plots/from_measurements/",
-        gams_dict,
-        gams_dict_f,
-    )
-    bar()
-    t
-    PartialDepPlots.partial_dependency_plots(
-        f"{PLOTS}/partial_dep_plots/from_random/",
-        gams_dict_r,
-        gams_dict_rf,
-    )
-    bar()
-    t
+# print("Generating partial dependency plots...")
+# with alive_bar(2) as bar:
+#     PartialDepPlots.partial_dependency_plots(
+#         f"{PLOTS}/partial_dep_plots/from_measurements/",
+#         gams_dict,
+#         gams_dict_f,
+#     )
+#     bar()
+#     t
+#     PartialDepPlots.partial_dependency_plots(
+#         f"{PLOTS}/partial_dep_plots/from_random/",
+#         gams_dict_r,
+#         gams_dict_rf,
+#     )
+#     bar()
+#     t
 
 
-print("Using GAMs from measurements to predict Darwin ocean biogeography (1987-2008)")
+print("Predicting Darwin ocean biogeography from ocean measurements (1987-2008)")
 print("(Have a cup of tea - this could take a while...)")
 with alive_bar(1) as bar:
     predictions_present = MakePredictions.make_predictions(
-        plankton_gams_dict, f"{V_SETS}/predictors/ocean_X_present.pkl"
+        gams_dict, f"{DATA}/validation_sets/predictors/predictors_oce_X.pkl"
     )
-    with open(f"{RESULTS}/predictions_present/test_predictions_p.pkl", "wb") as handle:
-        pickle.dump(predictions_present, handle, protocol=pickle.HIGHEST_PROTOCOL)
     bar()
     t
 
-# print(
-#     "Using GAMs from random sampling to predict Darwin ocean biogeography (1987-2008)"
-# )
-# with alive_bar(1) as bar:
-#     predictions_present_r = MakePredictions.make_predictions(
-#         plankton_random_gams_dict, f"{V_SETS}/predictors/ocean_X_present.pkl"
-#     )
-#     with open(
-#         f"{RESULTS}/predictions_present/test_predictions_random_p.pkl", "wb"
-#     ) as handle:
-#         pickle.dump(predictions_present_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
-#     bar()
-#     t
+print("Predicting Darwin ocean biogeography from random samples (1987-2008)")
+with alive_bar(1) as bar:
+    predictions_present_r = MakePredictions.make_predictions(
+        gams_dict_r, f"{DATA}/validation_sets/predictors/predictors_oce_X.pkl"
+    )
+    bar()
+    t
 
-# print("Using GAMs from measurements to predict Darwin ocean biogeography (2079-2100)")
-# with alive_bar(1) as bar:
-#     predictions_future = MakePredictions.make_predictions(
-#         plankton_gams_dict, f"{V_SETS}/predictors/ocean_X_future.pkl"
-#     )
-#     with open(f"{RESULTS}/predictions_future/test_predictions_f.pkl", "wb") as handle:
-#         pickle.dump(predictions_future, handle, protocol=pickle.HIGHEST_PROTOCOL)
-#     bar()
-#     t
+print("Predicting Darwin ocean biogeography from ocean measurements  (2079-2100)")
+with alive_bar(1) as bar:
+    predictions_future = MakePredictions.make_predictions(
+        gams_dict_f, f"{DATA}/validation_sets/predictors/predictors_oce_Xf.pkl"
+    )
+    bar()
+    t
 
-# print(
-#     "Using GAMs from random sampling to predict Darwin ocean biogeography (2079-2100)"
-# )
-# with alive_bar(1) as bar:
-#     predictions_future_r = MakePredictions.make_predictions(
-#         plankton_random_gams_dict, f"{V_SETS}/predictors/ocean_X_future.pkl"
-#     )
-#     with open(f"{RESULTS}/predictions_future/test_predictions_rf.pkl", "wb") as handle:
-#         pickle.dump(predictions_future_r, handle, protocol=pickle.HIGHEST_PROTOCOL)
-#     bar()
-#     t
+print("Predicting Darwin ocean biogeography from random samples (2079-2100)")
+with alive_bar(2) as bar:
+    predictions_future_r = MakePredictions.make_predictions(
+        gams_dict_rf, f"{DATA}/validation_sets/predictors/predictors_oce_Xf.pkl"
+    )
+    bar()
+    t
+
+    Save.save_predictions(
+        f"{RESULTS}/predictions",
+        **{
+            "predictions": predictions_present,
+            "predictions_r": predictions_present_r,
+            "predictions_f": predictions_future,
+            "predictions_rf": predictions_future_r,
+        },
+    )
+    bar()
+    t
