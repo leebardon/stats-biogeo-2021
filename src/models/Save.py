@@ -27,8 +27,8 @@ def save_matrix(path, **matrices):
         )
 
 
-def plankton_sets(path, **plankton_tsets):
-    for filename, arr in plankton_tsets.items():
+def plankton_dicts(path, **dictionary_sets):
+    for filename, arr in dictionary_sets.items():
         plankton = {
             "Pro": arr[0],
             "Pico": arr[1],
@@ -40,3 +40,9 @@ def plankton_sets(path, **plankton_tsets):
         }
         with open(f"{path}/{filename}.pkl", "wb") as handle:
             pickle.dump(plankton, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def save_gams(path, **gams_sets):
+    for group, gam in gams_sets.items():
+        with open(f"{path}/{group}.pkl", "wb") as handle:
+            pickle.dump(gam, handle, protocol=pickle.HIGHEST_PROTOCOL)

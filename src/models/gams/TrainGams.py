@@ -1,35 +1,39 @@
 import numpy as np
 import pandas as pd
+import pickle
 from pygam import LinearGAM, s, f
 
 
-def get_plankton(path):
-    plankton_dict = {
-        "proko": pd.read_pickle(f"{path}/proko.pkl"),
-        "pico": pd.read_pickle(f"{path}/pico.pkl"),
-        "cocco": pd.read_pickle(f"{path}/cocco.pkl"),
-        "diazo": pd.read_pickle(f"{path}/diazo.pkl"),
-        "diatom": pd.read_pickle(f"{path}/diatom.pkl"),
-        "dino": pd.read_pickle(f"{path}/dino.pkl"),
-        "zoo": pd.read_pickle(f"{path}/zoo.pkl"),
-    }
-    return plankton_dict
+def get_plankton(path, *plankton_sets):
+    p_sets = []
+    for p_set in plankton_sets:
+        with open(f"{path}/{p_set}.pkl", "rb") as handle:
+            plankton_set = pickle.load(handle)
+        p_sets.append(plankton_set)
+    return [p_sets[i] for i in range(len(p_sets))]
 
 
-def get_predictors(path):
-    predictors = pd.read_pickle(f"{path}/predictors_X_3586.pkl")
-    predictors_random = pd.read_pickle(f"{path}/random_predictors_X_3586.pkl")
-    return predictors, predictors_random
+def get_predictors(path, *filenames):
+    data = []
+    for name in filenames:
+        data.append(pd.read_pickle(f"{path}/{name}.pkl"))
+    return [data[i] for i in range(len(data))]
 
 
-def set_min_vals(plankton):
-    for group_name, biomass in plankton.items():
-        biomass[biomass < 1.001e-5] = 1.001e-5
-    return plankton
+def apply_cutoff(cut_off, *plankton_sets):
+    p_sets = []
+    for plankton in plankton_sets:
+        for funct_group, biomass in plankton.items():
+            biomass[biomass < cut_off] = 1.001e-5
+        p_sets.append(plankton)
+    return [set[i] for i in range(len(p_sets))]
 
 
-def fit_gams(plankton, predictors):
-    gams_dict = {}
-    for group_name, biomass in plankton.items():
-        gams_dict[f"{group_name}"] = LinearGAM().fit(predictors, biomass)
-    return gams_dict
+def fit_gams(*plankton_predictor_pairs):
+    gams_sets = []
+    for plank_dict, predictors in plankton_predictor_pairs:
+        gams = {}
+        for group_name, biomass in plank_dict.items():
+            gams[f"{group_name}"] = LinearGAM().fit(predictors, biomass)
+        gams_sets.append(gams)
+    return [gams_sets[i] for i in range(len(gams_sets))]
