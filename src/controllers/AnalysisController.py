@@ -3,9 +3,6 @@ import os, sys
 sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
 
 import time
-import pickle
-import numpy as np
-import pandas as pd
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models.gams import AnalyseGams
@@ -18,7 +15,7 @@ ANALYSIS_SAVE = base_path / "results" / "analysis_output"
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.05)
+t = time.sleep(2)
 
 
 print("Getting GAMs predictions and Darwin target data...")
@@ -42,8 +39,8 @@ with alive_bar(2) as bar:
     (darwin_ocean, darwin_ocean_f,) = AnalyseGams.get_targets(
         f"{TARGETS}",
         *[
-            "darwin_ocean",
-            "darwin_ocean_f",
+            "plankton_oce",
+            "plankton_oce_f",
         ],
     )
     bar()
@@ -87,34 +84,38 @@ with alive_bar(5) as bar:
     t
 
 print("Calculating mean and median biomasses for each functional group (1987-2008)...")
-with alive_bar(4) as bar:
+with alive_bar(3) as bar:
     mean_predictions, median_predictions = AnalyseGams.mean_and_median(
         predictions_cut, [], []
     )
     bar()
-    t
+    time.sleep(30)  # to save fans on poor laptop...
     mean_predictions_r, median_predictions_r = AnalyseGams.mean_and_median(
         predictions_cut_r, [], []
     )
     bar()
     t
+    time.sleep(30)
     mean_darwin, median_darwin = AnalyseGams.mean_and_median(darwin_cut, [], [])
     bar()
     t
+    time.sleep(30)
 
 print("Calculating mean and median biomasses for each functional group (2079-2100)...")
-with alive_bar(4) as bar:
+with alive_bar(3) as bar:
     mean_predictions_f, median_predictions_f = AnalyseGams.mean_and_median(
         predictions_cut_f, [], []
     )
     bar()
-    t
+    time.sleep(30)
     mean_predictions_rf, median_predictions_rf = AnalyseGams.mean_and_median(
         predictions_cut_rf, [], []
     )
     bar()
-    t
+    time.sleep(30)
     mean_darwin_f, median_darwin_f = AnalyseGams.mean_and_median(darwin_cut_f, [], [])
+    bar()
+    time.sleep(30)
 
     Save.save_means_and_medians(
         ANALYSIS_SAVE,
@@ -131,13 +132,12 @@ with alive_bar(4) as bar:
         mean_darwin_f,
         median_darwin_f,
     )
-    bar()
-    t
+
 
 print(
     "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (1987-2008)..."
 )
-with alive_bar(3) as bar:
+with alive_bar(2) as bar:
     mean_ratios, median_ratios = AnalyseGams.calc_ratios(
         mean_predictions, mean_darwin, median_predictions, median_darwin, [], []
     )
@@ -196,41 +196,43 @@ with alive_bar(2) as bar:
     Save.save_rsq(ANALYSIS_SAVE, rsq, rsq_r, rsq_f, rsq_rf)
 
 
-# print("Producing summary tables...")
-# with alive_bar(4) as bar:
-#     summary = AnalyseGams.summary_df(
-#         cutoff_summary_p, means_p, meds_p, rsq_p, len(darwin_target_p["proko"])
-#     )
-#     summary_rand_p = AnalyseGams.summary_df(
-#         cutoff_summary_rand_p,
-#         means_rand_p,
-#         meds_rand_p,
-#         rsq_rand_p,
-#         len(darwin_target_p["proko"]),
-#     )
-#     bar()
-#     t
-#     summary_f = AnalyseGams.summary_df(
-#         cutoff_summary_f, means_f, meds_f, rsq_f, len(darwin_target_p["proko"])
-#     )
-#     summary_rand_f = AnalyseGams.summary_df(
-#         cutoff_summary_rand_f,
-#         means_rand_f,
-#         meds_rand_f,
-#         rsq_rand_f,
-#         len(darwin_target_p["proko"]),
-#     )
-#     bar()
-#     t
-#     combined_df = AnalyseGams.combined_df(
-#         [summary_p, summary_rand_p, summary_f, summary_rand_f]
-#     )
-#     combined_df.to_csv(f"{ANALYSIS_SAVE}/summary/summary_all.csv")
-#     bar()
-#     t
-#     summary_p.to_pickle(f"{ANALYSIS_SAVE}/summary/summary_p.pkl")
-#     summary_rand_p.to_pickle(f"{ANALYSIS_SAVE}/summary/summary_rand_p.pkl")
-#     summary_f.to_pickle(f"{ANALYSIS_SAVE}/summary/summary_f.pkl")
-#     summary_rand_f.to_pickle(f"{ANALYSIS_SAVE}/summary/summary_rand_f.pkl")
-#     bar()
-#     t
+print("Producing summary tables...")
+with alive_bar(3) as bar:
+    summary_df = AnalyseGams.summary_df(
+        cutoff_summary, mean_ratios, median_ratios, rsq, len(darwin_ocean)
+    )
+    summary_df_r = AnalyseGams.summary_df(
+        cutoff_summary_r,
+        mean_ratios_r,
+        median_ratios_r,
+        rsq_r,
+        len(darwin_ocean),
+    )
+    bar()
+    t
+    summary_df_f = AnalyseGams.summary_df(
+        cutoff_summary_f, mean_ratios_f, median_ratios_f, rsq_f, len(darwin_ocean)
+    )
+    summary_df_rf = AnalyseGams.summary_df(
+        cutoff_summary_rf,
+        mean_ratios_rf,
+        median_ratios_f,
+        rsq_f,
+        len(darwin_ocean),
+    )
+    bar()
+    t
+    combined_df = AnalyseGams.combined_df(
+        [summary_df, summary_df_r, summary_df_f, summary_df_rf]
+    )
+
+    Save.save_summaries(
+        ANALYSIS_SAVE,
+        combined_df,
+        summary_df,
+        summary_df_r,
+        summary_df_f,
+        summary_df_rf,
+    )
+    bar()
+    t
