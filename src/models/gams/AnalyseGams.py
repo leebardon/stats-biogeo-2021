@@ -22,8 +22,8 @@ def get_targets(path, *darwin_true_values):
 
 
 def cut_off(predictions, target, cutoff):
-    f_groups = ["proko", "pico", "cocco", "diazo", "diatom", "dino", "zoo"]
-    gams_presence, darwin_presence, total = [], [], len(target["proko"])
+    f_groups = ["Pro", "Pico", "Cocco", "Diazo", "Diatom", "Dino", "Zoo"]
+    gams_presence, darwin_presence, total = [], [], len(target["Pro"])
     gams_absence, darwin_absence, either_below_cutoff = [], [], []
     for group in f_groups:
         gams_presence.append(
@@ -80,20 +80,6 @@ def calc_ratios(mean_gams, mean_darwin, med_gams, med_darwin, mean_ratios, med_r
     return mean_ratios, med_ratios
 
 
-# def save_as_dict(save_path, data, folder, filename):
-#     save_dict = {
-#         "Pro": data[0],
-#         "Pico": data[1],
-#         "Cocco": data[2],
-#         "Diazo": data[3],
-#         "Diatom": data[4],
-#         "Dino": data[5],
-#         "Zoo": data[6],
-#     }
-#     with open(f"{save_path}/{folder}/{filename}.pkl", "wb") as handle:
-#         pickle.dump(save_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
 def r_squared(darwin_target, gams_predictions):
     rsq = []
     for i in range(len(darwin_target)):
@@ -124,8 +110,8 @@ def summary_df(cutoffs, means, meds, rsq, total):
     cols = ["Darwin < cutoff", "GAMs < cutoff", "Either < cutoff"]
     for col in cols:
         cutoffs[col] = fractions(cutoffs[col], total)
-    cutoffs["Means Ratios"] = means.values()
-    cutoffs["Medians Ratios"] = meds.values()
+    cutoffs["Means Ratios"] = means
+    cutoffs["Medians Ratios"] = meds
     cutoffs["r-squared"] = [round(r, 2) for r in rsq]
     summary_df = cutoffs
 
@@ -149,82 +135,3 @@ def combined_df(dfs):
         axis=0,
     )
     return df_combined
-
-
-# def save_with_cutoff_removed(
-#     basepath,
-#     predictions,
-#     predictions_r,
-#     darwin,
-#     darwin_r,
-#     predictions_f,
-#     predictions_rf,
-#     darwin_f,
-#     darwin_rf,
-#     path_pres,
-#     path_fut,
-# ):
-#     save_as_dict(basepath, predictions, path_pres, "gams_cut_p")
-#     save_as_dict(basepath, predictions_r, path_pres, "gams_rand_cut_p")
-#     save_as_dict(basepath, darwin, path_pres, "darwin_cut_p")
-#     save_as_dict(basepath, darwin_r, path_pres, "darwin_cut_rand_p")
-#     save_as_dict(basepath, predictions_f, path_fut, "gams_cut_f")
-#     save_as_dict(basepath, predictions_rf, path_fut, "gams_rand_cut_f")
-#     save_as_dict(basepath, darwin_f, path_fut, "darwin_cut_f")
-#     save_as_dict(basepath, darwin_rf, path_fut, "darwin_cut_rand_f")
-
-
-# def save_means_and_medians(
-#     path,
-#     mean_g_p,
-#     med_g_p,
-#     mean_g_r_p,
-#     med_g_r_p,
-#     mean_d_p,
-#     med_d_p,
-#     mean_g_f,
-#     med_g_f,
-#     mean_g_r_f,
-#     med_g_r_f,
-#     mean_d_f,
-#     med_d_f,
-#     path_mean_p,
-#     path_med_p,
-#     path_mean_f,
-#     path_med_f,
-# ):
-#     save_as_dict(path, mean_g_p, path_mean_p, "means_gams_p")
-#     save_as_dict(path, med_g_p, path_med_p, "meds_gams_p")
-#     save_as_dict(path, mean_g_r_p, path_mean_p, "means_gams_rand_p")
-#     save_as_dict(path, med_g_r_p, path_med_p, "meds_gams_rand_p")
-#     save_as_dict(path, mean_d_p, path_mean_p, "means_darwin_p")
-#     save_as_dict(path, med_d_p, path_med_p, "meds_darwin_p")
-#     save_as_dict(path, mean_g_f, path_mean_f, "means_gams_f")
-#     save_as_dict(path, mean_g_r_f, path_med_f, "meds_gams_f")
-#     save_as_dict(path, mean_g_f, path_mean_f, "means_gams_rand_f")
-#     save_as_dict(path, mean_g_r_f, path_med_f, "meds_gams_rand_f")
-#     save_as_dict(path, mean_d_f, path_mean_f, "means_darwin_f")
-#     save_as_dict(path, med_d_f, path_med_f, "meds_darwin_f")
-
-
-def save_ratios(
-    path,
-    mean_r_p,
-    med_r_p,
-    mean_r_rand_p,
-    med_r_rand_p,
-    mean_r_f,
-    med_r_f,
-    mean_r_rand_f,
-    med_r_rand_f,
-    path_ratio_p,
-    path_ratio_f,
-):
-    save_as_dict(path, mean_r_p, path_ratio_p, "means_ratios_p")
-    save_as_dict(path, med_r_p, path_ratio_p, "meds_ratios_p")
-    save_as_dict(path, mean_r_rand_p, path_ratio_p, "means_ratios_rand_p")
-    save_as_dict(path, med_r_rand_p, path_ratio_p, "meds_ratios_rand_p")
-    save_as_dict(path, mean_r_f, path_ratio_f, "means_ratios_f")
-    save_as_dict(path, med_r_f, path_ratio_f, "meds_ratios_f")
-    save_as_dict(path, mean_r_rand_f, path_ratio_f, "means_ratios_rand_f")
-    save_as_dict(path, med_r_rand_f, path_ratio_f, "meds_ratios_rand_f")
