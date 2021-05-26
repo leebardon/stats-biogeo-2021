@@ -26,7 +26,8 @@ def apply_cutoff(cut_off, *plankton_sets):
         for funct_group, biomass in plankton.items():
             biomass[biomass < cut_off] = 1.001e-5
         p_sets.append(plankton)
-    return [set[i] for i in range(len(p_sets))]
+        breakpoint()
+    return [p_sets[i] for i in range(len(p_sets))]
 
 
 def fit_gams(*plankton_predictor_pairs):

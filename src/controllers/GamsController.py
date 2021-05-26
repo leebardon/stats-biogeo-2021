@@ -35,10 +35,10 @@ with alive_bar(1) as bar:
     (predictors, predictors_r, predictors_f, predictors_rf,) = TrainGams.get_predictors(
         f"{DATA}/sampled_predictors",
         *[
-            "predictors_X",
-            "rand_predictors_X",
-            "predictors_Xf",
-            "rand_predictors_Xf",
+            "predictors",
+            "predictors_r",
+            "predictors_f",
+            "predictors_rf",
         ],
     )
     bar()
@@ -52,10 +52,10 @@ with alive_bar(2) as bar:
     )
     bar()
     t
-    gams_dict, gams_dict_r = TrainGams.fit_gams(
+    gams, gams_r = TrainGams.fit_gams(
         *[
-            [plankton, predictors],
-            [plankton_r, predictors_r],
+            [plank_cut, predictors],
+            [plank_cut_r, predictors_r],
         ]
     )
     bar()
@@ -63,10 +63,10 @@ with alive_bar(2) as bar:
 
 print("Fitting GAMs on 2079-2100 samples to assess stability of relationships...")
 with alive_bar(2) as bar:
-    gams_dict_f, gams_dict_rf = TrainGams.fit_gams(
+    gams_f, gams_rf = TrainGams.fit_gams(
         *[
-            [plankton_f, predictors_f],
-            [plankton_rf, predictors_rf],
+            [plank_cut_f, predictors_f],
+            [plank_cut_rf, predictors_rf],
         ]
     )
     bar()
@@ -74,74 +74,78 @@ with alive_bar(2) as bar:
     Save.save_gams(
         f"{RESULTS}/fitted_models",
         **{
-            "gams_dict": gams_dict,
-            "gams_dict_r": gams_dict_r,
-            "gams_dict_f": gams_dict_f,
-            "gams_dict_rf": gams_dict_rf,
+            "gams": gams,
+            "gams_r": gams_r,
+            "gams_f": gams_f,
+            "gams_rf": gams_rf,
         },
     )
     bar()
     t
 
 
-# print("Generating partial dependency plots...")
-# with alive_bar(2) as bar:
-#     PartialDepPlots.partial_dependency_plots(
-#         f"{PLOTS}/partial_dep_plots/from_measurements/",
-#         gams_dict,
-#         gams_dict_f,
-#     )
-#     bar()
-#     t
-#     PartialDepPlots.partial_dependency_plots(
-#         f"{PLOTS}/partial_dep_plots/from_random/",
-#         gams_dict_r,
-#         gams_dict_rf,
-#     )
-#     bar()
-#     t
+print("Generating partial dependency plots...")
+with alive_bar(2) as bar:
+    PartialDepPlots.partial_dependency_plots(
+        f"{PLOTS}/partial_dep_plots/from_measurements/",
+        gams,
+        gams_f,
+    )
+    bar()
+    t
+    PartialDepPlots.partial_dependency_plots(
+        f"{PLOTS}/partial_dep_plots/from_random/",
+        gams_r,
+        gams_rf,
+    )
+    bar()
+    t
 
 
 print("Predicting Darwin ocean biogeography from ocean measurements (1987-2008)")
 print("(Have a cup of tea - this could take a while...)")
 with alive_bar(1) as bar:
-    predictions_present = MakePredictions.make_predictions(
-        gams_dict, f"{DATA}/validation_sets/predictors/predictors_oce_X.pkl"
+    predictions = MakePredictions.make_predictions(
+        gams, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
     )
     bar()
     t
+    time.sleep(60)
 
 print("Predicting Darwin ocean biogeography from random samples (1987-2008)")
 with alive_bar(1) as bar:
-    predictions_present_r = MakePredictions.make_predictions(
-        gams_dict_r, f"{DATA}/validation_sets/predictors/predictors_oce_X.pkl"
+    predictions_r = MakePredictions.make_predictions(
+        gams_r, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
     )
     bar()
     t
+    time.sleep(60)
 
 print("Predicting Darwin ocean biogeography from ocean measurements  (2079-2100)")
 with alive_bar(1) as bar:
-    predictions_future = MakePredictions.make_predictions(
-        gams_dict_f, f"{DATA}/validation_sets/predictors/predictors_oce_Xf.pkl"
+    predictions_f = MakePredictions.make_predictions(
+        gams_f, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
     )
     bar()
     t
+    time.sleep(60)
 
 print("Predicting Darwin ocean biogeography from random samples (2079-2100)")
 with alive_bar(2) as bar:
-    predictions_future_r = MakePredictions.make_predictions(
-        gams_dict_rf, f"{DATA}/validation_sets/predictors/predictors_oce_Xf.pkl"
+    predictions_rf = MakePredictions.make_predictions(
+        gams_rf, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
     )
     bar()
     t
+    time.sleep(60)
 
     Save.save_predictions(
         f"{RESULTS}/predictions",
         **{
-            "predictions": predictions_present,
-            "predictions_r": predictions_present_r,
-            "predictions_f": predictions_future,
-            "predictions_rf": predictions_future_r,
+            "predictions": predictions,
+            "predictions_r": predictions_r,
+            "predictions_f": predictions_f,
+            "predictions_rf": predictions_rf,
         },
     )
     bar()

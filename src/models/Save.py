@@ -202,10 +202,10 @@ def save_rsq(
     )
 
 
-def save_summaries(basepath, combined_df, summary, summary_r, summary_f, summary_rf):
-
+def save_summaries(basepath, summary, summary_r, summary_f, summary_rf):
+    # combined_df,
     subdir = check_dir_exists(f"{basepath}/t_summary")
-    combined_df.to_csv(f"{subdir}/summary_all.csv")
+    # combined_df.to_csv(f"{subdir}/summary_all.csv")
     save_stats(
         f"{basepath}",
         "t_summary",

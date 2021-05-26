@@ -53,22 +53,20 @@ with alive_bar(6) as bar:
     )
     bar()
     t
-    predictors_X = TSB.return_predictor_dataset(
-        eco_samp, salinity_oce, sst_oce, par_oce
-    )
+    predictors = TSB.return_predictor_dataset(eco_samp, salinity_oce, sst_oce, par_oce)
     bar()
     t
-    rand_predictors_X = TSB.return_predictor_dataset(
+    predictors_r = TSB.return_predictor_dataset(
         eco_samp_r, salinity_oce, sst_oce, par_oce
     )
     bar()
     t
-    predictors_X_f = TSB.return_predictor_dataset(
+    predictors_f = TSB.return_predictor_dataset(
         eco_samp_f, salinity_oce_f, sst_oce_f, par_oce
     )
     bar()
     t
-    rand_predictors_X = TSB.return_predictor_dataset(
+    predictors_rf = TSB.return_predictor_dataset(
         eco_samp_rf, salinity_oce_f, sst_oce_f, par_oce
     )
     bar()
@@ -76,10 +74,10 @@ with alive_bar(6) as bar:
     Save.save_to_pkl(
         f"{PREDICTORS_TSETS}",
         **{
-            "predictors_X.pkl": predictors_X,
-            "rand_predictors_X.pkl": rand_predictors_X,
-            "predictors_Xf.pkl": predictors_X_f,
-            "rand_predictors_Xf.pkl": rand_predictors_X,
+            "predictors.pkl": predictors,
+            "predictors_r.pkl": predictors_r,
+            "predictors_f.pkl": predictors_f,
+            "predictors_rf.pkl": predictors_rf,
         },
     )
     bar()
