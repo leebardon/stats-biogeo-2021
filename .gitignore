@@ -8,6 +8,7 @@ docs/site/
 /results/all_plots/*
 /results/analysis_output/*
 /results/gams_output/*
+/results/new_plots/*
 
 # vs code
 **/.vscode/

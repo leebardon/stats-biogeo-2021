@@ -18,17 +18,18 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 GeoAxes._pcolormesh_patched = Axes.pcolormesh
 
 
-from ML_Biogeography_2021.models.generate_plots import Maps
+from src.views import Maps
 
 
 base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
-MAP_DATA_SAVE = base_path / "map_plotting_data"
-REL_DIFF_SAVE = base_path / "all_plots" / "relative_diff_maps"
+# MAP_DATA_SAVE = base_path / "map_plotting_data"
+# REL_DIFF_SAVE = base_path / "all_plots" / "relative_diff_maps"
 
 
 def generate_diff_maps(darwin, gams, coords, savepath, maptitle):
     darwin_means, means_coords = Maps.process_and_plot(darwin, coords, mtype=1)
     gams_means, means_coords = Maps.process_and_plot(gams, coords, mtype=1)
+
     for f_group, data in darwin_means.items():
         diffs_df = pd.DataFrame(columns=[f"{f_group}_diffs", "lon", "lat"])
         diffs_df[f"{f_group}_diffs"] = (
@@ -98,7 +99,7 @@ def plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, filename, maptitle):
 
     plt.title(maptitle, fontsize=13)
     plt.savefig(
-        f"{REL_DIFF_SAVE}{savepath}/{filename}.pdf",
+        f"{savepath}/{filename}.pdf",
         format="pdf",
         dpi=1200,
         bbox_inches="tight",

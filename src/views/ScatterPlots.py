@@ -1,46 +1,52 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.image as mpimg
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-import pandas as pd
-import os, sys
-from pathlib import Path
 
-base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
-INNER_PLOT_SAVE = base_path / "all_plots" / "inner_plots"
-SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
+# from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+# import pandas as pd
+# import os, sys
+# from pathlib import Path
 
+# base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
+# INNER_PLOT_SAVE = base_path / "all_plots" / "inner_plots"
+# SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
 
-def generate_plots(gams_predictions, darwin_target, summary_stats, savepath):
-    plot_max = 2223085
-    for i in range(len(summary_stats)):
+# NEED TO REVERT TO PREVIOUS - SUMMARY_STATS REQUIRES FULL TABLE
+def generate_scatter_plots(predictions, darwin, summary_stats, scattersave, innersave):
+    plot_max = len(darwin["Pro"])
+    darwin_negligible = summary_stats[0] * plot_max
+    gams_negligible = summary_stats[1] * plot_max
+    presence_frac = 1 - summary_stats[2]
+
+    for i in range(len(darwin_negligible)):
         plot_inner(
             plot_max,
-            (summary_stats["Darwin < cutoff"][i]) * plot_max,
-            (summary_stats["GAMs < cutoff"][i]) * plot_max,
-            summary_stats["Presence Fraction"][i],
-            savepath,
+            darwin_negligible[i],
+            gams_negligible[i],
+            presence_frac[i],
+            innersave,
             f"inner_{i}",
         )
-    for f_group in gams_predictions:
+
+    for f_group in predictions:
         for i in range(len(f_group)):
             scatter_plot(
-                gams_predictions[f"{f_group}"],
-                darwin_target[f"{f_group}"],
+                predictions[f"{f_group}"],
+                darwin[f"{f_group}"],
                 summary_stats["r-squared"][i],
                 summary_stats["Means Ratios"][i],
                 summary_stats["Medians Ratios"][i],
-                f"{INNER_PLOT_SAVE}{savepath}/inner_{i}.png",
+                f"{innersave}/inner_{i}.png",
                 "Darwin v. GAMs",
                 "GAMs",
                 "Darwin",
-                savepath,
+                scattersave,
                 f"{f_group}",
             )
 
 
 def plot_inner(
-    plot_max, darwin_below_cutoff, gams_below_cutoff, frac, savepath, filename
+    plot_max, darwin_below_cutoff, gams_below_cutoff, frac, innersave, filename
 ):
     fig, ax = plt.subplots(figsize=(2, 2))
     ax.plot([0, plot_max], [0, plot_max], alpha=0)
@@ -110,7 +116,7 @@ def plot_inner(
     ax.set_rasterization_zorder(1)  # to retain png quality
 
     plt.savefig(
-        f"{INNER_PLOT_SAVE}{savepath}/{filename}.png",
+        f"{innersave}/{filename}.png",
         format="png",
         dpi=1200,
         bbox_inches="tight",
@@ -128,7 +134,7 @@ def scatter_plot(
     title,
     xlabel,
     ylabel,
-    savepath,
+    scatterpath,
     filename,
 ):
     x = gams_predictions
@@ -182,7 +188,7 @@ def scatter_plot(
     ax.axis("off")
 
     plt.savefig(
-        f"{SCATTER_SAVE}{savepath}/{filename}.pdf",
+        f"{scattersave}/{filename}.pdf",
         format="pdf",
         dpi=1200,
         bbox_inches="tight",
