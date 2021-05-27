@@ -1,10 +1,12 @@
 import os
 import numpy as np
 import pandas as pd
+import pickle
 import xarray as xr
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.pyplot as plt
+from src.models import Save
 from pathlib import Path
 from matplotlib.axes import Axes
 from cartopy.mpl.geoaxes import GeoAxes
@@ -12,9 +14,25 @@ from cartopy.mpl.gridliner import LATITUDE_FORMATTER
 
 GeoAxes._pcolormesh_patched = Axes.pcolormesh
 
-base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
-MAP_DATA_SAVE = base_path / "map_plotting_data"
-MAP_SAVE = base_path / "all_plots" / "maps"
+basepath = Path(os.path.abspath(__file__)).parents[2]
+MAPDATA = basepath / "data" / "processed"
+
+
+def get_dataset(path):
+    with open(f"{path}", "rb") as handle:
+        dataset = pickle.load(handle)
+    return dataset
+
+
+def get_coords(COORDS):
+    return get_dataset(COORDS)
+
+
+def get_inner(basepath, *paths):
+    datasets = []
+    for path in paths:
+        datasets.append(get_dataset(f"{basepath}/{path}"))
+    return [ds for ds in datasets]
 
 
 def below_cutoff_to_zero(plankton_dict):
@@ -23,20 +41,21 @@ def below_cutoff_to_zero(plankton_dict):
     return plankton_dict
 
 
-def process_and_plot(predictions_dict, coords, savepath="", maptitle="", mtype=0):
+def process_and_plot(data_dict, coords, filepath="", maptitle="", mtype=0):
+
     annual_means = {
-        "proko": 0,
-        "pico": 0,
-        "cocco": 0,
-        "diazo": 0,
-        "diatom": 0,
-        "dino": 0,
-        "zoo": 0,
+        "Pro": 0,
+        "Pico": 0,
+        "Cocco": 0,
+        "Diazo": 0,
+        "Diatom": 0,
+        "Dino": 0,
+        "Zoo": 0,
     }
 
     means_coords = {"lon": 0, "lat": 0}
 
-    for f_group, data in predictions_dict.items():
+    for f_group, data in data_dict.items():
         group_df = pd.DataFrame(columns=[f"{f_group}", "lon", "lat"])
         group_df[f"{f_group}"] = data
         group_df["lon"], group_df["lat"] = (
@@ -45,7 +64,7 @@ def process_and_plot(predictions_dict, coords, savepath="", maptitle="", mtype=0
         )
         means = get_annual_means(group_df, f_group)
         if mtype == 0:
-            pivot_to_plot(means, f_group, savepath, maptitle)
+            pivot_table(means, f_group, filepath, maptitle)
         else:
             annual_means[f"{f_group}"] = means[f"{f_group} annual means"].values
             means_coords["lon"] = means["lon"].values
@@ -64,33 +83,33 @@ def get_annual_means(group_df, f_group):
     return annual_means
 
 
-def pivot_table(means_df, f_group="", savepath="", maptitle="", mtype=0):
+def pivot_table(means_df, f_group="", filepath="", maptitle="", mtype=0):
     annual_means_pv = means_df.pivot(index="lat", columns="lon")
     annual_means_pv = annual_means_pv.droplevel(0, axis=1)
     annual_means_da = create_datarray_object(
-        annual_means_pv, f_group, savepath, maptitle, mtype
+        annual_means_pv, f_group, filepath, maptitle, mtype
     )
     return annual_means_da
 
 
-def create_datarray_object(annual_means_pv, f_group, savepath, maptitle, mtype):
+def create_datarray_object(annual_means_pv, f_group, filepath, maptitle, mtype):
     annual_means_nan_to_zero = annual_means_pv.fillna(0)
     annual_means_da = xr.DataArray(data=annual_means_nan_to_zero)
     if mtype == 0:
-        prep_for_plotting(annual_means_da, f_group, savepath, maptitle)
+        prep_for_plotting(annual_means_da, f_group, filepath, maptitle)
     else:
         return annual_means_da
 
 
-def prep_for_plotting(annual_means_da, f_group, savepath, maptitle):
+def prep_for_plotting(annual_means_da, f_group, filepath, maptitle):
     lat = annual_means_da["lat"].data
     lon = annual_means_da["lon"].data
     biomass = annual_means_da.data
     vmax = np.percentile(biomass, 95)
-    plot_map(lon, lat, biomass, vmax, savepath, f_group, maptitle)
+    plot_map(lon, lat, biomass, vmax, filepath, f_group, maptitle)
 
 
-def plot_map(lon, lat, biomass, vmax, savepath, filename, maptitle):
+def plot_map(lon, lat, biomass, vmax, path, filename, maptitle):
 
     projection = ccrs.PlateCarree(central_longitude=180.0)
     transform = ccrs.PlateCarree()
@@ -129,8 +148,9 @@ def plot_map(lon, lat, biomass, vmax, savepath, filename, maptitle):
     )
 
     plt.title(maptitle, fontsize=13)
+
     plt.savefig(
-        f"{MAP_SAVE}{savepath}/{filename}.pdf",
+        f"{path}/{filename}.pdf",
         format="pdf",
         dpi=1200,
         bbox_inches="tight",
