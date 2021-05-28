@@ -79,6 +79,10 @@ with alive_bar(5) as bar:
         predictions_cut_f,
         predictions_cut_rf,
         darwin_cut_f,
+        cutoff_summary,
+        cutoff_summary_r,
+        cutoff_summary_f,
+        cutoff_summary_rf,
     )
     bar()
     t
@@ -202,10 +206,10 @@ median_ratios_rf = pd.read_pickle(f"{thing}/future/median_ratios_rf.pkl")
 
 print("Producing summary tables...")
 with alive_bar(3) as bar:
-    summary = AnalyseGams.return_summary(
+    summary_stats = AnalyseGams.return_summary(
         cutoff_summary, mean_ratios, median_ratios, rsq, len(darwin_ocean["Pro"])
     )
-    summary_r = AnalyseGams.return_summary(
+    summary_stats_r = AnalyseGams.return_summary(
         cutoff_summary_r,
         mean_ratios_r,
         median_ratios_r,
@@ -214,14 +218,14 @@ with alive_bar(3) as bar:
     )
     bar()
     t
-    summary_f = AnalyseGams.return_summary(
+    summary_stats_f = AnalyseGams.return_summary(
         cutoff_summary_f,
         mean_ratios_f,
         median_ratios_f,
         rsq_f,
         len(darwin_ocean["Pro"]),
     )
-    summary_rf = AnalyseGams.return_summary(
+    summary_stats_rf = AnalyseGams.return_summary(
         cutoff_summary_rf,
         mean_ratios_rf,
         median_ratios_f,
@@ -230,17 +234,18 @@ with alive_bar(3) as bar:
     )
     bar()
     t
-    # combined_df = AnalyseGams.return_combined_df(
-    #     [summary, summary_r, summary_f, summary_rf]
-    # )
+
+    combined_df = AnalyseGams.return_combined_df(
+        [summary_stats, summary_stats_r, summary_stats_f, summary_stats_rf]
+    )
 
     Save.save_summaries(
         ANALYSIS_SAVE,
-        # combined_df,
-        summary,
-        summary_r,
-        summary_f,
-        summary_rf,
+        combined_df,
+        summary_stats,
+        summary_stats_r,
+        summary_stats_f,
+        summary_stats_rf,
     )
     bar()
     t

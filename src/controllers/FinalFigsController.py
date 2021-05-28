@@ -71,7 +71,6 @@ with alive_bar(3) as bar:
     bar()
     t
 
-
 print("Setting all values below cutoff equal to zero...")
 with alive_bar(1) as bar:
     all_plank_dicts = [
@@ -219,12 +218,14 @@ print("Plotting scatter plots (1987-2008)...")
 with alive_bar(2) as bar:
 
     SCATTER_P = Save.check_dir_exists(f"{SCATTER}/present")
+    INNER_P = Save.check_dir_exists(f"{INNER}/present")
 
     ScatterPlots.generate_scatter_plots(
         predictions,
         darwin_ocean,
         summary,
         Save.check_dir_exists(f"{SCATTER_P}/measurements"),
+        Save.check_dir_exists(f"{INNER_P}/measurements"),
     )
     bar()
     t
