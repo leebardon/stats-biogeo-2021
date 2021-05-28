@@ -134,7 +134,7 @@ def scatter_plot(
     title,
     xlabel,
     ylabel,
-    scatterpath,
+    scattersave,
     filename,
 ):
     x = gams_predictions

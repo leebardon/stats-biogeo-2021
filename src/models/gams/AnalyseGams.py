@@ -106,10 +106,11 @@ def calc_variance(data):
 
 def return_summary(cutoffs_df, means_ratios, meds_ratios, rsq, total):
     cols = ["Darwin < cutoff", "GAMs < cutoff", "Either < cutoff"]
-    cutoffs_df["Means Ratios"] = means_ratios
-    cutoffs_df["Medians Ratios"] = meds_ratios
-    cutoffs_df["r-squared"] = [round(r, 2) for r in rsq]
-    return [round((cutoffs_df[c] / total), 2) for c in cols]
+    summary_df = round((cutoffs_df[cols] / total), 2)
+    summary_df["Means Ratios"] = means_ratios
+    summary_df["Medians Ratios"] = meds_ratios
+    summary_df["r-squared"] = [round(r, 2) for r in rsq]
+    return summary_df
 
 
 def return_combined_df(dfs):
