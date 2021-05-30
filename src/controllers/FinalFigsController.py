@@ -85,134 +85,134 @@ with alive_bar(1) as bar:
     bar()
     t
 
-# print("Calculate annual means and plotting maps - Darwin Model Ocean (1987-2008)...")
-# with alive_bar(1) as bar:
+print("Calculate annual means and plotting maps - Darwin Model Ocean (1987-2008)...")
+with alive_bar(1) as bar:
 
-#     MAPS_P = Save.check_dir_exists(f"{MAPS}/present")
+    MAPS_P = Save.check_dir_exists(f"{MAPS}/present")
 
-#     Maps.process_and_plot(
-#         darwin_ocean,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_P}/darwin"),
-#         "Darwin Model Ocean (1987-2008)",
-#     )
-#     bar()
-#     t
+    Maps.process_and_plot(
+        darwin_ocean,
+        coords,
+        Save.check_dir_exists(f"{MAPS_P}/darwin"),
+        "Darwin Model Ocean (1987-2008)",
+    )
+    bar()
+    t
 
-# print(
-#     "Calculate annual means and plotting maps - GAMs Predictions from Ocean Measurements (1987-2008)..."
-# )
-# with alive_bar(1) as bar:
-#     Maps.process_and_plot(
-#         predictions,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_P}/gams_measurements"),
-#         "GAMs from Observations (1987-2008)",
-#     )
-#     bar()
-#     t
+print(
+    "Calculate annual means and plotting maps - GAMs Predictions from Ocean Measurements (1987-2008)..."
+)
+with alive_bar(1) as bar:
+    Maps.process_and_plot(
+        predictions,
+        coords,
+        Save.check_dir_exists(f"{MAPS_P}/gams_measurements"),
+        "GAMs from Observations (1987-2008)",
+    )
+    bar()
+    t
 
-# print(
-#     "Calculate annual means and plotting maps - GAMs Predictions from Random Samples (1987-2008)..."
-# )
-# with alive_bar(1) as bar:
-#     Maps.process_and_plot(
-#         predictions_r,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_P}/gams_random"),
-#         "GAMs from Random Sampling (1987-2008)",
-#     )
-#     bar()
-#     t
+print(
+    "Calculate annual means and plotting maps - GAMs Predictions from Random Samples (1987-2008)..."
+)
+with alive_bar(1) as bar:
+    Maps.process_and_plot(
+        predictions_r,
+        coords,
+        Save.check_dir_exists(f"{MAPS_P}/gams_random"),
+        "GAMs from Random Sampling (1987-2008)",
+    )
+    bar()
+    t
 
 
-# print("Calculate annual means and plotting maps - Darwin Model Ocean (2079-2100)...")
-# with alive_bar(1) as bar:
+print("Calculate annual means and plotting maps - Darwin Model Ocean (2079-2100)...")
+with alive_bar(1) as bar:
 
-#     MAPS_F = Save.check_dir_exists(f"{MAPS}/future")
+    MAPS_F = Save.check_dir_exists(f"{MAPS}/future")
 
-#     Maps.process_and_plot(
-#         darwin_ocean_f,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_F}/darwin"),
-#         "Darwin Model Ocean (2079-2100)",
-#     )
-#     bar()
-#     t
+    Maps.process_and_plot(
+        darwin_ocean_f,
+        coords,
+        Save.check_dir_exists(f"{MAPS_F}/darwin"),
+        "Darwin Model Ocean (2079-2100)",
+    )
+    bar()
+    t
 
-# print(
-#     "Calculate annual means and plotting maps - GAMs Predictions from Ocean Measurements (2079-2100)..."
-# )
-# with alive_bar(1) as bar:
-#     Maps.process_and_plot(
-#         predictions_f,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_F}/gams_measurements"),
-#         "GAMs from Observations (2079-2100)",
-#     )
-#     bar()
-#     t
+print(
+    "Calculate annual means and plotting maps - GAMs Predictions from Ocean Measurements (2079-2100)..."
+)
+with alive_bar(1) as bar:
+    Maps.process_and_plot(
+        predictions_f,
+        coords,
+        Save.check_dir_exists(f"{MAPS_F}/gams_measurements"),
+        "GAMs from Observations (2079-2100)",
+    )
+    bar()
+    t
 
-# print(
-#     "Calculate annual means and plotting maps - GAMs Predictions from Random Sampling (2079-2100)..."
-# )
-# with alive_bar(1) as bar:
-#     Maps.process_and_plot(
-#         predictions_rf,
-#         coords,
-#         Save.check_dir_exists(f"{MAPS_F}/gams_random"),
-#         "GAMs from Random Sampling (2079-2100)",
-#     )
-#     bar()
-#     t
+print(
+    "Calculate annual means and plotting maps - GAMs Predictions from Random Sampling (2079-2100)..."
+)
+with alive_bar(1) as bar:
+    Maps.process_and_plot(
+        predictions_rf,
+        coords,
+        Save.check_dir_exists(f"{MAPS_F}/gams_random"),
+        "GAMs from Random Sampling (2079-2100)",
+    )
+    bar()
+    t
 
-# print("Plotting 1987-2008 Mean Relative Difference Maps (%)...")
-# with alive_bar(2) as bar:
+print("Plotting 1987-2008 Mean Relative Difference Maps (%)...")
+with alive_bar(2) as bar:
 
-#     DIFF_P = Save.check_dir_exists(f"{DIFF}/present")
+    DIFF_P = Save.check_dir_exists(f"{DIFF}/present")
 
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean,
-#         predictions,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_P}/gams"),
-#         "Mean Relative Difference",
-#     )
-#     bar()
-#     t
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean,
-#         predictions_r,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_P}/gams_random"),
-#         "Mean Relative Difference",
-#     )
-#     bar()
-#     t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean,
+        predictions,
+        coords,
+        Save.check_dir_exists(f"{DIFF_P}/gams"),
+        "Mean Relative Difference",
+    )
+    bar()
+    t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean,
+        predictions_r,
+        coords,
+        Save.check_dir_exists(f"{DIFF_P}/gams_random"),
+        "Mean Relative Difference",
+    )
+    bar()
+    t
 
-# print("Plotting 2079-2100 Mean Relative Difference Maps (%)...")
-# with alive_bar(2) as bar:
+print("Plotting 2079-2100 Mean Relative Difference Maps (%)...")
+with alive_bar(2) as bar:
 
-#     DIFF_F = Save.check_dir_exists(f"{DIFF}/future")
+    DIFF_F = Save.check_dir_exists(f"{DIFF}/future")
 
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean_f,
-#         predictions_f,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_F}/gams"),
-#         "Mean Relative Difference",
-#     )
-#     bar()
-#     t
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean_f,
-#         predictions_rf,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_F}/gams_random"),
-#         "Mean Relative Difference",
-#     )
-#     bar()
-#     t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean_f,
+        predictions_f,
+        coords,
+        Save.check_dir_exists(f"{DIFF_F}/gams"),
+        "Mean Relative Difference",
+    )
+    bar()
+    t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean_f,
+        predictions_rf,
+        coords,
+        Save.check_dir_exists(f"{DIFF_F}/gams_random"),
+        "Mean Relative Difference",
+    )
+    bar()
+    t
 
 print("Plotting scatter plots (1987-2008)...")
 with alive_bar(2) as bar:
@@ -226,36 +226,44 @@ with alive_bar(2) as bar:
         summary,
         Save.check_dir_exists(f"{SCATTER_P}/measurements"),
         Save.check_dir_exists(f"{INNER_P}/measurements"),
+        1,
     )
     bar()
     t
-    ScatterPlots.generate_scatter_plots(
-        predictions_r,
-        darwin_ocean,
-        summary_r,
-        Save.check_dir_exists(f"{SCATTER_P}/random"),
-    )
-    bar()
-    t
+#     ScatterPlots.generate_scatter_plots(
+#         predictions_r,
+#         darwin_ocean,
+#         summary_r,
+#         Save.check_dir_exists(f"{SCATTER_P}/random"),
+#         Save.check_dir_exists(f"{INNER_P}/random"),
+#         1,
+#     )
+#     bar()
+#     t
 
-print("Plotting scatter plots (2079-2100)...")
-with alive_bar(2) as bar:
+# print("Plotting scatter plots (2079-2100)...")
+# with alive_bar(2) as bar:
 
-    SCATTER_F = Save.check_dir_exists(f"{SCATTER}/future")
+#     SCATTER_F = Save.check_dir_exists(f"{SCATTER}/future")
+#     INNER_F = Save.check_dir_exists(f"{INNER}/future")
 
-    ScatterPlots.generate_scatter_plots(
-        predictions_f,
-        darwin_ocean_f,
-        summary_f,
-        Save.check_dir_exists(f"{SCATTER_F}/measurements"),
-    )
-    bar()
-    t
-    ScatterPlots.generate_scatter_plots(
-        predictions_rf,
-        darwin_ocean_f,
-        summary_rf,
-        Save.check_dir_exists(f"{SCATTER_F}/random"),
-    )
-    bar()
-    t
+#     ScatterPlots.generate_scatter_plots(
+#         predictions_f,
+#         darwin_ocean_f,
+#         summary_f,
+#         Save.check_dir_exists(f"{SCATTER_F}/measurements"),
+#         Save.check_dir_exists(f"{INNER_F}/measurements"),
+#         2,
+#     )
+#     bar()
+#     t
+#     ScatterPlots.generate_scatter_plots(
+#         predictions_rf,
+#         darwin_ocean_f,
+#         summary_rf,
+#         Save.check_dir_exists(f"{SCATTER_F}/random"),
+#         Save.check_dir_exists(f"{INNER_F}/random"),
+#         2,
+#     )
+#     bar()
+#     t

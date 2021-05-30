@@ -1,6 +1,5 @@
 import os, sys
 import click
-import questionary
 from pathlib import Path
 from subprocess import run
 

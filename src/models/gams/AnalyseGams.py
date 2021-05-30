@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import statistics
 import pickle
 
@@ -23,28 +24,28 @@ def get_targets(path, *darwin_true_values):
     return [darwin_targets[i] for i in range(len(darwin_targets))]
 
 
-def cut_off(gams, darwin, cutoff):
-    gams_presence, darwin_presence, total = [], [], len(darwin["Pro"])
-    gams_absence, darwin_absence, either_below_cutoff = [], [], []
+def pres_abs_summary(gams, darwin, cutoff):
+    gams_present, darwin_present, total = [], [], len(darwin["Pro"])
+    gams_absent, darwin_absent, either_below_cutoff = [], [], []
     for group in F_GROUPS:
-        gams_presence.append(
+        gams_present.append(
             gams[group][(gams[group] >= cutoff) & (darwin[group] >= cutoff)]
         )
-        darwin_presence.append(
+        darwin_present.append(
             darwin[group][(darwin[group] >= cutoff) & (gams[group] >= cutoff)]
         )
-        gams_absence.append(gams[group][(gams[group] < cutoff)])
-        darwin_absence.append(darwin[group][(darwin[group] < cutoff)])
+        gams_absent.append(gams[group][(gams[group] < cutoff)])
+        darwin_absent.append(darwin[group][(darwin[group] < cutoff)])
 
     [
-        either_below_cutoff.append(total - len(gams_presence[i]))
+        either_below_cutoff.append(total - len(gams_present[i]))
         for i in range(len(F_GROUPS))
     ]
 
-    cutoff_summary_df = cutoff_summary(
-        gams_absence, darwin_absence, either_below_cutoff, total
+    pres_abs_summary = cutoff_summary(
+        gams_absent, darwin_absent, either_below_cutoff, total
     )
-    return gams_presence, darwin_presence, cutoff_summary_df
+    return gams_present, darwin_present, pres_abs_summary
 
 
 def cutoff_summary(gams_abs, darwin_abs, either_below, total):
@@ -66,8 +67,8 @@ def cutoff_summary(gams_abs, darwin_abs, either_below, total):
 def mean_and_median(predictions):
     mean_arr, med_arr = [], []
     for f_group in predictions:
-        mean_arr.append(statistics.mean(f_group))
-        med_arr.append(statistics.median(f_group))
+        mean_arr.append(np.mean(f_group))
+        med_arr.append(np.median(f_group))
     return mean_arr, med_arr
 
 
@@ -95,8 +96,8 @@ def calc_rsq(darwin, predictions):
     return 1 - (residuals_var) / (data_var)
 
 
-def calc_residuals(target, predictions):
-    return target - predictions
+def calc_residuals(darwin, predictions):
+    return darwin - predictions
 
 
 def calc_variance(data):
@@ -105,8 +106,9 @@ def calc_variance(data):
 
 
 def return_summary(cutoffs_df, means_ratios, meds_ratios, rsq, total):
-    cols = ["Darwin < cutoff", "GAMs < cutoff", "Either < cutoff"]
+    cols = ["Darwin < cutoff", "GAMs < cutoff"]
     summary_df = round((cutoffs_df[cols] / total), 2)
+    summary_df["Both > cutoff"] = round(1 - (cutoffs_df["Either < cutoff"] / total), 2)
     summary_df["Means Ratios"] = means_ratios
     summary_df["Medians Ratios"] = meds_ratios
     summary_df["r-squared"] = [round(r, 2) for r in rsq]
