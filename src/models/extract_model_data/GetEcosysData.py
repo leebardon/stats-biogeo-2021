@@ -11,11 +11,11 @@ def get_ecosys_surface_data(ecosys_data_path):
     all_surface_data = []
     month = 1
     for nc_file in ecosys_data_path.iterdir():
-        surface_data, col_names = convert_and_extract(nc_file)
+        surface_data, column_names = convert_and_extract(nc_file)
         surface_data["Month"] = month
         month += 1
         all_surface_data.append(surface_data)
-    final_df = build_combined_surface_df(all_surface_data, col_names)
+    final_df = build_combined_surface_df(all_surface_data, column_names)
     return final_df[final_df["pCO2"] != 0]
 
 

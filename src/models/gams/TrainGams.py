@@ -5,6 +5,16 @@ from pygam import LinearGAM, s, f
 
 
 def get_plankton(path, *plankton_sets):
+    """[summary] Returns plankton training sets converted from serialised pickle objects
+    into Pandas dataframes.
+
+    Args:
+        path ([path]): Path to pickled training sets
+        plankton_sets (*[pkl]): Four * pkl objects
+    Returns:
+        [pd.DataFrames]: Two training sets (measurements/random - 1987-2008)
+                         Two of same config. but 2079-2100 (for future PDP's)
+    """
     p_sets = []
     for p_set in plankton_sets:
         with open(f"{path}/{p_set}.pkl", "rb") as handle:
@@ -20,13 +30,12 @@ def get_predictors(path, *filenames):
     return [data[i] for i in range(len(data))]
 
 
-def apply_cutoff(cut_off, *plankton_sets):
+def apply_cutoff(cut_off_val, *plankton_sets):
     p_sets = []
     for plankton in plankton_sets:
         for funct_group, biomass in plankton.items():
-            biomass[biomass < cut_off] = 1.001e-5
+            biomass[biomass < cut_off_val] = cut_off_val
         p_sets.append(plankton)
-        breakpoint()
     return [p_sets[i] for i in range(len(p_sets))]
 
 

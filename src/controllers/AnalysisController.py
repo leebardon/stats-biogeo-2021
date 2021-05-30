@@ -10,9 +10,9 @@ from src.models.gams import AnalyseGams
 from src.models import Save
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
-PREDICTIONS = base_path / "results" / "gams_output" / "predictions"
+PREDICTIONS = base_path / "results_test2" / "gams_output" / "predictions"
 TARGETS = base_path / "data" / "processed" / "validation_sets" / "plankton"
-ANALYSIS_SAVE = base_path / "results" / "analysis_output"
+ANALYSIS_SAVE = base_path / "results_test2" / "analysis_output"
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -51,166 +51,157 @@ print(
     "Applying presence-absence cut-off, calculating false positives and negatives ..."
 )
 with alive_bar(5) as bar:
-    predictions_cut, darwin_cut, cutoff_summary = AnalyseGams.cut_off(
+    gams_cut, darwin_cut, pres_abs_summary = AnalyseGams.pres_abs_summary(
         predictions, darwin_ocean, 1.001e-5
     )
     bar()
     t
-    predictions_cut_r, darwin_cut_r, cutoff_summary_r = AnalyseGams.cut_off(
+    gams_cut_r, darwin_cut_r, pres_abs_summary_r = AnalyseGams.pres_abs_summary(
         predictions_r, darwin_ocean, 1.001e-5
     )
     bar()
     t
-    predictions_cut_f, darwin_cut_f, cutoff_summary_f = AnalyseGams.cut_off(
+    gams_cut_f, darwin_cut_f, pres_abs_summary_f = AnalyseGams.pres_abs_summary(
         predictions_f, darwin_ocean_f, 1.001e-5
     )
     bar()
     t
-    predictions_cut_rf, darwin_cut_rf, cutoff_summary_rf = AnalyseGams.cut_off(
+    gams_cut_rf, darwin_cut_rf, pres_abs_summary_rf = AnalyseGams.pres_abs_summary(
         predictions_rf, darwin_ocean_f, 1.001e-5
     )
     bar()
     t
-    Save.save_with_cutoff_removed(
+
+    Save.save_pres_abs_summary(
         ANALYSIS_SAVE,
-        predictions_cut,
-        predictions_cut_r,
-        darwin_cut,
-        predictions_cut_f,
-        predictions_cut_rf,
-        darwin_cut_f,
-        cutoff_summary,
-        cutoff_summary_r,
-        cutoff_summary_f,
-        cutoff_summary_rf,
+        pres_abs_summary,
+        pres_abs_summary_r,
+        pres_abs_summary_f,
+        pres_abs_summary_rf,
     )
     bar()
     t
 
-# print("Calculating mean and median biomasses for each functional group (1987-2008)...")
-# with alive_bar(3) as bar:
-#     mean_predictions, median_predictions = AnalyseGams.mean_and_median(predictions_cut)
-#     bar()
-#     time.sleep(30)  # to save fans on poor laptop...
-#     mean_predictions_r, median_predictions_r = AnalyseGams.mean_and_median(
-#         predictions_cut_r
-#     )
-#     bar()
-#     t
-#     time.sleep(30)
-#     mean_darwin, median_darwin = AnalyseGams.mean_and_median(darwin_cut)
-#     bar()
-#     t
-#     time.sleep(30)
+print("Calculating mean and median biomasses for each functional group (1987-2008)...")
+with alive_bar(3) as bar:
+    mean_gams, median_gams = AnalyseGams.mean_and_median(gams_cut)
+    bar()
+    time.sleep(60)  # to save fans on poor laptop...
+    mean_gams_r, median_gams_r = AnalyseGams.mean_and_median(gams_cut_r)
+    bar()
+    t
+    time.sleep(60)
+    mean_darwin, median_darwin = AnalyseGams.mean_and_median(darwin_cut)
+    bar()
+    t
+    time.sleep(60)
 
-# print("Calculating mean and median biomasses for each functional group (2079-2100)...")
-# with alive_bar(3) as bar:
-#     mean_predictions_f, median_predictions_f = AnalyseGams.mean_and_median(
-#         predictions_cut_f
-#     )
-#     bar()
-#     time.sleep(30)
-#     mean_predictions_rf, median_predictions_rf = AnalyseGams.mean_and_median(
-#         predictions_cut_rf
-#     )
-#     bar()
-#     time.sleep(30)
-#     mean_darwin_f, median_darwin_f = AnalyseGams.mean_and_median(darwin_cut_f)
-#     bar()
-#     time.sleep(30)
+print("Calculating mean and median biomasses for each functional group (2079-2100)...")
+with alive_bar(3) as bar:
+    mean_gams_f, median_gams_f = AnalyseGams.mean_and_median(gams_cut_f)
+    bar()
+    time.sleep(60)
+    mean_gams_rf, median_gams_rf = AnalyseGams.mean_and_median(gams_cut_rf)
+    bar()
+    time.sleep(60)
+    mean_darwin_f, median_darwin_f = AnalyseGams.mean_and_median(darwin_cut_f)
+    bar()
+    time.sleep(60)
+    Save.save_means_and_medians(
+        ANALYSIS_SAVE,
+        mean_gams,
+        median_gams,
+        mean_gams_r,
+        median_gams_r,
+        mean_darwin,
+        median_darwin,
+        mean_gams_f,
+        median_gams_f,
+        mean_gams_rf,
+        median_gams_rf,
+        mean_darwin_f,
+        median_darwin_f,
+    )
 
-#     Save.save_means_and_medians(
-#         ANALYSIS_SAVE,
-#         mean_predictions,
-#         median_predictions,
-#         mean_predictions_r,
-#         median_predictions_r,
-#         mean_darwin,
-#         median_darwin,
-#         mean_predictions_f,
-#         median_predictions_f,
-#         mean_predictions_rf,
-#         median_predictions_rf,
-#         mean_darwin_f,
-#         median_darwin_f,
-#     )
+# thing = "/Users/leebardon/Dropbox/Development/stats_biogeo_2021/results_test2/analysis_output/stats/"
+# mean_gams = pd.read_pickle(f"{thing}/present/mean_gams.pkl")
+# median_gams = pd.read_pickle(f"{thing}/present/median_gams.pkl")
+# mean_gams_r = pd.read_pickle(f"{thing}/present/mean_gams_r.pkl")
+# median_gams_r = pd.read_pickle(f"{thing}/present/median_gams_r.pkl")
+# mean_darwin = pd.read_pickle(f"{thing}/present/mean_darwin.pkl")
+# median_darwin = pd.read_pickle(f"{thing}/present/median_darwin.pkl")
+# mean_gams_f = pd.read_pickle(f"{thing}/future/mean_gams_f.pkl")
+# median_gams_f = pd.read_pickle(f"{thing}/future/median_gams_f.pkl")
+# mean_gams_rf = pd.read_pickle(f"{thing}/future/mean_gams_rf.pkl")
+# median_gams_rf = pd.read_pickle(f"{thing}/future/median_gams_rf.pkl")
+# mean_darwin_f = pd.read_pickle(f"{thing}/future/mean_darwin_f.pkl")
+# median_darwin_f = pd.read_pickle(f"{thing}/future/median_darwin_f.pkl")
 
+print(
+    "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (1987-2008)..."
+)
+with alive_bar(2) as bar:
+    mean_ratios, median_ratios = AnalyseGams.calc_ratios(
+        mean_gams, median_gams, mean_darwin, median_darwin
+    )
+    bar()
+    t
+    mean_ratios_r, median_ratios_r = AnalyseGams.calc_ratios(
+        mean_gams_r, median_gams_r, mean_darwin, median_darwin
+    )
+    bar()
+    t
 
-# print(
-#     "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (1987-2008)..."
-# )
-# with alive_bar(2) as bar:
-#     mean_ratios, median_ratios = AnalyseGams.calc_ratios(
-#         mean_predictions, median_predictions, mean_darwin, median_darwin
-#     )
-#     bar()
-#     t
-#     mean_ratios_r, median_ratios_r = AnalyseGams.calc_ratios(
-#         mean_predictions_r, median_predictions_r, mean_darwin, median_darwin
-#     )
-#     bar()
-#     t
-
-# print(
-#     "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (2079-2100)..."
-# )
-# with alive_bar(3) as bar:
-#     mean_ratios_f, median_ratios_f = AnalyseGams.calc_ratios(
-#         mean_predictions_f, median_predictions_f, mean_darwin_f, median_darwin_f
-#     )
-#     bar()
-#     t
-#     mean_ratios_rf, median_ratios_rf = AnalyseGams.calc_ratios(
-#         mean_predictions_rf, median_predictions_rf, mean_darwin_f, median_darwin_f
-#     )
-#     bar()
-#     t
-#     Save.save_ratios(
-#         ANALYSIS_SAVE,
-#         mean_ratios,
-#         median_ratios,
-#         mean_ratios_r,
-#         median_ratios_r,
-#         mean_ratios_f,
-#         median_ratios_f,
-#         mean_ratios_rf,
-#         median_ratios_rf,
-#     )
-#     bar()
-#     t
+print(
+    "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (2079-2100)..."
+)
+with alive_bar(3) as bar:
+    mean_ratios_f, median_ratios_f = AnalyseGams.calc_ratios(
+        mean_gams_f, median_gams_f, mean_darwin_f, median_darwin_f
+    )
+    bar()
+    t
+    mean_ratios_rf, median_ratios_rf = AnalyseGams.calc_ratios(
+        mean_gams_rf, median_gams_rf, mean_darwin_f, median_darwin_f
+    )
+    bar()
+    t
+    Save.save_ratios(
+        ANALYSIS_SAVE,
+        mean_ratios,
+        median_ratios,
+        mean_ratios_r,
+        median_ratios_r,
+        mean_ratios_f,
+        median_ratios_f,
+        mean_ratios_rf,
+        median_ratios_rf,
+    )
+    bar()
+    t
 
 
 print("Calculating R^2 values...")
 with alive_bar(2) as bar:
-    rsq = AnalyseGams.r_squared(darwin_cut, predictions_cut)
-    rsq_r = AnalyseGams.r_squared(darwin_cut_r, predictions_cut_r)
+    rsq = AnalyseGams.r_squared(darwin_cut, gams_cut)
+    rsq_r = AnalyseGams.r_squared(darwin_cut_r, gams_cut_r)
     bar()
     t
-    rsq_f = AnalyseGams.r_squared(darwin_cut_f, predictions_cut_f)
-    rsq_rf = AnalyseGams.r_squared(darwin_cut_rf, predictions_cut_rf)
+    rsq_f = AnalyseGams.r_squared(darwin_cut_f, gams_cut_f)
+    rsq_rf = AnalyseGams.r_squared(darwin_cut_rf, gams_cut_rf)
     bar()
     t
 
     Save.save_rsq(ANALYSIS_SAVE, rsq, rsq_r, rsq_f, rsq_rf)
 
-thing = "/Users/leebardon/Dropbox/Development/stats_biogeo_2021/results/analysis_output/t_ratios/"
-mean_ratios = pd.read_pickle(f"{thing}/present/mean_ratios.pkl")
-median_ratios = pd.read_pickle(f"{thing}/present/median_ratios.pkl")
-mean_ratios_r = pd.read_pickle(f"{thing}/present/mean_ratios_r.pkl")
-median_ratios_r = pd.read_pickle(f"{thing}/present/median_ratios_r.pkl")
-mean_ratios_f = pd.read_pickle(f"{thing}/future/mean_ratios_f.pkl")
-median_ratios_f = pd.read_pickle(f"{thing}/future/median_ratios_f.pkl")
-mean_ratios_rf = pd.read_pickle(f"{thing}/future/mean_ratios_rf.pkl")
-median_ratios_rf = pd.read_pickle(f"{thing}/future/median_ratios_rf.pkl")
-
 
 print("Producing summary tables...")
 with alive_bar(3) as bar:
     summary_stats = AnalyseGams.return_summary(
-        cutoff_summary, mean_ratios, median_ratios, rsq, len(darwin_ocean["Pro"])
+        pres_abs_summary, mean_ratios, median_ratios, rsq, len(darwin_ocean["Pro"])
     )
     summary_stats_r = AnalyseGams.return_summary(
-        cutoff_summary_r,
+        pres_abs_summary_r,
         mean_ratios_r,
         median_ratios_r,
         rsq_r,
@@ -219,17 +210,17 @@ with alive_bar(3) as bar:
     bar()
     t
     summary_stats_f = AnalyseGams.return_summary(
-        cutoff_summary_f,
+        pres_abs_summary_f,
         mean_ratios_f,
         median_ratios_f,
         rsq_f,
         len(darwin_ocean["Pro"]),
     )
     summary_stats_rf = AnalyseGams.return_summary(
-        cutoff_summary_rf,
+        pres_abs_summary_rf,
         mean_ratios_rf,
-        median_ratios_f,
-        rsq_f,
+        median_ratios_rf,
+        rsq_rf,
         len(darwin_ocean["Pro"]),
     )
     bar()

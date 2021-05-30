@@ -18,7 +18,7 @@ from src.models.sample_measurements import (
 base_path = Path(os.path.abspath(__file__)).parents[2]
 OCEAN_OBVS = base_path / "data" / "raw" / "ocean_observations.netcdf"
 GRID_CELL = base_path / "data" / "raw" / "grid_igsm.nc"
-SAVEPATH = base_path / "data" / "processed"
+SAVEPATH = base_path / "data" / "test_processed"
 PLOTPATH = base_path / "results" / "all_plots" / "sample_distributions"
 
 # CREATE OUTPUT FILES

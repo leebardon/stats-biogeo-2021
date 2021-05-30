@@ -15,8 +15,8 @@ base_path = Path(os.path.abspath(__file__)).parents[2]
 
 SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
 OCEAN = base_path / "data" / "processed" / "model_ocean_data"
-TARGETS_TSETS = base_path / "data" / "processed" / "sampled_plankton"
-PREDICTORS_TSETS = base_path / "data" / "processed" / "sampled_predictors"
+TARGETS_TSETS = base_path / "data" / "test_processed" / "sampled_plankton"
+PREDICTORS_TSETS = base_path / "data" / "test_processed" / "sampled_predictors"
 VSETS = base_path / "data" / "processed" / "validation_sets"
 
 
@@ -71,15 +71,16 @@ with alive_bar(6) as bar:
     )
     bar()
     t
-    Save.save_to_pkl(
-        f"{PREDICTORS_TSETS}",
-        **{
-            "predictors.pkl": predictors,
-            "predictors_r.pkl": predictors_r,
-            "predictors_f.pkl": predictors_f,
-            "predictors_rf.pkl": predictors_rf,
-        },
-    )
+
+    # Save.save_to_pkl(
+    #     Save.check_dir_exists(f"{PREDICTORS_TSETS}"),
+    #     **{
+    #         "predictors.pkl": predictors,
+    #         "predictors_r.pkl": predictors_r,
+    #         "predictors_f.pkl": predictors_f,
+    #         "predictors_rf.pkl": predictors_rf,
+    #     },
+    # )
     bar()
     t
 
@@ -114,15 +115,15 @@ with alive_bar(2) as bar:
     pl_tsets_f = [pro_f, pico_f, cocco_f, diazo_f, diatom_f, dino_f, zoo_f]
     pl_tsets_rf = [pro_rf, pico_rf, cocco_rf, diazo_rf, diatom_rf, dino_rf, zoo_rf]
 
-    Save.plankton_dicts(
-        f"{TARGETS_TSETS}",
-        **{
-            "plankton": pl_tsets,
-            "plankton_r": pl_tsets_r,
-            "plankton_f": pl_tsets_f,
-            "plankton_rf": pl_tsets_rf,
-        },
-    )
+    # Save.plankton_dicts(
+    #     f"{TARGETS_TSETS}",
+    #     **{
+    #         "plankton": pl_tsets,
+    #         "plankton_r": pl_tsets_r,
+    #         "plankton_f": pl_tsets_f,
+    #         "plankton_rf": pl_tsets_rf,
+    #     },
+    # )
     bar()
     t
 
@@ -160,13 +161,13 @@ with alive_bar(3) as bar:
         zoo_oce_f,
     ]
 
-    Save.plankton_dicts(
-        f"{VSETS}",
-        **{
-            "plankton/plankton_oce.pkl": pl_oce,
-            "plankton/plankton_oce_f.pkl": pl_oce_f,
-        },
-    )
+    # Save.plankton_dicts(
+    #     f"{VSETS}",
+    #     **{
+    #         "plankton/plankton_oce.pkl": pl_oce,
+    #         "plankton/plankton_oce_f.pkl": pl_oce_f,
+    #     },
+    # )
     bar()
     t
 

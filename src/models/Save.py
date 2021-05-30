@@ -62,49 +62,23 @@ def save_stats(subdir, folder, **stats_dicts):
             pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def save_with_cutoff_removed(
+def save_pres_abs_summary(
     basepath,
-    predictions,
-    predictions_r,
-    darwin,
-    predictions_f,
-    predictions_rf,
-    darwin_f,
-    cutoff_summary,
-    cutoff_summary_r,
-    cutoff_summary_f,
-    cutoff_summary_rf,
+    pres_abs_summary,
+    pres_abs_summary_r,
+    pres_abs_summary_f,
+    pres_abs_summary_rf,
 ):
-    subdir = check_dir_exists(f"{basepath}/t_cutoff")
-    check_dir_exists(f"{subdir}/present")
-    check_dir_exists(f"{subdir}/future")
+    subdir = check_dir_exists(f"{basepath}/presence_absence")
     check_dir_exists(f"{subdir}/summaries")
-    save_stats(
-        f"{subdir}",
-        "present",
-        **{
-            "predictions_cut": predictions,
-            "predictions_cut_r": predictions_r,
-            "darwin_cut": darwin,
-        },
-    )
-    save_stats(
-        f"{subdir}",
-        "future",
-        **{
-            "predictions_cut_f": predictions_f,
-            "predictions_cut_rf": predictions_rf,
-            "darwin_cut_f": darwin_f,
-        },
-    )
     save_stats(
         f"{subdir}",
         "summaries",
         **{
-            "cutoff_summary": cutoff_summary,
-            "cutoff_summary_r": cutoff_summary_r,
-            "cutoff_summary_f": cutoff_summary_f,
-            "cutoff_summary_rf": cutoff_summary_rf,
+            "pres_abs_summary": pres_abs_summary,
+            "pres_abs_summary_r": pres_abs_summary_r,
+            "pres_abs_summary_f": pres_abs_summary_f,
+            "pres_abs_summary_rf": pres_abs_summary_rf,
         },
     )
 
@@ -124,7 +98,7 @@ def save_means_and_medians(
     mean_darwin_f,
     median_darwin_f,
 ):
-    subdir = check_dir_exists(f"{basepath}/t_stats")
+    subdir = check_dir_exists(f"{basepath}/stats")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
@@ -164,7 +138,7 @@ def save_ratios(
     mean_ratios_rf,
     median_ratios_rf,
 ):
-    subdir = check_dir_exists(f"{basepath}/t_ratios")
+    subdir = check_dir_exists(f"{basepath}/ratios")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
@@ -196,7 +170,7 @@ def save_rsq(
     rsq_f,
     rsq_rf,
 ):
-    subdir = check_dir_exists(f"{basepath}/t_rsquared")
+    subdir = check_dir_exists(f"{basepath}/rsquared")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
@@ -218,11 +192,11 @@ def save_rsq(
 
 
 def save_summaries(basepath, combined_df, summary, summary_r, summary_f, summary_rf):
-    subdir = check_dir_exists(f"{basepath}/t_summary")
+    subdir = check_dir_exists(f"{basepath}/summary")
     combined_df.to_csv(f"{subdir}/summary_all.csv")
     save_stats(
         f"{basepath}",
-        "t_summary",
+        "summary",
         **{
             "summary": summary,
             "summary_r": summary_r,

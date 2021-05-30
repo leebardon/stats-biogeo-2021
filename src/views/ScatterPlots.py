@@ -12,51 +12,55 @@ import matplotlib.image as mpimg
 # SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
 
 # NEED TO REVERT TO PREVIOUS - SUMMARY_STATS REQUIRES FULL TABLE
-def generate_scatter_plots(predictions, darwin, summary_stats, scattersave, innersave):
+def generate_scatter_plots(predictions, darwin, stats, scattersave, innersave, colours):
     plot_max = len(darwin["Pro"])
-    darwin_negligible = summary_stats[0] * plot_max
-    gams_negligible = summary_stats[1] * plot_max
-    presence_frac = 1 - summary_stats[2]
 
-    for i in range(len(darwin_negligible)):
+    for i in range(len(stats)):
         plot_inner(
             plot_max,
-            darwin_negligible[i],
-            gams_negligible[i],
-            presence_frac[i],
+            (stats["Darwin < cutoff"][i]) * plot_max,
+            (stats["GAMs < cutoff"][i]) * plot_max,
+            stats["Both > cutoff"][i],
             innersave,
             f"inner_{i}",
         )
 
-    for f_group in predictions:
-        for i in range(len(f_group)):
-            scatter_plot(
-                predictions[f"{f_group}"],
-                darwin[f"{f_group}"],
-                summary_stats["r-squared"][i],
-                summary_stats["Means Ratios"][i],
-                summary_stats["Medians Ratios"][i],
-                f"{innersave}/inner_{i}.png",
-                "Darwin v. GAMs",
-                "GAMs",
-                "Darwin",
-                scattersave,
-                f"{f_group}",
-            )
+    f_groups = {
+        0: "Pro",
+        1: "Pico",
+        2: "Cocco",
+        3: "Diazo",
+        4: "Diatom",
+        5: "Dino",
+        6: "Zoo",
+    }
+    for j, f_group in f_groups.items():
+        scatter_plot(
+            predictions[f"{f_group}"],
+            darwin[f"{f_group}"],
+            stats["r-squared"][j],
+            stats["Means Ratios"][j],
+            stats["Medians Ratios"][j],
+            f"{innersave}/inner_{j}.png",
+            "Darwin vs. GAMs",
+            "GAMs",
+            "Darwin",
+            scattersave,
+            f"{f_group}",
+            colours,
+        )
 
 
-def plot_inner(
-    plot_max, darwin_below_cutoff, gams_below_cutoff, frac, innersave, filename
-):
+def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, filename):
     fig, ax = plt.subplots(figsize=(2, 2))
-    ax.plot([0, plot_max], [0, plot_max], alpha=0)
+    ax.plot([0, pmax], [0, pmax], alpha=0)
 
     # darwin below cutoff - left red
     ax.add_patch(
         patches.Rectangle(
             (0, 0),  # origin
             darwin_below_cutoff,  # width
-            plot_max,  # height
+            pmax,  # height
             facecolor="red",
             alpha=0.7,
             fill=True,
@@ -65,10 +69,10 @@ def plot_inner(
     # gams below cutoff - bottom red
     ax.add_patch(
         patches.Rectangle(
-            (0, 0), plot_max, gams_below_cutoff, facecolor="red", alpha=0.7, fill=True
+            (0, 0), pmax, gams_below_cutoff, facecolor="red", alpha=0.7, fill=True
         )
     )
-    # Both below cutoff
+    # both below cutoff
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
@@ -78,27 +82,27 @@ def plot_inner(
             fill=True,
         )
     )
-    # Both above cutoff
+    # both above cutoff
     ax.add_patch(
         patches.Rectangle(
             (darwin_below_cutoff, gams_below_cutoff),
-            plot_max,
-            plot_max,
+            pmax,
+            pmax,
             facecolor="green",
             alpha=1.0,
             fill=True,
         )
     )
-    # Green area text
+    # green area text
     ax.text(
-        0.25 * (darwin_below_cutoff + plot_max),
-        0.45 * (gams_below_cutoff + plot_max),
+        0.25 * (darwin_below_cutoff + pmax),
+        0.45 * (gams_below_cutoff + pmax),
         round(frac, 2),
         fontsize=26,
         fontweight="bold",
         color="white",
     )
-    # Overlap rectangle
+    # overlap rectangle
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
@@ -111,8 +115,8 @@ def plot_inner(
     plt.tick_params(
         bottom=False, top=False, left=False, labelbottom=False, labelleft=False
     )
-    ax.set_xlim(0, plot_max)
-    ax.set_ylim(0, plot_max)
+    ax.set_xlim(0, pmax)
+    ax.set_ylim(0, pmax)
     ax.set_rasterization_zorder(1)  # to retain png quality
 
     plt.savefig(
@@ -136,7 +140,9 @@ def scatter_plot(
     ylabel,
     scattersave,
     filename,
+    colours,
 ):
+
     x = gams_predictions
     y = darwin_target
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -172,12 +178,16 @@ def scatter_plot(
         c="navy",
         linewidth=2,
     )
-    plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Greens)
+    if colours == 1:
+        plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Greens)
+    else:
+        plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Reds)
+
     plt.colorbar(
         orientation="vertical",
         fraction=0.11,
         pad=0.03,
-        label="( $\mathregular{mmol\ C/m^3}$ )",
+        label="$log_{10}(N)$",
     )
 
     # Upper left image     CHECK FILE LOCATION
