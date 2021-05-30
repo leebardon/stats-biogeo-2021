@@ -10,9 +10,9 @@ from src.models.gams import AnalyseGams
 from src.models import Save
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
-PREDICTIONS = base_path / "results_test2" / "gams_output" / "predictions"
+PREDICTIONS = base_path / "results" / "gams_output" / "predictions"
 TARGETS = base_path / "data" / "processed" / "validation_sets" / "plankton"
-ANALYSIS_SAVE = base_path / "results_test2" / "analysis_output"
+ANALYSIS_SAVE = base_path / "results" / "analysis_output"
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
