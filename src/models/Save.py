@@ -98,7 +98,8 @@ def save_means_and_medians(
     mean_darwin_f,
     median_darwin_f,
 ):
-    subdir = check_dir_exists(f"{basepath}/stats")
+    statsDir = check_dir_exists(f"{basepath}/stats")
+    subdir = check_dir_exists(f"{statsDir}/mean_med")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
@@ -138,7 +139,8 @@ def save_ratios(
     mean_ratios_rf,
     median_ratios_rf,
 ):
-    subdir = check_dir_exists(f"{basepath}/ratios")
+    statsDir = check_dir_exists(f"{basepath}/stats")
+    subdir = check_dir_exists(f"{statsDir}/ratios")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
@@ -170,7 +172,8 @@ def save_rsq(
     rsq_f,
     rsq_rf,
 ):
-    subdir = check_dir_exists(f"{basepath}/rsquared")
+    statsDir = check_dir_exists(f"{basepath}/stats")
+    subdir = check_dir_exists(f"{statsDir}/rsquared")
     check_dir_exists(f"{subdir}/present")
     check_dir_exists(f"{subdir}/future")
     save_stats(
