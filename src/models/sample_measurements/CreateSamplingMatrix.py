@@ -2,8 +2,6 @@ import numpy as np
 import os
 from random import randint
 
-SEED = 2021_1
-
 
 def column_coordinates(ocean_df):
     X = ocean_df["Longitude"][:]
@@ -54,9 +52,10 @@ def sampling_matrix(I, X, Y, T, x, y):
     return I
 
 
-def random_matrix(Ir):
+def random_matrix(SEED, num):
+    Ir = np.zeros(shape=(144, 90, 265))
     rng = np.random.default_rng(SEED)
-    for _ in range(10000):
+    for _ in range(num):
         rx = rng.integers(low=0, high=144)
         ry = rng.integers(low=0, high=90)
         rt = rng.integers(low=0, high=264)

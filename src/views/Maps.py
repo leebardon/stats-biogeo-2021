@@ -35,9 +35,9 @@ def get_inner(basepath, *paths):
     return [ds for ds in datasets]
 
 
-def below_cutoff_to_zero(plankton_dict):
+def below_cutoff_to_cutoff(plankton_dict):
     for group, data in plankton_dict.items():
-        data[data < 1.001e-5] = 0
+        data[data < 1.001e-5] = 1.001e-5
     return plankton_dict
 
 

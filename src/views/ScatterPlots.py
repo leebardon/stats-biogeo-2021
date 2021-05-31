@@ -172,15 +172,11 @@ def scatter_plot(
     ax.set_ylabel(ylabel, fontsize=11)
     ax.set_title(title, fontsize=15)
 
-    ax.plot(
-        [0, max(gams_predictions)],
-        [0, max(darwin_target)],
-        c="navy",
-        linewidth=2,
-    )
     if colours == 1:
+        ax.plot(x, x, c="red", linewidth=2)
         plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Greens)
     else:
+        ax.plot(x, x, c="navy", linewidth=2)
         plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Reds)
 
     plt.colorbar(
