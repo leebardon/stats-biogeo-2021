@@ -4,7 +4,7 @@ docs/site/
 /data/imported/*
 /data/interim/*
 /data/processed/*
-/data/processed_test2/*
+/data/old_processed/*
 /data/raw/*
 /old_results/all_plots/*
 /old_results/analysis_output/*
@@ -12,9 +12,9 @@ docs/site/
 /results_test1/all_plots/*
 /results_test1/analysis_output/*
 /results_test1/gams_output/*
-/results_test2/all_plots/*
-/results_test2/analysis_output/*
-/results_test2/gams_output/*
+/results/all_plots/*
+/results/analysis_output/*
+/results/gams_output/*
 
 
 # vs code
