@@ -4,6 +4,7 @@ docs/site/
 /data/imported/*
 /data/interim/*
 /data/processed/*
+/data/processed_test2/*
 /data/raw/*
 /old_results/all_plots/*
 /old_results/analysis_output/*

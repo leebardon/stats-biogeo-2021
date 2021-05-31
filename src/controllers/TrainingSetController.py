@@ -14,9 +14,9 @@ from src.models.build_training_sets import TrainingSetBuilder as TSB
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
 SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
-OCEAN = base_path / "data" / "processed" / "model_ocean_data"
-TARGETS_TSETS = base_path / "data" / "test_processed" / "sampled_plankton"
-PREDICTORS_TSETS = base_path / "data" / "test_processed" / "sampled_predictors"
+OCEAN = base_path / "data" / "processed_test2" / "model_ocean_data"
+TARGETS_TSETS = base_path / "data" / "processed_test2" / "sampled_plankton"
+PREDICTORS_TSETS = base_path / "data" / "processed_test2" / "sampled_predictors"
 VSETS = base_path / "data" / "processed" / "validation_sets"
 
 
@@ -24,8 +24,8 @@ config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(1)
 
 
-print("Building predictor variable training sets...")
-with alive_bar(6) as bar:
+print("Obtaining sampled ecosystem and ocean physics data ...")
+with alive_bar(2) as bar:
     eco_samp, eco_samp_r, eco_samp_f, eco_samp_rf = TSB.get_data(
         f"{SAMPLES}",
         *[
@@ -35,6 +35,17 @@ with alive_bar(6) as bar:
             "rand_eco_samp_f.pkl",
         ],
     )
+    r2_samp, r3_samp, r2_samp_f, r3_samp_f = TSB.get_data(
+        f"{SAMPLES}",
+        *[
+            "r2_samp.pkl",
+            "r3_samp.pkl",
+            "r2_samp_f.pkl",
+            "r3_samp_f.pkl",
+        ],
+    )
+    bar()
+    t
     salinity_oce, sst_oce, par_oce = TSB.get_data(
         f"{OCEAN}/present",
         *[
@@ -53,6 +64,9 @@ with alive_bar(6) as bar:
     )
     bar()
     t
+
+print("Building predictor variable training sets (primary) ...")
+with alive_bar(2) as bar:
     predictors = TSB.return_predictor_dataset(eco_samp, salinity_oce, sst_oce, par_oce)
     bar()
     t
@@ -71,18 +85,51 @@ with alive_bar(6) as bar:
     )
     bar()
     t
-
-    # Save.save_to_pkl(
-    #     Save.check_dir_exists(f"{PREDICTORS_TSETS}"),
-    #     **{
-    #         "predictors.pkl": predictors,
-    #         "predictors_r.pkl": predictors_r,
-    #         "predictors_f.pkl": predictors_f,
-    #         "predictors_rf.pkl": predictors_rf,
-    #     },
-    # )
+    Save.save_to_pkl(
+        Save.check_dir_exists(f"{PREDICTORS_TSETS}"),
+        **{
+            "predictors.pkl": predictors,
+            "predictors_r.pkl": predictors_r,
+            "predictors_f.pkl": predictors_f,
+            "predictors_rf.pkl": predictors_rf,
+        },
+    )
     bar()
     t
+
+print(
+    "Building predictor variable training sets (using larger randomly-sampled sets) ..."
+)
+with alive_bar(2) as bar:
+    r2_predictors = TSB.return_predictor_dataset(
+        r2_samp, salinity_oce, sst_oce, par_oce
+    )
+    bar()
+    t
+    r3_predictors = TSB.return_predictor_dataset(
+        r3_samp, salinity_oce, sst_oce, par_oce
+    )
+    bar()
+    t
+    r2_predictors_f = TSB.return_predictor_dataset(
+        r2_samp_f, salinity_oce_f, sst_oce_f, par_oce
+    )
+    bar()
+    t
+    r3_predictors_f = TSB.return_predictor_dataset(
+        r3_samp_f, salinity_oce_f, sst_oce_f, par_oce
+    )
+    bar()
+    t
+    Save.save_to_pkl(
+        Save.check_dir_exists(f"{PREDICTORS_TSETS}"),
+        **{
+            "r2_predictors.pkl": r2_predictors,
+            "r3_predictors.pkl": r3_predictors,
+            "r2_predictors_f.pkl": r2_predictors_f,
+            "r3_predictors_f.pkl": r3_predictors_f,
+        },
+    )
 
 print("Building training sets for plankton functional groups...")
 with alive_bar(2) as bar:
@@ -115,17 +162,74 @@ with alive_bar(2) as bar:
     pl_tsets_f = [pro_f, pico_f, cocco_f, diazo_f, diatom_f, dino_f, zoo_f]
     pl_tsets_rf = [pro_rf, pico_rf, cocco_rf, diazo_rf, diatom_rf, dino_rf, zoo_rf]
 
-    # Save.plankton_dicts(
-    #     f"{TARGETS_TSETS}",
-    #     **{
-    #         "plankton": pl_tsets,
-    #         "plankton_r": pl_tsets_r,
-    #         "plankton_f": pl_tsets_f,
-    #         "plankton_rf": pl_tsets_rf,
-    #     },
-    # )
+    Save.plankton_dicts(
+        f"{TARGETS_TSETS}",
+        **{
+            "plankton": pl_tsets,
+            "plankton_r": pl_tsets_r,
+            "plankton_f": pl_tsets_f,
+            "plankton_rf": pl_tsets_rf,
+        },
+    )
     bar()
     t
+
+print("Building large test random sets for plankton functional groups...")
+with alive_bar(2) as bar:
+    r2_pro, r3_pro, r2_pro_f, r3_pro_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, 21, 22
+    )
+    r2_pico, r3_pico, r2_pico_f, r3_pico_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, 23, 24
+    )
+    r2_cocco, r3_cocco, r2_cocco_f, r3_cocco_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, *np.arange(25, 30)
+    )
+    r2_diazo, r3_diazo, r2_diazo_f, r3_diazo_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, *np.arange(30, 35)
+    )
+    r2_diatom, r3_diatom, r2_diatom_f, r3_diatom_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, *np.arange(35, 46)
+    )
+    r2_dino, r3_dino, r2_dino_f, r3_dino_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, *np.arange(46, 56)
+    )
+    r2_zoo, r3_zoo, r2_zoo_f, r3_zoo_f = TSB.group_plankton(
+        r2_samp, r3_samp, r2_samp_f, r3_samp_f, *np.arange(56, 72)
+    )
+    bar()
+    t
+
+    r2_tsets = [r2_pro, r2_pico, r2_cocco, r2_diazo, r2_diatom, r2_dino, r2_zoo]
+    r3_tsets = [r3_pro, r3_pico, r3_cocco, r3_diazo, r3_diatom, r3_dino, r3_zoo]
+    r2_tsets_f = [
+        r2_pro_f,
+        r2_pico_f,
+        r2_cocco_f,
+        r2_diazo_f,
+        r2_diatom_f,
+        r2_dino_f,
+        r2_zoo_f,
+    ]
+    r3_tsets_f = [
+        r3_pro_f,
+        r3_pico_f,
+        r3_cocco_f,
+        r3_diazo_f,
+        r3_diatom_f,
+        r3_dino_f,
+        r3_zoo_f,
+    ]
+
+    Save.plankton_dicts(
+        f"{TARGETS_TSETS}",
+        **{
+            "r2_plankton": r2_tsets,
+            "r3_plankton": r3_tsets,
+            "r2_plankton_f": r2_tsets_f,
+            "r3_plankton_f": r3_tsets_f,
+        },
+    )
 
 print("Building whole-ocean validation sets for plankton functional groups...")
 with alive_bar(3) as bar:
@@ -148,8 +252,6 @@ with alive_bar(3) as bar:
     dino_oce, dino_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(46, 56))
     zoo_oce, zoo_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(56, 72))
     bar()
-    t
-
     pl_oce = [pro_oce, pico_oce, cocco_oce, diazo_oce, diatom_oce, dino_oce, zoo_oce]
     pl_oce_f = [
         pro_oce_f,
@@ -160,23 +262,22 @@ with alive_bar(3) as bar:
         dino_oce_f,
         zoo_oce_f,
     ]
-
-    # Save.plankton_dicts(
-    #     f"{VSETS}",
-    #     **{
-    #         "plankton/plankton_oce.pkl": pl_oce,
-    #         "plankton/plankton_oce_f.pkl": pl_oce_f,
-    #     },
-    # )
+    Save.plankton_dicts(
+        f"{VSETS}",
+        **{
+            "plankton/plankton_oce.pkl": pl_oce,
+            "plankton/plankton_oce_f.pkl": pl_oce_f,
+        },
+    )
     bar()
     t
 
 print("Building whole-ocean predictor sets (Darwin ocean 1987-2008, 2079-2100)...")
 with alive_bar(2) as bar:
-    predictors_oce_X = TSB.return_predictor_dataset(
+    predictors_oce = TSB.return_predictor_dataset(
         eco_oce, salinity_oce, sst_oce, par_oce
     )
-    predictors_oce_Xf = TSB.return_predictor_dataset(
+    predictors_oce_f = TSB.return_predictor_dataset(
         eco_oce_f, salinity_oce_f, sst_oce_f, par_oce
     )
     bar()
@@ -184,8 +285,8 @@ with alive_bar(2) as bar:
     Save.save_to_pkl(
         f"{VSETS}",
         **{
-            "predictors/predictors_oce_X.pkl": predictors_oce_X,
-            "predictors/predictors_oce_Xf.pkl": predictors_oce_Xf,
+            "predictors/predictors_oce.pkl": predictors_oce,
+            "predictors/predictors_oce_f.pkl": predictors_oce_f,
         },
     )
     bar()

@@ -13,8 +13,8 @@ from src.views import PartialDepPlots
 BASEPATH = Path(os.path.abspath(__file__)).parents[2]
 
 DATA = BASEPATH / "data" / "processed"
-RESULTS = Save.check_dir_exists(f"{BASEPATH}/results_test2/gams_output")
-PLOTS = Save.check_dir_exists(f"{BASEPATH}/results_test2/all_plots")
+RESULTS = Save.check_dir_exists(f"{BASEPATH}/results/gams_output")
+PLOTS = Save.check_dir_exists(f"{BASEPATH}/results/all_plots")
 CUTOFF = 1.001e-5
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -84,25 +84,25 @@ with alive_bar(2) as bar:
     t
 
 
-# print("Generating partial dependency plots...")
-# with alive_bar(2) as bar:
+print("Generating partial dependency plots...")
+with alive_bar(2) as bar:
 
-#     PLOTS_PDP = Save.check_dir_exists(f"{PLOTS}/partial_dep_plots")
+    PLOTS_PDP = Save.check_dir_exists(f"{PLOTS}/partial_dep_plots")
 
-#     PartialDepPlots.partial_dependency_plots(
-#         Save.check_dir_exists(f"{PLOTS_PDP}/from_measurements"),
-#         gams,
-#         gams_f,
-#     )
-#     bar()
-#     t
-#     PartialDepPlots.partial_dependency_plots(
-#         Save.check_dir_exists(f"{PLOTS_PDP}/from_random"),
-#         gams_r,
-#         gams_rf,
-#     )
-#     bar()
-#     t
+    PartialDepPlots.partial_dependency_plots(
+        Save.check_dir_exists(f"{PLOTS_PDP}/from_measurements"),
+        gams,
+        gams_f,
+    )
+    bar()
+    t
+    PartialDepPlots.partial_dependency_plots(
+        Save.check_dir_exists(f"{PLOTS_PDP}/from_random"),
+        gams_r,
+        gams_rf,
+    )
+    bar()
+    t
 
 
 print("Predicting Darwin biogeography (1987-2008) from ocean measurements (1987-2008)")
@@ -115,40 +115,42 @@ with alive_bar(1) as bar:
     t
     time.sleep(60)
 
-    # print("Predicting Darwin biogeography (1987-2008) from random samples (1987-2008) ")
-    # with alive_bar(1) as bar:
-    #     predictions_r = MakePredictions.make_predictions(
-    #         gams_r, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
-    #     )
-    #     bar()
-    #     t
-    #     time.sleep(60)
+    print("Predicting Darwin biogeography (1987-2008) from random samples (1987-2008) ")
+    with alive_bar(1) as bar:
+        predictions_r = MakePredictions.make_predictions(
+            gams_r, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
+        )
+        bar()
+        t
+        time.sleep(60)
 
-    # print("Predicting Darwin biogeography (2079-2100) from ocean measurements (1987-2008) ")
-    # with alive_bar(1) as bar:
-    #     predictions_f = MakePredictions.make_predictions(
-    #         gams, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
-    #     )
-    #     bar()
-    #     t
-    #     time.sleep(60)
+    print(
+        "Predicting Darwin biogeography (2079-2100) from ocean measurements (1987-2008) "
+    )
+    with alive_bar(1) as bar:
+        predictions_f = MakePredictions.make_predictions(
+            gams, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
+        )
+        bar()
+        t
+        time.sleep(60)
 
-    # print("Predicting Darwin biogeography (2079-2100) from random samples (1987-2008) ")
-    # with alive_bar(2) as bar:
-    #     predictions_rf = MakePredictions.make_predictions(
-    #         gams_r, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
-    #     )
-    #     bar()
-    #     t
-    #     time.sleep(60)
+    print("Predicting Darwin biogeography (2079-2100) from random samples (1987-2008) ")
+    with alive_bar(2) as bar:
+        predictions_rf = MakePredictions.make_predictions(
+            gams_r, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
+        )
+        bar()
+        t
+        time.sleep(60)
 
     Save.save_predictions(
         f"{RESULTS}/predictions",
         **{
             "predictions": predictions,
-            # "predictions_r": predictions_r,
-            # "predictions_f": predictions_f,
-            # "predictions_rf": predictions_rf,
+            "predictions_r": predictions_r,
+            "predictions_f": predictions_f,
+            "predictions_rf": predictions_rf,
         },
     )
     bar()

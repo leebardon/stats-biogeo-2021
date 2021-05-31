@@ -18,8 +18,11 @@ from src.models.sample_measurements import (
 base_path = Path(os.path.abspath(__file__)).parents[2]
 OCEAN_OBVS = base_path / "data" / "raw" / "ocean_observations.netcdf"
 GRID_CELL = base_path / "data" / "raw" / "grid_igsm.nc"
-SAVEPATH = base_path / "data" / "test_processed"
+SAVEPATH = base_path / "data" / "processed"
 PLOTPATH = base_path / "results" / "all_plots" / "sample_distributions"
+SEED = 2021_1
+SEED2 = 2021_2
+SEED3 = 2021_3
 
 # CREATE OUTPUT FILES
 
@@ -49,7 +52,7 @@ with alive_bar(1) as bar:
 print("Adding 'Months' and 'Seasons' columns and saving processed dataset...")
 with alive_bar(2) as bar:
     processed_ocean_df = AddColumns.create_months_column(ocean_measurements_df)
-    # processed_ocean_df = AddColumns.create_seasons_column(ocean_measurements_df)
+    processed_ocean_df = AddColumns.create_seasons_column(ocean_measurements_df)
     bar()
     t
 
@@ -81,19 +84,23 @@ with alive_bar(1) as bar:
 
 print("Generating and saving sampling matrices...")
 with alive_bar(3) as bar:
-    I_zero = CreateSamplingMatrix.matrix_of_zeros()
-    I = CreateSamplingMatrix.sampling_matrix(I_zero, X, Y, T, x, y)
+    I_zeros = CreateSamplingMatrix.matrix_of_zeros()
+    I = CreateSamplingMatrix.sampling_matrix(I_zeros, X, Y, T, x, y)
     bar()
     t
-
-    Ir_zero = np.zeros(shape=(144, 90, 265))
-    Ir = CreateSamplingMatrix.random_matrix(Ir_zero)
+    Ir = CreateSamplingMatrix.random_matrix(SEED, 10000)
+    Ir2 = CreateSamplingMatrix.random_matrix(SEED2, 20000)
+    Ir3 = CreateSamplingMatrix.random_matrix(SEED3, 40000)
     bar()
     t
-
     Save.save_matrix(
         f"{SAVEPATH}/sampling_matrices",
-        **{"ocean_sample_matrix.npy": I, "random_sample_matrix.npy": Ir},
+        **{
+            "ocean_sample_matrix.npy": I,
+            "random_sample_matrix.npy": Ir,
+            "random_matrix_2.npy": Ir2,
+            "random_matrix_3.npy": Ir3,
+        },
     )
     bar()
     t
