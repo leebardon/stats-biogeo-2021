@@ -354,6 +354,8 @@ with alive_bar(1) as bar:
     HeatMaps.correlation_heatmap(
         "seismic",
         Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
+        vmin=-0.4,
+        vmax=0.4,
         **{
             "hmap_diff": round(diffs_dfs[0], 2),
             "hmap_diff_r": round(diffs_dfs[1], 2),
