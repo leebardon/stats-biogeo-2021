@@ -23,6 +23,7 @@ def calculate_dcorrs(predictors, f_groups):
             dcorrs.loc[groupname, COLS[i]] = distance_correlation(
                 predictors[COLS[i]].values, plankton_data.values
             )
+    dcorrs
     return dcorrs
 
 
@@ -59,3 +60,10 @@ def calculate_spearmans(predictors, plankton):
 def get_df(predictors, plankton):
     plank_df = pd.DataFrame(plankton, columns=INDEX)
     return pd.concat([predictors, plank_df], axis=1)
+
+
+def calculate_differences(*dcorrs):
+    diffs_dfs = []
+    for i in range(len(dcorrs)):
+        diffs_dfs.append((dcorrs[i][0] - dcorrs[i][1]))
+    return diffs_dfs
