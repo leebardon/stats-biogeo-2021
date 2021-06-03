@@ -123,19 +123,6 @@ with alive_bar(3) as bar:
         median_darwin_f,
     )
 
-# thing = "/Users/leebardon/Dropbox/Development/stats_biogeo_2021/results_test2/analysis_output/stats/"
-# mean_gams = pd.read_pickle(f"{thing}/present/mean_gams.pkl")
-# median_gams = pd.read_pickle(f"{thing}/present/median_gams.pkl")
-# mean_gams_r = pd.read_pickle(f"{thing}/present/mean_gams_r.pkl")
-# median_gams_r = pd.read_pickle(f"{thing}/present/median_gams_r.pkl")
-# mean_darwin = pd.read_pickle(f"{thing}/present/mean_darwin.pkl")
-# median_darwin = pd.read_pickle(f"{thing}/present/median_darwin.pkl")
-# mean_gams_f = pd.read_pickle(f"{thing}/future/mean_gams_f.pkl")
-# median_gams_f = pd.read_pickle(f"{thing}/future/median_gams_f.pkl")
-# mean_gams_rf = pd.read_pickle(f"{thing}/future/mean_gams_rf.pkl")
-# median_gams_rf = pd.read_pickle(f"{thing}/future/median_gams_rf.pkl")
-# mean_darwin_f = pd.read_pickle(f"{thing}/future/mean_darwin_f.pkl")
-# median_darwin_f = pd.read_pickle(f"{thing}/future/median_darwin_f.pkl")
 
 print(
     "Calculating ratios ((GAMs_[mean/med] - Darwin_[mean/med]) / Darwin_[mean/med]) (1987-2008)..."
