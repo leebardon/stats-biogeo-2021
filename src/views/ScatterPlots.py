@@ -12,7 +12,9 @@ import matplotlib.image as mpimg
 # SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
 
 # NEED TO REVERT TO PREVIOUS - SUMMARY_STATS REQUIRES FULL TABLE
-def generate_scatter_plots(predictions, darwin, stats, scattersave, innersave, colours):
+def generate_scatter_plots(
+    predictions, darwin, stats, scattersave, innersave, colours, settings
+):
     plot_max = len(darwin["Pro"])
 
     for i in range(len(stats)):
@@ -48,10 +50,12 @@ def generate_scatter_plots(predictions, darwin, stats, scattersave, innersave, c
             scattersave,
             f"{f_group}",
             colours,
+            settings[f_group][0],
+            settings[f_group][1],
         )
 
 
-def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, filename):
+def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename):
     fig, ax = plt.subplots(figsize=(2, 2))
     ax.plot([0, pmax], [0, pmax], alpha=0)
 
@@ -59,7 +63,7 @@ def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, fi
     ax.add_patch(
         patches.Rectangle(
             (0, 0),  # origin
-            darwin_below_cutoff,  # width
+            darwin_below_cut,  # width
             pmax,  # height
             facecolor="red",
             alpha=0.7,
@@ -69,15 +73,15 @@ def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, fi
     # gams below cutoff - bottom red
     ax.add_patch(
         patches.Rectangle(
-            (0, 0), pmax, gams_below_cutoff, facecolor="red", alpha=0.7, fill=True
+            (0, 0), pmax, gams_below_cut, facecolor="red", alpha=0.7, fill=True
         )
     )
     # both below cutoff
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
-            darwin_below_cutoff,
-            gams_below_cutoff,
+            darwin_below_cut,
+            gams_below_cut,
             facecolor="darkred",
             fill=True,
         )
@@ -85,7 +89,7 @@ def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, fi
     # both above cutoff
     ax.add_patch(
         patches.Rectangle(
-            (darwin_below_cutoff, gams_below_cutoff),
+            (darwin_below_cut, gams_below_cut),
             pmax,
             pmax,
             facecolor="green",
@@ -95,8 +99,8 @@ def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, fi
     )
     # green area text
     ax.text(
-        0.25 * (darwin_below_cutoff + pmax),
-        0.45 * (gams_below_cutoff + pmax),
+        0.25 * (darwin_below_cut + pmax),
+        0.45 * (gams_below_cut + pmax),
         round(frac, 2),
         fontsize=26,
         fontweight="bold",
@@ -106,8 +110,8 @@ def plot_inner(pmax, darwin_below_cutoff, gams_below_cutoff, frac, innersave, fi
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
-            darwin_below_cutoff,
-            gams_below_cutoff,
+            darwin_below_cut,
+            gams_below_cut,
             facecolor="darkred",
             fill=True,
         )
@@ -141,6 +145,8 @@ def scatter_plot(
     scattersave,
     filename,
     colours,
+    xlim,
+    ylim,
 ):
 
     x = gams_predictions
@@ -179,6 +185,9 @@ def scatter_plot(
         ax.plot(x, x, c="navy", linewidth=2)
         plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Reds)
 
+    plt.xlim(0, xlim)
+    plt.ylim(0, ylim)
+
     plt.colorbar(
         orientation="vertical",
         fraction=0.11,
@@ -200,3 +209,44 @@ def scatter_plot(
         bbox_inches="tight",
     )
     plt.close(fig)
+
+
+class ScatterSettings:
+    def __init__(self):
+        # [xlim, ylim]
+        self.obvs_pres = {
+            "Pro": [1.1, 0.75],
+            "Pico": [1, 0.6],
+            "Cocco": [1.5, 1.1],
+            "Diazo": [0.26, 0.5],
+            "Diatom": [4, 3],
+            "Dino": [1.8, 1.5],
+            "Zoo": [8, 8],
+        }
+        self.rand_pres = {
+            "Pro": [0.7, 0.7],
+            "Pico": [0.6, 0.55],
+            "Cocco": [1.2, 1.1],
+            "Diazo": [0.3, 0.5],
+            "Diatom": [2.5, 3],
+            "Dino": [1.5, 1.5],
+            "Zoo": [8, 8],
+        }
+        self.obvs_fut = {
+            "Pro": [1.6, 0.7],
+            "Pico": [1.6, 0.6],
+            "Cocco": [1.7, 1.1],
+            "Diazo": [0.3, 0.45],
+            "Diatom": [4.5, 3],
+            "Dino": [1.8, 1.45],
+            "Zoo": [8, 8],
+        }
+        self.rand_fut = {
+            "Pro": [0.7, 0.7],
+            "Pico": [0.6, 0.6],
+            "Cocco": [1.1, 1.1],
+            "Diazo": [0.38, 0.42],
+            "Diatom": [2.5, 3],
+            "Dino": [2.2, 1.4],
+            "Zoo": [8, 8],
+        }

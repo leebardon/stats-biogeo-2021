@@ -16,6 +16,7 @@ GeoAxes._pcolormesh_patched = Axes.pcolormesh
 
 basepath = Path(os.path.abspath(__file__)).parents[2]
 MAPDATA = basepath / "data" / "processed"
+# COORDS = basepath / "data" / "processed" / "model_ocean_data"
 
 
 def get_dataset(path):
@@ -25,7 +26,12 @@ def get_dataset(path):
 
 
 def get_coords(COORDS):
-    return get_dataset(COORDS)
+    return get_dataset(f"{COORDS}/degrees_coords.pkl")
+
+
+def get_sample_coords():
+    data = get_dataset(f"{MAPDATA}/model_ocean_data/samp_coords.pkl")
+    return data["x_deg"], data["y_deg"]
 
 
 def get_inner(basepath, *paths):
@@ -109,7 +115,7 @@ def prep_for_plotting(annual_means_da, f_group, filepath, maptitle):
     plot_map(lon, lat, biomass, vmax, filepath, f_group, maptitle)
 
 
-def plot_map(lon, lat, biomass, vmax, path, filename, maptitle):
+def plot_map(lon, lat, biomass, vmax, path, f_group, maptitle):
 
     projection = ccrs.PlateCarree(central_longitude=180.0)
     transform = ccrs.PlateCarree()
@@ -137,7 +143,11 @@ def plot_map(lon, lat, biomass, vmax, path, filename, maptitle):
     gl.yformatter = LATITUDE_FORMATTER
     ax.coastlines(linewidth=0.3)
     ax.set_aspect("auto")
-    # ax.scatter(xpoints, ypoints, transform=transform, s=1, color='firebrick')
+
+    if f_group == "Cocco":
+        sample_x, sample_y = get_sample_coords()
+        ax.scatter(sample_x, sample_y, transform=transform, s=0.8, color="firebrick")
+
     fig.colorbar(
         ax1,
         ax=ax,
@@ -150,7 +160,7 @@ def plot_map(lon, lat, biomass, vmax, path, filename, maptitle):
     plt.title(maptitle, fontsize=13)
 
     plt.savefig(
-        f"{path}/{filename}.pdf",
+        f"{path}/{f_group}_map.pdf",
         format="pdf",
         dpi=1200,
         bbox_inches="tight",

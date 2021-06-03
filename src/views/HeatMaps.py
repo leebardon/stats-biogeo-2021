@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def correlation_heatmap(colour, path, **data_dicts):
+def correlation_heatmap(colour, path, vmin=None, vmax=None, **data_dicts):
     for filename, df in data_dicts.items():
         fig, ax = plt.subplots(figsize=(8, 6))
         cols = ["Pro", "Pico", "Cocco", "Diazo", "Diatom", "Dino", "Zoo"]
@@ -29,6 +29,8 @@ def correlation_heatmap(colour, path, **data_dicts):
             linecolor="black",
             annot=True,
             square=True,
+            vmin=vmin,
+            vmax=vmax,
         )
         plt.savefig(
             f"{path}/{filename}.pdf",

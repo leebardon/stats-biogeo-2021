@@ -71,15 +71,15 @@ with alive_bar(2) as bar:
     )
     bar()
     t
-    Save.save_gams(
-        Save.check_dir_exists(f"{RESULTS}/fitted_models"),
-        **{
-            "gams": gams,
-            "gams_r": gams_r,
-            "gams_f": gams_f,
-            "gams_rf": gams_rf,
-        },
-    )
+    # Save.save_gams(
+    #     Save.check_dir_exists(f"{RESULTS}/fitted_models"),
+    #     **{
+    #         "gams": gams,
+    #         "gams_r": gams_r,
+    #         "gams_f": gams_f,
+    #         "gams_rf": gams_rf,
+    #     },
+    # )
     bar()
     t
 

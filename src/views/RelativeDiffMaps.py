@@ -26,7 +26,7 @@ base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
 # REL_DIFF_SAVE = base_path / "all_plots" / "relative_diff_maps"
 
 
-def generate_diff_maps(darwin, gams, coords, savepath, maptitle):
+def generate_diff_maps(darwin, gams, coords, savepath, maptitle, settings):
     darwin_means, means_coords = Maps.process_and_plot(darwin, coords, mtype=1)
     gams_means, means_coords = Maps.process_and_plot(gams, coords, mtype=1)
 
@@ -37,20 +37,22 @@ def generate_diff_maps(darwin, gams, coords, savepath, maptitle):
         )
         diffs_df["lon"], diffs_df["lat"] = means_coords["lon"], means_coords["lat"]
         rel_diffs_da = Maps.pivot_table(diffs_df, mtype=1)
-        rel_diff_maps(rel_diffs_da, savepath, f_group, maptitle)
+        rel_diff_maps(rel_diffs_da, savepath, f_group, maptitle, settings)
 
 
-def rel_diff_maps(rel_diffs_da, savepath, f_group, maptitle):
+def rel_diff_maps(rel_diffs_da, savepath, f_group, maptitle, settings):
     lat = rel_diffs_da["lat"].data
     lon = rel_diffs_da["lon"].data
     biomass = rel_diffs_da.data
-    vmin = np.percentile(biomass, 5)
-    vmax = np.percentile(biomass, 95)
+    # vmin = np.percentile(biomass, 5)
+    # vmax = np.percentile(biomass, 95)
+    vmin = settings[f_group][0]
+    vmax = settings[f_group][1]
     plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, f_group, maptitle)
 
 
 def plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, filename, maptitle):
-    extent = [abs(vmin) if abs(vmin) > abs(vmax) else abs(vmax)]
+    # extent = [abs(vmin) if abs(vmin) > abs(vmax) else abs(vmax)]
     projection = ccrs.PlateCarree(central_longitude=180.0)
     transform = ccrs.PlateCarree()
     # cmap = "bwr"
@@ -73,8 +75,10 @@ def plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, filename, maptitle):
         biomass * 100,
         cmap=cmap,
         transform=transform,
-        vmin=-extent[0] * 100,
-        vmax=extent[0] * 100,
+        # vmin=-extent[0] * 100,
+        # vmax=extent[0] * 100,
+        vmin=vmin,
+        vmax=vmax,
         shading="gouraud",
     )
     gl = ax.gridlines(linewidth=0, draw_labels=True)
@@ -105,3 +109,27 @@ def plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, filename, maptitle):
         bbox_inches="tight",
     )
     plt.close(fig)
+
+
+class DiffMapSettings:
+    def __init__(self):
+        # [scaling present and future map to whichever has the wider range, for direct comparison]
+
+        self.obvs = {
+            "Pro": [-17.0, 17.0],
+            "Pico": [-15.5, 15.5],
+            "Cocco": [-12.0, 12.0],
+            "Diazo": [-8.5, 8.5],
+            "Diatom": [-42.0, 42.0],
+            "Dino": [-17.0, 17.0],
+            "Zoo": [-125.0, 125.0],
+        }
+        self.rand = {
+            "Pro": [-8.5, 8.5],
+            "Pico": [-7.5, 7.5],
+            "Cocco": [-15.0, 15.0],
+            "Diazo": [-7.0, 7.0],
+            "Diatom": [-25.0, 25.0],
+            "Dino": [-15.0, 15.0],
+            "Zoo": [-85.0, 85.0],
+        }
