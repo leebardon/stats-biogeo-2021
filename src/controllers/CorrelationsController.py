@@ -1,8 +1,4 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
-import time
+import time, os
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models.correlations import Correlations
@@ -17,7 +13,7 @@ PLOTSAVE = Save.check_dir_exists(f"{BASEPATH}/results/all_plots/heatmaps")
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(0.05)
+t = time.sleep(2)
 
 
 print("Getting plankton and predictors sample sets...")
@@ -131,7 +127,7 @@ with alive_bar(4) as bar:
             [r3_dcorrs, r3_dcorrs_f],
         ]
     )
-
+breakpoint()
 # Save.save_to_pkl(
 #     Save.check_dir_exists(f"{CORRSAVE}/dcorrs"),
 #     **{
@@ -359,8 +355,8 @@ with alive_bar(1) as bar:
         **{
             "hmap_diff": round(diffs_dfs[0], 2),
             "hmap_diff_r": round(diffs_dfs[1], 2),
-            "hmap_diff_f": round(diffs_dfs[2], 2),
-            "hmap_diff_rf": round(diffs_dfs[3], 2),
+            "r2_hmap_diff": round(diffs_dfs[2], 2),
+            "r3_hmap_diff": round(diffs_dfs[3], 2),
         },
     )
     bar()
