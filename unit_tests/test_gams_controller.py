@@ -1,15 +1,9 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(".."))
-
+import os
 import pytest
-import pandas as pd
-import numpy as np
-from pygam import LinearGAM, s, f
+import unittest
 from pathlib import Path
-from src.models import Save
-from src.models.gams import TrainGams, MakePredictions
-from src.views import PartialDepPlots
+from unittest import TestCase
+import pandas as pd
 
 BASEPATH = Path(os.path.abspath(__file__)).parents[1]
 DATA = BASEPATH / "data" / "processed"
@@ -26,7 +20,7 @@ class BasicGamsTestCase(TestCase):
 
 
 class BetweenAssertMixin(object):
-    def assertBetween(self, series, lo, hi):
+    def assertBetween(series, lo, hi):
         if not (min(series) <= lo):
             raise AssertionError(f"{min(series)} is lower than {lo}")
         elif not (max(series) <= hi):
@@ -59,6 +53,7 @@ class TestLoadedTrainingSets(BasicGamsTestCase, BetweenAssertMixin):
         self.assertBetween(self.pred_tset["Si"].values, 3.7e-9, 75)
 
     def test_SST_between_ocean_min_and_max(self) -> None:
+        debugger()
         self.assertBetween(self.pred_tset["SST"].values, -2.1, 32.3)
 
     def test_SSS_between_ocean_min_and_max(self) -> None:

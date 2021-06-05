@@ -3,10 +3,7 @@ import click
 from pathlib import Path
 from subprocess import run
 
-sys.path.insert(0, os.path.abspath("."))
-
 controllers = Path(os.path.abspath(__file__)).parents[0] / "src" / "controllers"
-
 
 class ChoiceOption(click.Option):
     def __init__(self, param_decls=None, **attrs):

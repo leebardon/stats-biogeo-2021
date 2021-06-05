@@ -1,7 +1,4 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
+import os
 import numpy as np
 import pandas as pd
 import time
@@ -12,8 +9,8 @@ from src.models import Save
 
 base_path = Path(os.path.abspath(__file__)).parents[2]
 
-DARWIN = base_path / "data" / "processed_test2" / "model_ocean_data"
-MATRICES = base_path / "data" / "processed_test2" / "sampling_matrices"
+DARWIN = base_path / "data" / "processed" / "model_ocean_data"
+MATRICES = base_path / "data" / "processed" / "sampling_matrices"
 INTERIM = base_path / "data" / "interim" / "sampled_ecosys"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -66,7 +63,6 @@ with alive_bar(2) as bar:
     bar()
     t
 
-breakpoint()
 print("Ensuring random sample is equal size to obvs sample and saving...")
 with alive_bar(2) as bar:
     rand_samp_oce = Sampling.make_equal(samp_oce, rand_samp_oce)

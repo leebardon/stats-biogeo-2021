@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
-import statistics
 import pickle
 
 F_GROUPS = ["Pro", "Pico", "Cocco", "Diazo", "Diatom", "Dino", "Zoo"]
+CUTOFF = 1.001e-5
 
 
 def get_predictions(path, *prediction_sets):
@@ -24,80 +24,108 @@ def get_targets(path, *darwin_true_values):
     return [darwin_targets[i] for i in range(len(darwin_targets))]
 
 
-def pres_abs_summary(gams, darwin, cutoff):
-    gams_present, darwin_present, total = [], [], len(darwin["Pro"])
-    gams_absent, darwin_absent, either_below_cutoff = [], [], []
-    for group in F_GROUPS:
-        gams_present.append(
-            gams[group][(gams[group] >= cutoff) & (darwin[group] >= cutoff)]
-        )
-        darwin_present.append(
-            darwin[group][(darwin[group] >= cutoff) & (gams[group] >= cutoff)]
-        )
-        gams_absent.append(gams[group][(gams[group] < cutoff)])
-        darwin_absent.append(darwin[group][(darwin[group] < cutoff)])
-
-    [
-        either_below_cutoff.append(total - len(gams_present[i]))
-        for i in range(len(F_GROUPS))
+def pres_abs_summary(gams, darwin):
+    total = len(darwin["Pro"])
+    true_pos = [true_positive(gams[g], darwin[g]) for g in F_GROUPS]
+    true_neg = [true_negative(gams[g], darwin[g]) for g in F_GROUPS]
+    false_pos = [false_positive(gams[g], darwin[g]) for g in F_GROUPS]
+    false_neg = [false_negative(gams[g], darwin[g]) for g in F_GROUPS]
+    gams_pres = [(gams[g][(gams[g] > CUTOFF) & (darwin[g] > CUTOFF)]) for g in F_GROUPS]
+    darwin_pres = [
+        (darwin[g][(darwin[g] > CUTOFF) & (gams[g] > CUTOFF)]) for g in F_GROUPS
     ]
-
-    pres_abs_summary = cutoff_summary(
-        gams_absent, darwin_absent, either_below_cutoff, total
+    gams_abs = [(gams[g][(gams[g] < CUTOFF)]) for g in F_GROUPS]
+    darwin_abs = [(darwin[g][(darwin[g] < CUTOFF)]) for g in F_GROUPS]
+    summary = summary_df(
+        gams_abs, darwin_abs, true_pos, true_neg, false_pos, false_neg, total
     )
-    return gams_present, darwin_present, pres_abs_summary
+    return gams_pres, darwin_pres, summary
 
 
-def cutoff_summary(gams_abs, darwin_abs, either_below, total):
-    cutoff_summary = pd.DataFrame(
-        {"Darwin < cutoff": [0], "GAMs < cutoff": [0], "Either < cutoff": [0]},
-        index=F_GROUPS,
-    )
+def true_positive(gams, darwin):
+    return gams[(gams > CUTOFF) & (darwin > CUTOFF)]
+
+
+def true_negative(gams, darwin):
+    return gams[(gams <= CUTOFF) & (darwin <= CUTOFF)]
+
+
+def false_positive(gams, darwin):
+    return gams[(gams > CUTOFF) & (darwin <= CUTOFF)]
+
+
+def false_negative(gams, darwin):
+    return gams[(gams <= CUTOFF) & (darwin > CUTOFF)]
+
+
+def summary_df(gams_abs, darwin_abs, true_pos, true_neg, false_pos, false_neg, total):
+    cols = [
+        "Darwin < cutoff",
+        "GAMs < cutoff",
+        "True Pos.",
+        "True Neg.",
+        "False Pos.",
+        "False Neg.",
+        "Sensitivity",
+        "Specificity",
+        "Balanced Acc.",
+        "Presence Frac.",
+    ]
+    summary = pd.DataFrame(columns=cols, index=F_GROUPS)
     for i in range(len(F_GROUPS)):
-        cutoff_summary["Darwin < cutoff"][i] = len(darwin_abs[i])
-        cutoff_summary["GAMs < cutoff"][i] = len(gams_abs[i])
-        cutoff_summary["Either < cutoff"][i] = either_below[i]
+        summary["Darwin < cutoff"][i] = len(darwin_abs[i])
+        summary["GAMs < cutoff"][i] = len(gams_abs[i])
+        summary["True Pos."][i] = len(true_pos[i])
+        summary["True Neg."][i] = len(true_neg[i])
+        summary["False Pos."][i] = len(false_pos[i])
+        summary["False Neg."][i] = len(false_neg[i])
+        summary["Sensitivity"][i] = sensitivity(true_pos[i], gams_abs[i], total)
+        summary["Specificity"][i] = specificity(true_neg[i], gams_abs[i])
+        summary["Balanced Acc."][i] = (
+            summary["Sensitivity"][i] + summary["Specificity"][i]
+        ) / 2
+        summary["Presence Frac."][i] = 1 - (total - len(true_pos[i])) / total
 
-    cutoff_summary["Presence Fraction"] = 1 - (
-        round(cutoff_summary["Either < cutoff"] / (total), 2)
-    )
-    return cutoff_summary
+    return summary
+
+
+def sensitivity(true_pos, gams_below, total):
+    return len(true_pos) / (total - len(gams_below))
+
+
+def specificity(true_neg, gams_below):
+    return len(true_neg) / (len(gams_below))
 
 
 def mean_and_median(predictions):
-    mean_arr, med_arr = [], []
+    means, medians = [], []
     for f_group in predictions:
-        mean_arr.append(np.mean(f_group))
-        med_arr.append(np.median(f_group))
-    return mean_arr, med_arr
+        means.append(np.mean(f_group))
+        medians.append(np.median(f_group))
+    return means, medians
 
 
-def calc_ratios(mean_gams, med_gams, mean_darwin, med_darwin):
+def calc_ratios(mean_gams, med_gams, mean_dar, med_dar):
     mean_ratios, med_ratios = [], []
     for i in range(len(med_gams)):
-        mean_r = round((mean_gams[i] - mean_darwin[i]) / mean_darwin[i], 2)
-        med_r = round((med_gams[i] - med_darwin[i]) / med_darwin[i], 2)
-        mean_ratios.append(mean_r)
-        med_ratios.append(med_r)
+        mean_ratios.append(round((mean_gams[i] - mean_dar[i]) / mean_dar[i], 2))
+        med_ratios.append(round((med_gams[i] - med_dar[i]) / med_dar[i], 2))
     return mean_ratios, med_ratios
 
 
-def r_squared(darwin_target, gams_predictions):
-    rsq = []
-    for i in range(len(darwin_target)):
-        rsq.append(calc_rsq(darwin_target[i], gams_predictions[i]))
-    return rsq
+def r_squared(darwin, gams):
+    return [calc_rsq(darwin[i], gams[i]) for i in range(len(darwin))]
 
 
-def calc_rsq(darwin, predictions):
-    residuals = calc_residuals(darwin, predictions)
+def calc_rsq(darwin, gams):
+    residuals = calc_residuals(darwin, gams)
     data_var = calc_variance(darwin)
     residuals_var = calc_variance(residuals)
-    return 1 - (residuals_var) / (data_var)
+    return 1 - residuals_var / data_var
 
 
-def calc_residuals(darwin, predictions):
-    return darwin - predictions
+def calc_residuals(darwin, gams):
+    return darwin - gams
 
 
 def calc_variance(data):
@@ -106,13 +134,12 @@ def calc_variance(data):
 
 
 def return_summary(cutoffs_df, means_ratios, meds_ratios, rsq, total):
-    cols = ["Darwin < cutoff", "GAMs < cutoff"]
-    summary_df = round((cutoffs_df[cols] / total), 2)
-    summary_df["Both > cutoff"] = round(1 - (cutoffs_df["Either < cutoff"] / total), 2)
-    summary_df["Means Ratios"] = means_ratios
-    summary_df["Medians Ratios"] = meds_ratios
-    summary_df["r-squared"] = [round(r, 2) for r in rsq]
-    return summary_df
+    cols = ["Sensitivity", "Specificity", "Balanced Acc."]
+    final_summary = cutoffs_df[cols].round(2)
+    final_summary["Means Ratios"] = means_ratios
+    final_summary["Medians Ratios"] = meds_ratios
+    final_summary["r-squared"] = [round(r, 2) for r in rsq]
+    return final_summary
 
 
 def return_combined_df(dfs):
