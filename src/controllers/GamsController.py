@@ -71,15 +71,15 @@ with alive_bar(2) as bar:
     )
     bar()
     t
-    # Save.save_gams(
-    #     Save.check_dir_exists(f"{RESULTS}/fitted_models"),
-    #     **{
-    #         "gams": gams,
-    #         "gams_r": gams_r,
-    #         "gams_f": gams_f,
-    #         "gams_rf": gams_rf,
-    #     },
-    # )
+    Save.save_gams(
+        Save.check_dir_exists(f"{RESULTS}/fitted_models"),
+        **{
+            "gams": gams,
+            "gams_r": gams_r,
+            "gams_f": gams_f,
+            "gams_rf": gams_rf,
+        },
+    )
     bar()
     t
 
@@ -105,53 +105,53 @@ with alive_bar(2) as bar:
     t
 
 
-print("Predicting Darwin biogeography (1987-2008) from ocean measurements (1987-2008)")
-print("(Have a cup of tea - this could take a while...)")
-with alive_bar(1) as bar:
-    predictions = MakePredictions.make_predictions(
-        gams, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
-    )
-    bar()
-    t
-    time.sleep(60)
+# print("Predicting Darwin biogeography (1987-2008) from ocean measurements (1987-2008)")
+# print("(Have a cup of tea - this could take a while...)")
+# with alive_bar(1) as bar:
+#     predictions = MakePredictions.make_predictions(
+#         gams, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
+#     )
+#     bar()
+#     t
+#     time.sleep(60)
 
-    print("Predicting Darwin biogeography (1987-2008) from random samples (1987-2008) ")
-    with alive_bar(1) as bar:
-        predictions_r = MakePredictions.make_predictions(
-            gams_r, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
-        )
-        bar()
-        t
-        time.sleep(60)
-
-    print(
-        "Predicting Darwin biogeography (2079-2100) from ocean measurements (1987-2008) "
-    )
-    with alive_bar(1) as bar:
-        predictions_f = MakePredictions.make_predictions(
-            gams, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
-        )
-        bar()
-        t
-        time.sleep(60)
-
-    print("Predicting Darwin biogeography (2079-2100) from random samples (1987-2008) ")
-    with alive_bar(2) as bar:
-        predictions_rf = MakePredictions.make_predictions(
-            gams_r, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
-        )
-        bar()
-        t
-        time.sleep(60)
-
-    Save.save_predictions(
-        f"{RESULTS}/predictions",
-        **{
-            "predictions": predictions,
-            "predictions_r": predictions_r,
-            "predictions_f": predictions_f,
-            "predictions_rf": predictions_rf,
-        },
-    )
-    bar()
-    t
+# print("Predicting Darwin biogeography (1987-2008) from random samples (1987-2008) ")
+# with alive_bar(1) as bar:
+#     predictions_r = MakePredictions.make_predictions(
+#         gams_r, f"{DATA}/validation_sets/predictors/predictors_oce.pkl"
+#     )
+#     bar()
+#     t
+#     time.sleep(60)
+#
+# print(
+#     "Predicting Darwin biogeography (2079-2100) from ocean measurements (1987-2008) "
+# )
+# with alive_bar(1) as bar:
+#     predictions_f = MakePredictions.make_predictions(
+#         gams, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
+#     )
+#     bar()
+#     t
+#     time.sleep(60)
+#
+# print("Predicting Darwin biogeography (2079-2100) from random samples (1987-2008) ")
+# with alive_bar(2) as bar:
+#     predictions_rf = MakePredictions.make_predictions(
+#         gams_r, f"{DATA}/validation_sets/predictors/predictors_oce_f.pkl"
+#     )
+#     bar()
+#     t
+#     time.sleep(60)
+#
+# Save.save_predictions(
+#     f"{RESULTS}/predictions",
+#     **{
+#         "predictions": predictions,
+#         "predictions_r": predictions_r,
+#         "predictions_f": predictions_f,
+#         "predictions_rf": predictions_rf,
+#     },
+# )
+# bar()
+# t

@@ -17,7 +17,7 @@ def plot_pdp(gam_p, gam_f, func_group, path):
         "Salinity",
         "PAR",
     ]
-    y_label = "Biomass ($\mathregular{mmol\ C/m^3}$)"
+    y_label = func_group
     plt.figure()
     fig, axs = plt.subplots(1, 7, figsize=(18, 5))
     fig.tight_layout(pad=2.7)
@@ -41,7 +41,7 @@ def plot_pdp(gam_p, gam_f, func_group, path):
         ax.plot(XX2[:, i], gam_f.partial_dependence(term=i, X=XX2), linewidth=3)
 
         if i == 0:
-            ax.set_ylabel(y_label, fontsize=12)
+            ax.set_ylabel(y_label, fontsize=20)
         ax.set_xlabel(labels[i], fontsize=12)
 
     plt.savefig(

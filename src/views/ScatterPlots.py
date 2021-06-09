@@ -11,17 +11,16 @@ import matplotlib.image as mpimg
 # INNER_PLOT_SAVE = base_path / "all_plots" / "inner_plots"
 # SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
 
-# NEED TO REVERT TO PREVIOUS - SUMMARY_STATS REQUIRES FULL TABLE
+
 def generate_scatter_plots(
     predictions, darwin, stats, scattersave, innersave, colours, settings
 ):
     plot_max = len(darwin["Pro"])
-
     for i in range(len(stats)):
         plot_inner(
             plot_max,
-            (stats["Darwin < cutoff"][i]) * plot_max,
-            (stats["GAMs < cutoff"][i]) * plot_max,
+            (stats["Darwin < cutoff"][i]),
+            (stats["GAMs < cutoff"][i]),
             stats["Both > cutoff"][i],
             innersave,
             f"inner_{i}",
@@ -44,9 +43,9 @@ def generate_scatter_plots(
             stats["Means Ratios"][j],
             stats["Medians Ratios"][j],
             f"{innersave}/inner_{j}.png",
-            "Darwin vs. GAMs",
-            "GAMs",
+            "GAMs vs. Darwin",
             "Darwin",
+            "GAMs",
             scattersave,
             f"{f_group}",
             colours,
@@ -59,29 +58,29 @@ def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename
     fig, ax = plt.subplots(figsize=(2, 2))
     ax.plot([0, pmax], [0, pmax], alpha=0)
 
-    # darwin below cutoff - left red
+    # gams below cutoff - left red
     ax.add_patch(
         patches.Rectangle(
             (0, 0),  # origin
-            darwin_below_cut,  # width
+            gams_below_cut,  # width
             pmax,  # height
             facecolor="red",
             alpha=0.7,
             fill=True,
         )
     )
-    # gams below cutoff - bottom red
+    # darwin below cutoff - bottom red
     ax.add_patch(
         patches.Rectangle(
-            (0, 0), pmax, gams_below_cut, facecolor="red", alpha=0.7, fill=True
+            (0, 0), pmax, darwin_below_cut, facecolor="red", alpha=0.7, fill=True
         )
     )
     # both below cutoff
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
-            darwin_below_cut,
             gams_below_cut,
+            darwin_below_cut,
             facecolor="darkred",
             fill=True,
         )
@@ -89,7 +88,7 @@ def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename
     # both above cutoff
     ax.add_patch(
         patches.Rectangle(
-            (darwin_below_cut, gams_below_cut),
+            (gams_below_cut, darwin_below_cut),
             pmax,
             pmax,
             facecolor="green",
@@ -101,7 +100,7 @@ def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename
     ax.text(
         0.25 * (darwin_below_cut + pmax),
         0.45 * (gams_below_cut + pmax),
-        round(frac, 2),
+        round((frac/pmax), 2),
         fontsize=26,
         fontweight="bold",
         color="white",
@@ -110,8 +109,8 @@ def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename
     ax.add_patch(
         patches.Rectangle(
             (0, 0),
-            darwin_below_cut,
             gams_below_cut,
+            darwin_below_cut,
             facecolor="darkred",
             fill=True,
         )
@@ -149,8 +148,8 @@ def scatter_plot(
     ylim,
 ):
 
-    x = gams_predictions
-    y = darwin_target
+    x = darwin_target
+    y = gams_predictions
     fig, ax = plt.subplots(figsize=(6, 4))
 
     # Lower right box
@@ -179,7 +178,7 @@ def scatter_plot(
     ax.set_title(title, fontsize=15)
 
     if colours == 1:
-        ax.plot(x, x, c="red", linewidth=2)
+        ax.plot(x, x, c="navy", linewidth=2)
         plt.hexbin(x, y, gridsize=(60, 60), bins="log", cmap=plt.cm.Greens)
     else:
         ax.plot(x, x, c="navy", linewidth=2)
@@ -214,39 +213,21 @@ def scatter_plot(
 class ScatterSettings:
     def __init__(self):
         # [xlim, ylim]
-        self.obvs_pres = {
-            "Pro": [1.1, 0.75],
-            "Pico": [1, 0.6],
-            "Cocco": [1.5, 1.1],
-            "Diazo": [0.26, 0.5],
-            "Diatom": [4, 3],
-            "Dino": [1.8, 1.5],
-            "Zoo": [8, 8],
+        self.present = {
+            "Pro": [0.74, 0.74],
+            "Pico": [0.58, 0.58],
+            "Cocco": [1.1, 1.1],
+            "Diazo": [0.3, 0.3],
+            "Diatom": [3, 3],
+            "Dino": [1.52, 1.52],
+            "Zoo": [8.68, 8.68],
         }
-        self.rand_pres = {
-            "Pro": [0.7, 0.7],
-            "Pico": [0.6, 0.55],
-            "Cocco": [1.2, 1.1],
-            "Diazo": [0.3, 0.5],
-            "Diatom": [2.5, 3],
-            "Dino": [1.5, 1.5],
-            "Zoo": [8, 8],
-        }
-        self.obvs_fut = {
-            "Pro": [1.6, 0.7],
-            "Pico": [1.6, 0.6],
-            "Cocco": [1.7, 1.1],
-            "Diazo": [0.3, 0.45],
-            "Diatom": [4.5, 3],
-            "Dino": [1.8, 1.45],
-            "Zoo": [8, 8],
-        }
-        self.rand_fut = {
-            "Pro": [0.7, 0.7],
+        self.future = {
+            "Pro": [0.71, 0.71],
             "Pico": [0.6, 0.6],
             "Cocco": [1.1, 1.1],
-            "Diazo": [0.38, 0.42],
-            "Diatom": [2.5, 3],
-            "Dino": [2.2, 1.4],
-            "Zoo": [8, 8],
+            "Diazo": [0.3, 0.3],
+            "Diatom": [2.94, 2.94],
+            "Dino": [1.42, 1.42],
+            "Zoo": [8.36, 8.36],
         }

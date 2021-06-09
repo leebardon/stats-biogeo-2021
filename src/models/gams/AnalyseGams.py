@@ -37,9 +37,30 @@ def pres_abs_summary(gams, darwin):
     gams_abs = [(gams[g][(gams[g] < CUTOFF)]) for g in F_GROUPS]
     darwin_abs = [(darwin[g][(darwin[g] < CUTOFF)]) for g in F_GROUPS]
     summary = summary_df(
-        gams_abs, darwin_abs, true_pos, true_neg, false_pos, false_neg, total
+        gams_abs,
+        darwin_abs,
+        gams_pres,
+        darwin_pres,
+        true_pos,
+        true_neg,
+        false_pos,
+        false_neg,
+        total,
     )
-    return gams_pres, darwin_pres, summary
+    gams_prepped, darwin_prepped = remove_outliers(gams_pres, darwin_pres)
+    return gams_prepped, darwin_prepped, summary
+
+
+def remove_outliers(gams, darwin):
+    for i in range(len(darwin)):
+        g_max, d_max = get_max(gams[i], darwin[i])
+        darwin[i] = np.where(darwin[i] > d_max, d_max, darwin[i])
+        gams[i] = np.where(gams[i] > g_max, g_max, gams[i])
+    return gams, darwin
+
+
+def get_max(gams, darwin):
+    return np.percentile(gams, 99.9), np.percentile(darwin, 99.9)
 
 
 def true_positive(gams, darwin):
@@ -58,10 +79,21 @@ def false_negative(gams, darwin):
     return gams[(gams <= CUTOFF) & (darwin > CUTOFF)]
 
 
-def summary_df(gams_abs, darwin_abs, true_pos, true_neg, false_pos, false_neg, total):
+def summary_df(
+    gams_abs,
+    darwin_abs,
+    gams_pres,
+    darwin_pres,
+    true_pos,
+    true_neg,
+    false_pos,
+    false_neg,
+    total,
+):
     cols = [
         "Darwin < cutoff",
         "GAMs < cutoff",
+        "Both > cutoff",
         "True Pos.",
         "True Neg.",
         "False Pos.",
@@ -75,6 +107,7 @@ def summary_df(gams_abs, darwin_abs, true_pos, true_neg, false_pos, false_neg, t
     for i in range(len(F_GROUPS)):
         summary["Darwin < cutoff"][i] = len(darwin_abs[i])
         summary["GAMs < cutoff"][i] = len(gams_abs[i])
+        summary["Both > cutoff"][i] = len(gams_pres[i])
         summary["True Pos."][i] = len(true_pos[i])
         summary["True Neg."][i] = len(true_neg[i])
         summary["False Pos."][i] = len(false_pos[i])
@@ -134,7 +167,14 @@ def calc_variance(data):
 
 
 def return_summary(cutoffs_df, means_ratios, meds_ratios, rsq, total):
-    cols = ["Sensitivity", "Specificity", "Balanced Acc."]
+    cols = [
+        "GAMs < cutoff",
+        "Darwin < cutoff",
+        "Both > cutoff",
+        "Sensitivity",
+        "Specificity",
+        "Balanced Acc.",
+    ]
     final_summary = cutoffs_df[cols].round(2)
     final_summary["Means Ratios"] = means_ratios
     final_summary["Medians Ratios"] = meds_ratios
