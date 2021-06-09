@@ -1,6 +1,6 @@
 # Analysing Data from MIT's Darwin Model
 
-**NOTE**: _This package is a work in progress (as of 22nd Mar 2021). This message will be removed when development is complete._
+**NOTE**: _This package is a work in progress (as of 22nd Mar 2021). This message will be removed when v.1.0 development is complete._
 
 This package contains a series of analytical tools to extract and data from output from MIT's Darwin marine ecosystem model, powered by the MITgcm. It applies machine-leaning (ML) models to a subset of historical Darwin ocean data, and assesses how well the ML models can predict the simulated ocean's plankton biogeography in future, as a response to climate change.
 
