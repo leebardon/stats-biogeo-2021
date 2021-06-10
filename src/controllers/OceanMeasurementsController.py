@@ -1,33 +1,26 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
 import xarray as xr
-import numpy as np
 import time
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.views import MatrixPlots
-from src.models import Save
+from src.models import Save, Utils
 from src.models.sample_measurements import (
     CleanData,
     AddColumns,
     CreateSamplingMatrix,
 )
 
-base_path = Path(os.path.abspath(__file__)).parents[2]
-OCEAN_OBVS = base_path / "data" / "raw" / "ocean_observations.netcdf"
-GRID_CELL = base_path / "data" / "raw" / "grid_igsm.nc"
-SAVEPATH = base_path / "data" / "processed"
-PLOTPATH = base_path / "results" / "all_plots" / "sample_distributions"
-SEED = 2021_1
-SEED2 = 2021_2
-SEED3 = 2021_3
+ROOT = Path(os.path.abspath(__file__)).parents[2]
+OCEAN_OBVS = ROOT / "data" / "raw" / "ocean_observations.netcdf"
+GRID_CELL = ROOT / "data" / "raw" / "grid_igsm.nc"
+SAVEPATH = ROOT / "data" / "processed"
+PLOTPATH = ROOT / "results" / "all_plots" / "sample_distributions"
+SEED, SEED2, SEED3 = 2021_1, 2021_2, 2021_3
 
-# CREATE OUTPUT FILES
-
+log = Utils.setup_logger("syslog")
+scilog = Utils.setup_logger("scilog_ocean_meas")
 config_handler.set_global(length=50, spinner="fish_bouncing")
-t = time.sleep(1)
+t = time.sleep(2)
 
 
 print("Obtaining ocean measurements dataset...")

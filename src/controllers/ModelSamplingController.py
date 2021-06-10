@@ -7,11 +7,11 @@ from alive_progress import alive_bar, config_handler
 from src.models.sample_model import Sampling
 from src.models import Save
 
-base_path = Path(os.path.abspath(__file__)).parents[2]
+ROOT = Path(os.path.abspath(__file__)).parents[2]
 
-DARWIN = base_path / "data" / "processed" / "model_ocean_data"
-MATRICES = base_path / "data" / "processed" / "sampling_matrices"
-INTERIM = base_path / "data" / "interim" / "sampled_ecosys"
+DARWIN = ROOT / "data" / "processed" / "model_ocean_data"
+MATRICES = ROOT / "data" / "processed" / "sampling_matrices"
+INTERIM = ROOT / "data" / "interim" / "sampled_ecosys"
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
 t = time.sleep(2)
