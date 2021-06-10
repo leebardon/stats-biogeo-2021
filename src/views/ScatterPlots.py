@@ -100,7 +100,7 @@ def plot_inner(pmax, darwin_below_cut, gams_below_cut, frac, innersave, filename
     ax.text(
         0.25 * (darwin_below_cut + pmax),
         0.45 * (gams_below_cut + pmax),
-        round((frac/pmax), 2),
+        round((frac / pmax), 2),
         fontsize=26,
         fontweight="bold",
         color="white",
