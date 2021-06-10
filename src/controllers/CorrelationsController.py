@@ -96,27 +96,6 @@ with alive_bar(4) as bar:
     bar()
     t
 
-import pandas as pd
-
-dcorrs = pd.read_pickle(f"{BASEPATH}/data/processed/correlations/dcorrs/dcorrs.pkl")
-dcorrs_r = pd.read_pickle(f"{BASEPATH}/data/processed/correlations/dcorrs/dcorrs_r.pkl")
-dcorrs_f = pd.read_pickle(f"{BASEPATH}/data/processed/correlations/dcorrs/dcorrs_f.pkl")
-dcorrs_rf = pd.read_pickle(
-    f"{BASEPATH}/data/processed/correlations/dcorrs/dcorrs_rf.pkl"
-)
-r2_dcorrs = pd.read_pickle(
-    f"{BASEPATH}/data/processed/correlations/dcorrs/r2_dcorrs.pkl"
-)
-r3_dcorrs = pd.read_pickle(
-    f"{BASEPATH}/data/processed/correlations/dcorrs/r3_dcorrs.pkl"
-)
-r2_dcorrs_f = pd.read_pickle(
-    f"{BASEPATH}/data/processed/correlations/dcorrs/r2_dcorrs_f.pkl"
-)
-r3_dcorrs_f = pd.read_pickle(
-    f"{BASEPATH}/data/processed/correlations/dcorrs/r3_dcorrs_f.pkl"
-)
-
 print("Calculating changes in correlations over time...")
 with alive_bar(4) as bar:
     diffs_dfs = Correlations.calculate_differences(
@@ -127,7 +106,6 @@ with alive_bar(4) as bar:
             [r3_dcorrs, r3_dcorrs_f],
         ]
     )
-breakpoint()
 Save.save_to_pkl(
     Save.check_dir_exists(f"{CORRSAVE}/dcorrs"),
     **{
@@ -260,7 +238,7 @@ print("Plotting Distance Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "coolwarm",
+        "YlOrBr",
         Save.check_dir_exists(f"{PLOTSAVE}/dcorrs"),
         **{
             "hmap_dcorrs": dcorrs,
@@ -276,21 +254,19 @@ with alive_bar(1) as bar:
     bar()
     t
 
-print("Plotting correlation difference heatmaps...")
+print("Plotting correlation heatmap differences over time...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "pink",
-        Save.check_dir_exists(f"{PLOTSAVE}/dcorrs"),
+        "seismic",
+        Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
+        vmin=-0.3,
+        vmax=0.3,
         **{
-            "hmap_dcorrs": dcorrs,
-            "hmap_dcorrs_r": dcorrs_r,
-            "hmap_dcorrs_f": dcorrs_f,
-            "hmap_dcorrs_rf": dcorrs_rf,
-            "r2_hmap_dorrs": r2_dcorrs,
-            "r3_hmap_dcorrs": r3_dcorrs,
-            "r2_hmap_dcorrs_f": r2_dcorrs_f,
-            "r3_hmap_dcorrs_f": r3_dcorrs_f,
+            "hmap_diff": round(diffs_dfs[0], 2),
+            "hmap_diff_r": round(diffs_dfs[1], 2),
+            "r2_hmap_diff": round(diffs_dfs[2], 2),
+            "r3_hmap_diff": round(diffs_dfs[3], 2),
         },
     )
     bar()
@@ -300,7 +276,7 @@ print("Plotting Pearson's Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "RdYlGn",
+        "pink",
         Save.check_dir_exists(f"{PLOTSAVE}/pearsons"),
         **{
             "hmap_pearsons": pearsons,
@@ -332,31 +308,13 @@ print("Plotting Spearman's Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "pink",
+        "coolwarm",
         Save.check_dir_exists(f"{PLOTSAVE}/spearmans"),
         **{
             "hmap_spearmans": spearmans,
             "hmap_spearmans_r": spearmans_r,
             "hmap_spearmans_f": spearmans_f,
             "hmap_spearmans_rf": spearmans_rf,
-        },
-    )
-    bar()
-    t
-
-print("Plotting correlation heatmap differences over time...")
-with alive_bar(1) as bar:
-
-    HeatMaps.correlation_heatmap(
-        "seismic",
-        Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
-        vmin=-0.4,
-        vmax=0.4,
-        **{
-            "hmap_diff": round(diffs_dfs[0], 2),
-            "hmap_diff_r": round(diffs_dfs[1], 2),
-            "r2_hmap_diff": round(diffs_dfs[2], 2),
-            "r3_hmap_diff": round(diffs_dfs[3], 2),
         },
     )
     bar()
