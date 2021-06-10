@@ -6,10 +6,10 @@ from src.models import Save
 from src.views import HeatMaps
 
 
-BASEPATH = Path(os.path.abspath(__file__)).parents[2]
-DATASETS = f"{BASEPATH}/data/processed"
+ROOT = Path(os.path.abspath(__file__)).parents[2]
+DATASETS = f"{ROOT}/data/processed"
 CORRSAVE = Save.check_dir_exists(f"{DATASETS}/correlations")
-PLOTSAVE = Save.check_dir_exists(f"{BASEPATH}/results/all_plots/heatmaps")
+PLOTSAVE = Save.check_dir_exists(f"{ROOT}/results/all_plots/heatmaps")
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
