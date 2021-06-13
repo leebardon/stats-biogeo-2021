@@ -58,7 +58,6 @@ def process_and_plot(data_dict, coords, filepath="", maptitle="", mtype=0):
         "Dino": 0,
         "Zoo": 0,
     }
-
     means_coords = {"lon": 0, "lat": 0}
 
     for f_group, data in data_dict.items():
@@ -116,23 +115,29 @@ def prep_for_plotting(annual_means_da, f_group, filepath, maptitle):
 
 
 def plot_map(lon, lat, biomass, vmax, path, f_group, maptitle):
-
+    # set projection and colours
     projection = ccrs.PlateCarree(central_longitude=180.0)
     transform = ccrs.PlateCarree()
     cmap = "YlGnBu"
     fc = "lightgray"
 
+    # generate fig and axes
     fig = plt.figure(figsize=(7, 4))
-
     ax = plt.subplot(111, projection=projection)
+
+    # add map details
     ax1 = ax.add_feature(
         cfeature.NaturalEarthFeature(
             "physical", "land", "110m", edgecolor="face", facecolor=fc
         )
     )
+
+    # plot data
     ax1 = ax.pcolormesh(
         lon, lat, biomass, cmap=cmap, transform=transform, vmax=vmax, shading="gouraud"
     )
+
+    # format gridlines, coastlines, and labelling
     gl = ax.gridlines(linewidth=0, draw_labels=True)
     gl.top_labels, gl.left_labels, gl.right_labels, gl.bottom_labels = (
         False,
@@ -144,7 +149,8 @@ def plot_map(lon, lat, biomass, vmax, path, f_group, maptitle):
     ax.coastlines(linewidth=0.3)
     ax.set_aspect("auto")
 
-    if f_group == "Cocco":
+    # add location of measurements
+    if f_group == "Diatom" and path.endswith("present/darwin"):
         sample_x, sample_y = get_sample_coords()
         ax.scatter(sample_x, sample_y, transform=transform, s=0.8, color="firebrick")
 
@@ -156,7 +162,6 @@ def plot_map(lon, lat, biomass, vmax, path, f_group, maptitle):
         pad=0.03,
         label=" $\mathregular{mmol\ C/m^3}$ -- 95th pct ",
     )
-
     plt.title(maptitle, fontsize=13)
 
     plt.savefig(

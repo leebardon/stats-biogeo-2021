@@ -1,6 +1,4 @@
 import numpy as np
-import os
-from random import randint
 
 
 def column_coordinates(ocean_df):
@@ -32,13 +30,6 @@ def matrix_coordinates(matrix, type):
     return lon, lat, months
 
 
-def darwin_matrix_ccordinates(grid):
-    x = grid["X"].data
-    y = grid["Y"].data
-    t = np.arange(1, 265, 1)
-    return x, y, t
-
-
 def matrix_of_zeros():
     return np.zeros(shape=(144, 90, 265))
 
@@ -61,3 +52,6 @@ def random_matrix(SEED, num):
         rt = rng.integers(low=0, high=264)
         Ir[rx, ry, rt] = 1
     return Ir
+
+
+

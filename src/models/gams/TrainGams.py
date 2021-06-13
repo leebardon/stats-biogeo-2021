@@ -4,9 +4,8 @@ from pygam import LinearGAM, s, f
 
 
 def get_plankton(path, *plankton_sets):
-    """[summary] Returns plankton training sets converted from serialised pickle objects
-    into Pandas dataframes.
-
+    """Returns plankton training sets converted from serialised pickle objects
+        into Pandas dataframes.
     Args:
         path ([path]): Path to pickled training sets
         plankton_sets (*[pkl]): Four * pkl objects

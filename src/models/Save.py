@@ -207,3 +207,19 @@ def save_summaries(basepath, combined_df, summary, summary_r, summary_f, summary
             "summary_rf": summary_rf,
         },
     )
+
+def size_test_matrices(path, test_matrices, num_cells):
+    BASE = check_dir_exists(f"{path}/size_tests")
+    out = check_dir_exists(f"{BASE}/matrices")
+    for i, M in enumerate(test_matrices):
+        np.save(
+            f"{out}/M{num_cells[i]}",
+            M,
+            allow_pickle=True,
+        )
+
+def size_test_sampled_ecosys(path, sampled_ecosys_dfs):
+    BASE = check_dir_exists(f"{path}/size_tests")
+    out = check_dir_exists(f"{BASE}/sampled_ecosys")
+    for df in sampled_ecosys_dfs:
+        df.to_pickle(f"{out}/sampled_{len(df)}.pkl")
