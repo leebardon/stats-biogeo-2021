@@ -1,5 +1,6 @@
 import xarray as xr
 import time
+import os
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.views import MatrixPlots
@@ -44,8 +45,8 @@ with alive_bar(1) as bar:
 
 print("Adding 'Months' and 'Seasons' columns and saving processed dataset...")
 with alive_bar(2) as bar:
-    processed_ocean_df = AddColumns.create_months_column(ocean_measurements_df)
-    processed_ocean_df = AddColumns.create_seasons_column(ocean_measurements_df)
+    measurements_df_plus_months = AddColumns.create_months_column(ocean_measurements_df)
+    processed_ocean_df = AddColumns.create_seasons_column(measurements_df_plus_months)
     bar()
     t
 
