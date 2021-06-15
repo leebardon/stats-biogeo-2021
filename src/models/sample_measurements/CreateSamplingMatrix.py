@@ -52,6 +52,3 @@ def random_matrix(SEED, num):
         rt = rng.integers(low=0, high=264)
         Ir[rx, ry, rt] = 1
     return Ir
-
-
-

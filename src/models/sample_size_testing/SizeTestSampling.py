@@ -34,6 +34,3 @@ def check_land_removed(matrices):
         ocean = M_df[M_df["pCO2"] != 0]
         land_removed.append(ocean)
     return land_removed
-
-
-
