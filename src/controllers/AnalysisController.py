@@ -80,6 +80,7 @@ print("Calculating mean and median biomasses for each functional group (1987-200
 with alive_bar(3) as bar:
     mean_gams, median_gams = AnalyseGams.mean_and_median(gams_cut)
     bar()
+    t
     time.sleep(15)  # to save fans on poor laptop...
     mean_gams_r, median_gams_r = AnalyseGams.mean_and_median(gams_cut_r)
     bar()

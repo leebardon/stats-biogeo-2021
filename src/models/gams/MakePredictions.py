@@ -1,8 +1,5 @@
-import numpy as np
 import pandas as pd
-from pygam import LinearGAM, s, f
-import os, sys
-from pathlib import Path
+from pygam import LinearGAM
 
 
 def make_predictions(plankton_gams, predictors_oce):

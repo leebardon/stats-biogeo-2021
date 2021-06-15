@@ -21,13 +21,6 @@ def merge_matrix_and_ecosys_data(sampling_matrix, ecosys_data):
     return merged_df
 
 
-def merge_matrix_and_phys_data(sampling_matrix, phys_data):
-    merged_phys_data = phys_data.merge(
-        sampling_matrix, on=["X", "Y", "Month"], how="inner"
-    )
-    return merged_phys_data
-
-
 def remove_land(df):
     land_removed = df[df["pCO2"] != 0]
     return land_removed
@@ -41,4 +34,3 @@ def make_equal(sampled_set, randomly_sampled_set):
         inplace=True,
     )
     return randomly_sampled_set
-
