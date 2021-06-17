@@ -162,126 +162,126 @@ with alive_bar(1) as bar:
     )
     bar()
     t
-#
-# print("Plotting 1987-2008 Mean Relative Difference Maps (%)...")
-# with alive_bar(2) as bar:
-#
-#     DMS = DiffMapSettings()
-#     DIFF_P = Save.check_dir_exists(f"{DIFF}/present")
-#
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean,
-#         predictions,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_P}/gams"),
-#         "Mean Relative Difference",
-#         DMS.obvs,
-#     )
-#     bar()
-#     t
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean,
-#         predictions_r,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_P}/gams_random"),
-#         "Mean Relative Difference",
-#         DMS.rand,
-#     )
-#     bar()
-#     t
-#
-# print("Plotting 2079-2100 Mean Relative Difference Maps (%)...")
-# with alive_bar(2) as bar:
-#
-#     DIFF_F = Save.check_dir_exists(f"{DIFF}/future")
-#
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean_f,
-#         predictions_f,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_F}/gams"),
-#         "Mean Relative Difference",
-#         DMS.obvs,
-#     )
-#     bar()
-#     t
-#     RelativeDiffMaps.generate_diff_maps(
-#         darwin_ocean_f,
-#         predictions_rf,
-#         coords,
-#         Save.check_dir_exists(f"{DIFF_F}/gams_random"),
-#         "Mean Relative Difference",
-#         DMS.rand,
-#     )
-#     bar()
-#     t
 
-# print("Plotting scatter plots (1987-2008)...")
-# with alive_bar(2) as bar:
-#
-#     SETTINGS = ScatterSettings()
-#     SCATTER_P = Save.check_dir_exists(f"{SCATTER}/present")
-#     INNER_P = Save.check_dir_exists(f"{INNER}/present")
-#
-#     ScatterPlots.generate_scatter_plots(
-#         predictions,
-#         darwin_ocean,
-#         summary,
-#         Save.check_dir_exists(f"{SCATTER_P}/measurements"),
-#         Save.check_dir_exists(f"{INNER_P}/measurements"),
-#         1,
-#         SETTINGS.present,
-#     )
-#     bar()
-#     t
-#     ScatterPlots.generate_scatter_plots(
-#         predictions_r,
-#         darwin_ocean,
-#         summary_r,
-#         Save.check_dir_exists(f"{SCATTER_P}/random"),
-#         Save.check_dir_exists(f"{INNER_P}/random"),
-#         1,
-#         SETTINGS.present,
-#     )
-#     bar()
-#     t
-#
-# print("Plotting scatter plots (2079-2100)...")
-# with alive_bar(2) as bar:
-#
-#     SCATTER_F = Save.check_dir_exists(f"{SCATTER}/future")
-#     INNER_F = Save.check_dir_exists(f"{INNER}/future")
-#
-#     ScatterPlots.generate_scatter_plots(
-#         predictions_f,
-#         darwin_ocean_f,
-#         summary_f,
-#         Save.check_dir_exists(f"{SCATTER_F}/measurements"),
-#         Save.check_dir_exists(f"{INNER_F}/measurements"),
-#         2,
-#         SETTINGS.future,
-#     )
-#     bar()
-#     t
-#     ScatterPlots.generate_scatter_plots(
-#         predictions_rf,
-#         darwin_ocean_f,
-#         summary_rf,
-#         Save.check_dir_exists(f"{SCATTER_F}/random"),
-#         Save.check_dir_exists(f"{INNER_F}/random"),
-#         2,
-#         SETTINGS.future,
-#     )
-#     bar()
-#     t
-#
-# print("Plotting comparative r^2, balanced acc. and means ratios bar chart...")
-# with alive_bar(2) as bar:
-#
-#     Barplot.generate_barplot(
-#         Save.check_dir_exists(f"{PLOTS}/barplot"),
-#         summary,
-#         summary_f,
-#         summary_r,
-#         summary_rf,
-#     )
+print("Plotting 1987-2008 Mean Relative Difference Maps (%)...")
+with alive_bar(2) as bar:
+
+    DMS = DiffMapSettings()
+    DIFF_P = Save.check_dir_exists(f"{DIFF}/present")
+
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean,
+        predictions,
+        coords,
+        Save.check_dir_exists(f"{DIFF_P}/gams"),
+        "Mean Relative Difference",
+        DMS.obvs,
+    )
+    bar()
+    t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean,
+        predictions_r,
+        coords,
+        Save.check_dir_exists(f"{DIFF_P}/gams_random"),
+        "Mean Relative Difference",
+        DMS.rand,
+    )
+    bar()
+    t
+
+print("Plotting 2079-2100 Mean Relative Difference Maps (%)...")
+with alive_bar(2) as bar:
+
+    DIFF_F = Save.check_dir_exists(f"{DIFF}/future")
+
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean_f,
+        predictions_f,
+        coords,
+        Save.check_dir_exists(f"{DIFF_F}/gams"),
+        "Mean Relative Difference",
+        DMS.obvs,
+    )
+    bar()
+    t
+    RelativeDiffMaps.generate_diff_maps(
+        darwin_ocean_f,
+        predictions_rf,
+        coords,
+        Save.check_dir_exists(f"{DIFF_F}/gams_random"),
+        "Mean Relative Difference",
+        DMS.rand,
+    )
+    bar()
+    t
+
+print("Plotting scatter plots (1987-2008)...")
+with alive_bar(2) as bar:
+
+    SETTINGS = ScatterSettings()
+    SCATTER_P = Save.check_dir_exists(f"{SCATTER}/present")
+    INNER_P = Save.check_dir_exists(f"{INNER}/present")
+
+    ScatterPlots.generate_scatter_plots(
+        predictions,
+        darwin_ocean,
+        summary,
+        Save.check_dir_exists(f"{SCATTER_P}/measurements"),
+        Save.check_dir_exists(f"{INNER_P}/measurements"),
+        1,
+        SETTINGS.present,
+    )
+    bar()
+    t
+    ScatterPlots.generate_scatter_plots(
+        predictions_r,
+        darwin_ocean,
+        summary_r,
+        Save.check_dir_exists(f"{SCATTER_P}/random"),
+        Save.check_dir_exists(f"{INNER_P}/random"),
+        1,
+        SETTINGS.present,
+    )
+    bar()
+    t
+
+print("Plotting scatter plots (2079-2100)...")
+with alive_bar(2) as bar:
+
+    SCATTER_F = Save.check_dir_exists(f"{SCATTER}/future")
+    INNER_F = Save.check_dir_exists(f"{INNER}/future")
+
+    ScatterPlots.generate_scatter_plots(
+        predictions_f,
+        darwin_ocean_f,
+        summary_f,
+        Save.check_dir_exists(f"{SCATTER_F}/measurements"),
+        Save.check_dir_exists(f"{INNER_F}/measurements"),
+        2,
+        SETTINGS.future,
+    )
+    bar()
+    t
+    ScatterPlots.generate_scatter_plots(
+        predictions_rf,
+        darwin_ocean_f,
+        summary_rf,
+        Save.check_dir_exists(f"{SCATTER_F}/random"),
+        Save.check_dir_exists(f"{INNER_F}/random"),
+        2,
+        SETTINGS.future,
+    )
+    bar()
+    t
+
+print("Plotting comparative r^2, balanced acc. and means ratios bar chart...")
+with alive_bar(2) as bar:
+
+    Barplot.generate_barplot(
+        Save.check_dir_exists(f"{PLOTS}/barplot"),
+        summary,
+        summary_f,
+        summary_r,
+        summary_rf,
+    )

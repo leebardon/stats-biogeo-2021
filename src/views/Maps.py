@@ -150,7 +150,7 @@ def plot_map(lon, lat, biomass, vmax, path, f_group, maptitle):
     ax.set_aspect("auto")
 
     # add location of measurements
-    if f_group == "Diatom" and path.endswith("present/darwin"):
+    if f_group == "Cocco" and path.endswith("present/darwin"):
         sample_x, sample_y = get_sample_coords()
         ax.scatter(sample_x, sample_y, transform=transform, s=0.8, color="firebrick")
 

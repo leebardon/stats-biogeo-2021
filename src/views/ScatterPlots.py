@@ -1,15 +1,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import matplotlib.image as mpimg
+import os
+from pathlib import Path
 
-# from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-# import pandas as pd
-# import os, sys
-# from pathlib import Path
-
-# base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
-# INNER_PLOT_SAVE = base_path / "all_plots" / "inner_plots"
-# SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
+base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
+INNER_PLOT_SAVE = base_path / "all_plots" / "inner_plots"
+SCATTER_SAVE = base_path / "all_plots" / "scatter_plots"
 
 
 def generate_scatter_plots(
@@ -194,7 +191,7 @@ def scatter_plot(
         label="$log_{10}(N)$",
     )
 
-    # Upper left image     CHECK FILE LOCATION
+    # Upper left image
     image = mpimg.imread(inner_plot)
 
     ax = plt.axes([0.1, 0.65, 0.22, 0.22], frameon=False)

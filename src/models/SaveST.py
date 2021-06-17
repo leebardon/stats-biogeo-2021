@@ -5,9 +5,10 @@ import pandas as pd
 
 from src.models import Save
 
+
 def size_test_matrices(path, test_matrices, num_cells):
-    BASE = check_dir_exists(f"{path}/size_tests")
-    out = check_dir_exists(f"{BASE}/matrices")
+    BASE = Save.check_dir_exists(f"{path}/size_tests")
+    out = Save.check_dir_exists(f"{BASE}/matrices")
     for i, M in enumerate(test_matrices):
         np.save(
             f"{out}/M{num_cells[i]}",
@@ -100,6 +101,7 @@ def save_means_and_medians(
         },
     )
 
+
 def save_ratios(
     basepath,
     cocco_mean_ratios,
@@ -136,13 +138,8 @@ def save_ratios(
         },
     )
 
-def save_rsq(
-    basepath,
-    cocco_rsq,
-    diatom_rsq,
-    cocco_rsq_f,
-    diatom_rsq_f
-):
+
+def save_rsq(basepath, cocco_rsq, diatom_rsq, cocco_rsq_f, diatom_rsq_f):
     statsDir = Save.check_dir_exists(f"{basepath}/stats")
     subdir = Save.check_dir_exists(f"{statsDir}/rsquared")
     Save.check_dir_exists(f"{subdir}/present")
@@ -164,13 +161,14 @@ def save_rsq(
         },
     )
 
+
 def save_summaries(
-        basepath,
-        combined_df,
-        cocco_summary_stats,
-        diatom_summary_stats,
-        cocco_summary_stats_f,
-        diatom_summary_stats_f,
+    basepath,
+    combined_df,
+    cocco_summary_stats,
+    diatom_summary_stats,
+    cocco_summary_stats_f,
+    diatom_summary_stats_f,
 ):
     subdir = Save.check_dir_exists(f"{basepath}/summary")
     combined_df.to_csv(f"{subdir}/summary_sizetests.csv")
