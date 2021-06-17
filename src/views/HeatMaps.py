@@ -26,6 +26,7 @@ def correlation_heatmap(colour, path, vmin=None, vmax=None, **data_dicts):
             correlations,
             cmap=colour,
             linewidths=1.5,
+            annot_kws={"size": 16},
             linecolor="black",
             annot=True,
             square=True,

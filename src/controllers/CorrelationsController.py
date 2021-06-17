@@ -256,17 +256,16 @@ with alive_bar(1) as bar:
 
 print("Plotting correlation heatmap differences over time...")
 with alive_bar(1) as bar:
-
     HeatMaps.correlation_heatmap(
         "seismic",
         Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
         vmin=-0.3,
         vmax=0.3,
         **{
-            "hmap_diff": round(diffs_dfs[0], 2),
-            "hmap_diff_r": round(diffs_dfs[1], 2),
-            "r2_hmap_diff": round(diffs_dfs[2], 2),
-            "r3_hmap_diff": round(diffs_dfs[3], 2),
+            "hmap_diff": diffs_dfs[0].astype('float64').round(2),
+            "hmap_diff_r": diffs_dfs[1].astype('float64').round(2),
+            "r2_hmap_diff": diffs_dfs[2].astype('float64').round(2),
+            "r3_hmap_diff": diffs_dfs[3].astype('float64').round(2),
         },
     )
     bar()
@@ -276,13 +275,13 @@ print("Plotting Pearson's Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "pink",
+        "PiYG",
         Save.check_dir_exists(f"{PLOTSAVE}/pearsons"),
         **{
-            "hmap_pearsons": pearsons,
-            "hmap_pearsons_r": pearsons_r,
-            "hmap_pearsons_f": pearsons_f,
-            "hmap_pearsons_rf": pearsons_rf,
+            "hmap_pearsons": pearsons.astype('float64').round(2),
+            "hmap_pearsons_r": pearsons_r.astype('float64').round(2),
+            "hmap_pearsons_f": pearsons_f.astype('float64').round(2),
+            "hmap_pearsons_rf": pearsons_rf.astype('float64').round(2),
         },
     )
     bar()
@@ -292,13 +291,13 @@ print("Plotting log transformed Pearson's Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "Blues",
+        "BrBG",
         Save.check_dir_exists(f"{PLOTSAVE}/ln_pearsons"),
         **{
-            "hmap_ln_pearsons": ln_pearsons,
-            "hmap_ln_pearsons_r": ln_pearsons_r,
-            "hmap_ln_pearsons_f": ln_pearsons_f,
-            "hmap_ln_pearsons_rf": ln_pearsons_rf,
+            "hmap_ln_pearsons": ln_pearsons.astype('float64').round(2),
+            "hmap_ln_pearsons_r": ln_pearsons_r.astype('float64').round(2),
+            "hmap_ln_pearsons_f": ln_pearsons_f.astype('float64').round(2),
+            "hmap_ln_pearsons_rf": ln_pearsons_rf.astype('float64').round(2),
         },
     )
     bar()
@@ -308,13 +307,13 @@ print("Plotting Spearman's Correlation heatmaps...")
 with alive_bar(1) as bar:
 
     HeatMaps.correlation_heatmap(
-        "coolwarm",
+        "RdYlGn",
         Save.check_dir_exists(f"{PLOTSAVE}/spearmans"),
         **{
-            "hmap_spearmans": spearmans,
-            "hmap_spearmans_r": spearmans_r,
-            "hmap_spearmans_f": spearmans_f,
-            "hmap_spearmans_rf": spearmans_rf,
+            "hmap_spearmans": spearmans.astype('float64').round(2),
+            "hmap_spearmans_r": spearmans_r.astype('float64').round(2),
+            "hmap_spearmans_f": spearmans_f.astype('float64').round(2),
+            "hmap_spearmans_rf": spearmans_rf.astype('float64').round(2),
         },
     )
     bar()
