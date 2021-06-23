@@ -34,6 +34,7 @@ def pres_abs_summary(gams, darwin):
     darwin_pres = [
         (darwin[g][(darwin[g] > CUTOFF) & (gams[g] > CUTOFF)]) for g in F_GROUPS
     ]
+    breakpoint()
     gams_abs = [(gams[g][(gams[g] < CUTOFF)]) for g in F_GROUPS]
     darwin_abs = [(darwin[g][(darwin[g] < CUTOFF)]) for g in F_GROUPS]
     summary = summary_df(
@@ -47,8 +48,8 @@ def pres_abs_summary(gams, darwin):
         false_neg,
         total,
     )
-    gams_prepped, darwin_prepped = remove_outliers(gams_pres, darwin_pres)
-    return gams_prepped, darwin_prepped, summary
+    # gams_prepped, darwin_prepped = remove_outliers(gams_pres, darwin_pres)
+    return gams_pres, darwin_pres, summary
 
 
 def remove_outliers(gams, darwin):
@@ -193,3 +194,9 @@ def return_combined_df(dfs):
         ],
         axis=0,
     )
+
+def pres_abs_tsets(gams):
+    absence = []
+    for i in gams:
+        absence.append(len(gams[i][gams[i] < 1.001e-5]))
+    return absence
