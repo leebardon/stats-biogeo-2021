@@ -41,8 +41,13 @@ def plot_pdp(gam_p, gam_f, func_group, path):
         ax.plot(XX2[:, i], gam_f.partial_dependence(term=i, X=XX2), linewidth=3)
 
         if i == 0:
+            # if func_group == "Cocco":
+            #     ax.set_ylabel("Partial Dep. (rand.)", fontsize=18)
+            # else:
             ax.set_ylabel(y_label, fontsize=20)
-        ax.set_xlabel(labels[i], fontsize=12)
+        ax.set_xlabel(labels[i], fontsize=18)
+
+
 
     plt.savefig(
         f"{path}/{func_group}.pdf",

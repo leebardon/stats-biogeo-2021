@@ -61,66 +61,66 @@ with alive_bar(2) as bar:
     bar()
     t
 
-# print("Building plankton and predictor training sets for sample size tests...")
-# with alive_bar(1) as bar:
-#     predictor_tsets = SizeTestGams.build_predictor_tsets(
-#         sampled_ecosys_dfs, sss, sst, par
-#     )
-#     cocco_tsets, diatom_tsets = SizeTestGams.build_plankton_tsets(sampled_ecosys_dfs)
-#
-#     SaveST.size_test_training_sets(SIZE_TESTS, predictor_tsets, cocco_tsets, diatom_tsets)
-#     bar()
-#     t
+print("Building plankton and predictor training sets for sample size tests...")
+with alive_bar(1) as bar:
+    predictor_tsets = SizeTestGams.build_predictor_tsets(
+        sampled_ecosys_dfs, sss, sst, par
+    )
+    cocco_tsets, diatom_tsets = SizeTestGams.build_plankton_tsets(sampled_ecosys_dfs)
+
+    SaveST.size_test_training_sets(SIZE_TESTS, predictor_tsets, cocco_tsets, diatom_tsets)
+    bar()
+    t
 
 
-# print("Fitting GAMs to test samples...")
-# with alive_bar(2) as bar:
-#     cocco_cut, diatom_cut = SizeTestGams.apply_size_test_cutoff(
-#         CUTOFF, cocco_tsets, diatom_tsets
-#     )
-#     bar()
-#     t
-#     cocco_gams, diatom_gams = SizeTestGams.fit_size_test_gams(
-#         cocco_cut, diatom_cut, predictor_tsets
-#     )
-#     bar()
-#     t
+print("Fitting GAMs to test samples...")
+with alive_bar(2) as bar:
+    cocco_cut, diatom_cut = SizeTestGams.apply_size_test_cutoff(
+        CUTOFF, cocco_tsets, diatom_tsets
+    )
+    bar()
+    t
+    cocco_gams, diatom_gams = SizeTestGams.fit_size_test_gams(
+        cocco_cut, diatom_cut, predictor_tsets
+    )
+    bar()
+    t
 
 
-# print("Making predictions (1987-2008)...")
-# with alive_bar(2) as bar:
-#     predictors_oce = f"{PROC}/validation_sets/predictors/predictors_oce.pkl"
-#     cocco_predictions = SizeTestGams.make_size_test_predictions("coccos", cocco_gams, predictors_oce)
-#     bar()
-#     time.sleep(60)
-#     diatom_predictions = SizeTestGams.make_size_test_predictions("diatoms", diatom_gams, predictors_oce)
-#     bar()
-#     t
+print("Making predictions (1987-2008)...")
+with alive_bar(2) as bar:
+    predictors_oce = f"{PROC}/validation_sets/predictors/predictors_oce.pkl"
+    cocco_predictions = SizeTestGams.make_size_test_predictions("coccos", cocco_gams, predictors_oce)
+    bar()
+    time.sleep(60)
+    diatom_predictions = SizeTestGams.make_size_test_predictions("diatoms", diatom_gams, predictors_oce)
+    bar()
+    t
 
-# print("Making predictions (2079-2100)...")
-# with alive_bar(3) as bar:
-#     predictors_oce_f = f"{PROC}/validation_sets/predictors/predictors_oce_f.pkl"
-#     cocco_predictions_f = SizeTestGams.make_size_test_predictions(
-#         "coccos_f", cocco_gams, predictors_oce_f
-#     )
-#     bar()
-#     time.sleep(60)
-#     diatom_predictions_f = SizeTestGams.make_size_test_predictions(
-#         "diatoms_f", diatom_gams, predictors_oce_f
-#     )
-#     bar()
-#     t
-#     SaveST.save_predictions(
-#         Save.check_dir_exists(f"{SIZE_TESTS}/predictions"),
-#         **{
-#             "cocco_predictions": cocco_predictions,
-#             "diatom_predictions": diatom_predictions,
-# "cocco_predictions_f": cocco_predictions_f,
-# "diatom_predictions_f": diatom_predictions_f,
-# },
-# )
-#     bar()
-#     t
+print("Making predictions (2079-2100)...")
+with alive_bar(3) as bar:
+    predictors_oce_f = f"{PROC}/validation_sets/predictors/predictors_oce_f.pkl"
+    cocco_predictions_f = SizeTestGams.make_size_test_predictions(
+        "coccos_f", cocco_gams, predictors_oce_f
+    )
+    bar()
+    time.sleep(60)
+    diatom_predictions_f = SizeTestGams.make_size_test_predictions(
+        "diatoms_f", diatom_gams, predictors_oce_f
+    )
+    bar()
+    t
+    SaveST.save_predictions(
+        Save.check_dir_exists(f"{SIZE_TESTS}/predictions"),
+        **{
+            "cocco_predictions": cocco_predictions,
+            "diatom_predictions": diatom_predictions,
+"cocco_predictions_f": cocco_predictions_f,
+"diatom_predictions_f": diatom_predictions_f,
+},
+)
+    bar()
+    t
 
 
 from src.models.gams import AnalyseGams
@@ -225,20 +225,20 @@ with alive_bar(3) as bar:
 #     )
 
 
-mean_cocco = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/mean_cocco.pkl")
-median_cocco = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/median_cocco.pkl")
-mean_diatom = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/mean_diatoms.pkl")
-median_diatom = pd.read_pickle(
-    f"{SIZE_TESTS}/stats/mean_med/present/median_diatoms.pkl"
-)
-mean_cocco_f = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/future/mean_cocco_f.pkl")
-median_cocco_f = pd.read_pickle(
-    f"{SIZE_TESTS}/stats/mean_med/future/median_cocco_f.pkl"
-)
-mean_diatom_f = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/future/mean_diatoms_f.pkl")
-median_diatom_f = pd.read_pickle(
-    f"{SIZE_TESTS}/stats/mean_med/future/median_diatoms_f.pkl"
-)
+# mean_cocco = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/mean_cocco.pkl")
+# median_cocco = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/median_cocco.pkl")
+# mean_diatom = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/present/mean_diatoms.pkl")
+# median_diatom = pd.read_pickle(
+#     f"{SIZE_TESTS}/stats/mean_med/present/median_diatoms.pkl"
+# )
+# mean_cocco_f = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/future/mean_cocco_f.pkl")
+# median_cocco_f = pd.read_pickle(
+#     f"{SIZE_TESTS}/stats/mean_med/future/median_cocco_f.pkl"
+# )
+# mean_diatom_f = pd.read_pickle(f"{SIZE_TESTS}/stats/mean_med/future/mean_diatoms_f.pkl")
+# median_diatom_f = pd.read_pickle(
+#     f"{SIZE_TESTS}/stats/mean_med/future/median_diatoms_f.pkl"
+# )
 
 
 print("Calc. mean and median ratios (1987-2008)...")
