@@ -1,20 +1,19 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
+import os
 import time
-
 from alive_progress import alive_bar, config_handler
 from pathlib import Path
 from src.models import Save
 from src.models.gams import TrainGams, MakePredictions
 from src.views import PartialDepPlots
 
-BASEPATH = Path(os.path.abspath(__file__)).parents[2]
+ROOT = Path(os.path.abspath(__file__)).parents[2]
 
-DATA = BASEPATH / "data" / "processed"
-RESULTS = Save.check_dir_exists(f"{BASEPATH}/results/gams_output")
-PLOTS = Save.check_dir_exists(f"{BASEPATH}/results/all_plots")
+# Load
+DATA = ROOT / "data_test" / "processed"
+# Save
+RESULTS = Save.check_dir_exists(f"{ROOT}/results_test/gams_output")
+PLOTS = Save.check_dir_exists(f"{ROOT}/results_test/all_plots")
+# Const.
 CUTOFF = 1.001e-5
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -86,9 +85,9 @@ with alive_bar(2) as bar:
 
 print("Generating partial dependency plots...")
 with alive_bar(2) as bar:
-#
+
     PLOTS_PDP = Save.check_dir_exists(f"{PLOTS}/partial_dep_plots")
-#
+
     PartialDepPlots.partial_dependency_plots(
         Save.check_dir_exists(f"{PLOTS_PDP}/from_measurements"),
         gams,
@@ -140,16 +139,15 @@ with alive_bar(2) as bar:
     )
     bar()
     t
-    time.sleep(60)
+    Save.save_predictions(
+        Save.check_dir_exists(f"{RESULTS}/predictions"),
+        **{
+            "predictions": predictions,
+            "predictions_r": predictions_r,
+            "predictions_f": predictions_f,
+            "predictions_rf": predictions_rf,
+        },
+    )
+    bar()
+    t
 
-Save.save_predictions(
-    f"{RESULTS}/predictions",
-    **{
-        "predictions": predictions,
-        "predictions_r": predictions_r,
-        "predictions_f": predictions_f,
-        "predictions_rf": predictions_rf,
-    },
-)
-bar()
-t

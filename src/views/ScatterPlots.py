@@ -228,3 +228,25 @@ class ScatterSettings:
             "Dino": [1.42, 1.42],
             "Zoo": [8.36, 8.36],
         }
+
+class ScatterSettingsTest:
+    def __init__(self):
+        # [xlim, ylim]
+        self.present = {
+            "Pro": [0.74, 0.74],
+            "Pico": [0.58, 0.58],
+            "Cocco": [0.9, 0.9],
+            "Diazo": [0.25, 0.25],
+            "Diatom": [3, 3],
+            "Dino": [1.2, 1.0],
+            "Zoo": [7, 7],
+        }
+        self.future = {
+            "Pro": [0.71, 0.71],
+            "Pico": [0.6, 0.6],
+            "Cocco": [0.9, 0.9],
+            "Diazo": [0.35, 0.35],
+            "Diatom": [2.5, 2.5],
+            "Dino": [1.2, 1.2],
+            "Zoo": [7.5, 7.5],
+        }

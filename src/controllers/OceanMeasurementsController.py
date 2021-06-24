@@ -10,13 +10,16 @@ from src.models.sample_measurements import (
     AddColumns,
     CreateSamplingMatrix,
 )
-
 ROOT = Path(os.path.abspath(__file__)).parents[2]
-OCEAN_OBVS = ROOT / "data" / "raw" / "ocean_observations.netcdf"
-GRID_CELL = ROOT / "data" / "raw" / "grid_igsm.nc"
-SAVEPATH = ROOT / "data" / "processed"
-PLOTPATH = ROOT / "results" / "all_plots" / "sample_distributions"
 SEED, SEED2, SEED3 = 2021_1, 2021_2, 2021_3
+
+# Load
+OCEAN_OBVS = ROOT / "data_test" / "raw" / "ocean_observations.netcdf"
+GRID_CELL = ROOT / "data_test" / "raw" / "grid_igsm.nc"
+# Save
+SAVEPATH = Save.check_dir_exists(f"{ROOT}/data_test/processed")
+PLOTPATH = Save.check_dir_exists(f"{ROOT}/results_test/all_plots/sample_distributions")
+
 
 log = Utils.setup_logger("syslog")
 scilog = Utils.setup_logger("scilog_ocean_meas")
@@ -45,8 +48,8 @@ with alive_bar(1) as bar:
 
 print("Adding 'Months' and 'Seasons' columns and saving processed dataset...")
 with alive_bar(2) as bar:
-    measurements_df_plus_months = AddColumns.create_months_column(ocean_measurements_df)
-    processed_ocean_df = AddColumns.create_seasons_column(measurements_df_plus_months)
+    processed_ocean_df = AddColumns.create_months_column(ocean_measurements_df)
+    # processed_ocean_df = AddColumns.create_seasons_column(measurements_df_plus_months)
     bar()
     t
 

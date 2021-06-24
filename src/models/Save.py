@@ -8,7 +8,7 @@ import pandas as pd
 
 def check_dir_exists(path):
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path, exist_ok=True)
     return path
 
 

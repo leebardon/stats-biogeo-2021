@@ -1,7 +1,4 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
+import os
 import numpy as np
 import time
 from alive_progress import alive_bar, config_handler
@@ -9,13 +6,15 @@ from pathlib import Path
 from src.models import Save
 from src.models.build_training_sets import TrainingSetBuilder as TSB
 
-base_path = Path(os.path.abspath(__file__)).parents[2]
+ROOT = Path(os.path.abspath(__file__)).parents[2]
 
-SAMPLES = base_path / "data" / "interim" / "sampled_ecosys"
-OCEAN = base_path / "data" / "processed_test2" / "model_ocean_data"
-TARGETS_TSETS = base_path / "data" / "processed_test2" / "sampled_plankton"
-PREDICTORS_TSETS = base_path / "data" / "processed_test2" / "sampled_predictors"
-VSETS = base_path / "data" / "processed" / "validation_sets"
+# Load
+SAMPLES = ROOT / "data_test" / "interim" / "sampled_ecosys"
+OCEAN = ROOT / "data_test" / "processed" / "model_ocean_data"
+# Save
+TARGETS_TSETS = Save.check_dir_exists(f"{ROOT}/data_test/processed/sampled_plankton")
+PREDICTORS_TSETS = Save.check_dir_exists(f"{ROOT}/data_test/processed/sampled_predictors")
+VSETS = Save.check_dir_exists(f"{ROOT}/data_test/processed/validation_sets")
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -47,24 +46,30 @@ with alive_bar(2) as bar:
     salinity_oce, sst_oce, par_oce = TSB.get_data(
         f"{OCEAN}/present",
         *[
-            "sss_ocean_p.pkl",
-            "sst_ocean_p.pkl",
-            "par_ocean.pkl",
+            # "sss_ocean_p.pkl",
+            # "sst_ocean_p.pkl",
+            # "par_ocean.pkl",
+            "sss_test_p.pkl",
+            "sst_test_p.pkl",
+            "par_test.pkl",
         ],
     )
     salinity_oce_f, sst_oce_f, par_oce = TSB.get_data(
         f"{OCEAN}/future",
         *[
-            "sss_ocean_f.pkl",
-            "sst_ocean_f.pkl",
-            "par_ocean.pkl",
+            # "sss_ocean_f.pkl",
+            # "sst_ocean_f.pkl",
+            # "par_ocean.pkl",
+            "sss_test_f.pkl",
+            "sst_test_f.pkl",
+            "par_test.pkl",
         ],
     )
     bar()
     t
 
 print("Building predictor variable training sets (primary) ...")
-with alive_bar(2) as bar:
+with alive_bar(5) as bar:
     predictors = TSB.return_predictor_dataset(eco_samp, salinity_oce, sst_oce, par_oce)
     bar()
     t
@@ -98,7 +103,7 @@ with alive_bar(2) as bar:
 print(
     "Building predictor variable training sets (using larger randomly-sampled sets) ..."
 )
-with alive_bar(2) as bar:
+with alive_bar(4) as bar:
     r2_predictors = TSB.return_predictor_dataset(
         r2_samp, salinity_oce, sst_oce, par_oce
     )
@@ -228,6 +233,8 @@ with alive_bar(2) as bar:
             "r3_plankton_f": r3_tsets_f,
         },
     )
+    bar()
+    t
 
 print("Building whole-ocean validation sets for plankton functional groups...")
 with alive_bar(3) as bar:
@@ -250,6 +257,7 @@ with alive_bar(3) as bar:
     dino_oce, dino_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(46, 56))
     zoo_oce, zoo_oce_f = TSB.group_oce_plank(eco_oce, eco_oce_f, *np.arange(56, 72))
     bar()
+    t
     pl_oce = [pro_oce, pico_oce, cocco_oce, diazo_oce, diatom_oce, dino_oce, zoo_oce]
     pl_oce_f = [
         pro_oce_f,
@@ -260,11 +268,12 @@ with alive_bar(3) as bar:
         dino_oce_f,
         zoo_oce_f,
     ]
+    Save.check_dir_exists(f"{VSETS}/plankton")
     Save.plankton_dicts(
         f"{VSETS}",
         **{
-            "plankton/plankton_oce.pkl": pl_oce,
-            "plankton/plankton_oce_f.pkl": pl_oce_f,
+            "plankton/plankton_oce": pl_oce,
+            "plankton/plankton_oce_f": pl_oce_f,
         },
     )
     bar()
@@ -280,6 +289,7 @@ with alive_bar(2) as bar:
     )
     bar()
     t
+    Save.check_dir_exists(f"{VSETS}/predictors")
     Save.save_to_pkl(
         f"{VSETS}",
         **{
