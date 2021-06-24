@@ -7,9 +7,12 @@ from src.views import HeatMaps
 
 
 ROOT = Path(os.path.abspath(__file__)).parents[2]
-DATASETS = f"{ROOT}/data/processed"
+
+# Load
+DATASETS = f"{ROOT}/data_test/processed"
+# Save
 CORRSAVE = Save.check_dir_exists(f"{DATASETS}/correlations")
-PLOTSAVE = Save.check_dir_exists(f"{ROOT}/results/all_plots/heatmaps")
+PLOTSAVE = Save.check_dir_exists(f"{ROOT}/results_test/all_plots/heatmaps")
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -241,10 +244,10 @@ with alive_bar(1) as bar:
         "YlOrBr",
         Save.check_dir_exists(f"{PLOTSAVE}/dcorrs"),
         **{
-            "hmap_dcorrs": dcorrs,
-            "hmap_dcorrs_r": dcorrs_r,
-            "hmap_dcorrs_f": dcorrs_f,
-            "hmap_dcorrs_rf": dcorrs_rf,
+            # "hmap_dcorrs": dcorrs,
+            # "hmap_dcorrs_r": dcorrs_r,
+            # "hmap_dcorrs_f": dcorrs_f,
+            # "hmap_dcorrs_rf": dcorrs_rf,
             "r2_hmap_dorrs": r2_dcorrs,
             "r3_hmap_dcorrs": r3_dcorrs,
             "r2_hmap_dcorrs_f": r2_dcorrs_f,
@@ -254,22 +257,22 @@ with alive_bar(1) as bar:
     bar()
     t
 
-print("Plotting correlation heatmap differences over time...")
-with alive_bar(1) as bar:
-    HeatMaps.correlation_heatmap(
-        "seismic",
-        Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
-        vmin=-0.3,
-        vmax=0.3,
-        **{
-            "hmap_diff": diffs_dfs[0].astype('float64').round(2),
-            "hmap_diff_r": diffs_dfs[1].astype('float64').round(2),
-            "r2_hmap_diff": diffs_dfs[2].astype('float64').round(2),
-            "r3_hmap_diff": diffs_dfs[3].astype('float64').round(2),
-        },
-    )
-    bar()
-    t
+# print("Plotting correlation heatmap differences over time...")
+# with alive_bar(1) as bar:
+#     HeatMaps.correlation_heatmap(
+#         "seismic",
+#         Save.check_dir_exists(f"{PLOTSAVE}/dcorr_diffs"),
+#         vmin=-0.3,
+#         vmax=0.3,
+#         **{
+#             "hmap_diff": diffs_dfs[0].astype('float64').round(2),
+#             "hmap_diff_r": diffs_dfs[1].astype('float64').round(2),
+#             "r2_hmap_diff": diffs_dfs[2].astype('float64').round(2),
+#             "r3_hmap_diff": diffs_dfs[3].astype('float64').round(2),
+#         },
+#     )
+#     bar()
+#     t
 
 print("Plotting Pearson's Correlation heatmaps...")
 with alive_bar(1) as bar:

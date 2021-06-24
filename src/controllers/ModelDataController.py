@@ -1,24 +1,19 @@
-import os, sys
-
-sys.path.insert(0, os.path.abspath(os.path.join(__file__, "..", "..", "..")))
-
-import numpy as np
+import os
 import pandas as pd
-import xarray as xrS
 import time
 from alive_progress import alive_bar, config_handler
 from pathlib import Path
 from src.models import Save
 from src.models.extract_model_data import GetEcosysData, GetPhysicalData
 
-# CombineDatasets - apparently this was a module I was gonna create :/ ??
-# CREATE METHOD TO PRODUCE OUTPUT FILES of shape, min(X) max(X) etc
-
-base_path = Path(os.path.abspath(__file__)).parents[2]
-RAW = base_path / "data" / "raw"
-INTERIM = base_path / "data" / "interim" / "whole_ecosys"
-PROCESSED = base_path / "data" / "processed"
+ROOT = Path(os.path.abspath(__file__)).parents[2]
 DEPTH = 0
+
+# Load
+RAW = ROOT / "data" / "raw"
+INTERIM = ROOT / "data" / "interim" / "whole_ecosys"
+# Save
+PROCESSED = Save.check_dir_exists(f"{ROOT}/data_test/processed")
 
 
 config_handler.set_global(length=50, spinner="fish_bouncing")
@@ -53,6 +48,7 @@ with alive_bar(3) as bar:
     ecosys_interim = pd.read_pickle(f"{INTERIM}/ecosys_interim_p.pkl")
     ecosys_interim_f = pd.read_pickle(f"{INTERIM}/ecosys_interim_f.pkl")
 
+
 print("Mapping lat and lon degrees to grid coords...")
 with alive_bar(2) as bar:
     ecosys = GetEcosysData.add_grid_coords(ecosys_interim)
@@ -60,20 +56,21 @@ with alive_bar(2) as bar:
     bar()
     t
 
+    # NOT WORKING
     # print("Adding 'Seasons' column and saving...")
     # with alive_bar(2) as bar:
-    # NOT WORKING
     # ecosys = GetEcosysData.add_seasons_col(ecosys)
     # ecosys_f = GetEcosysData.add_seasons_col(ecosys_f)
     # bar()
     # t
 
     Save.save_to_pkl(
-        f"{PROCESSED}/model_ocean_data/present", **{"new_ecosys_ocean_p.pkl": ecosys}
+        Save.check_dir_exists(f"{PROCESSED}/model_ocean_data/present"),
+        **{"ecosys_ocean_p.pkl": ecosys}
     )
     Save.save_to_pkl(
-        f"{PROCESSED}/model_ocean_data/future",
-        **{"new_ecosys_ocean_f.pkl": ecosys_f},
+        Save.check_dir_exists(f"{PROCESSED}/model_ocean_data/future"),
+        **{"ecosys_ocean_f.pkl": ecosys_f},
     )
     bar()
     t

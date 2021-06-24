@@ -2,6 +2,8 @@ docs/site/
 .idea/*
 
 # Large datafiles
+/data_test/*
+/results_test/*
 /data/imported/*
 /data/interim/*
 /data/processed/*

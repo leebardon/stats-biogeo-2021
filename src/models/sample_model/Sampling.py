@@ -2,18 +2,34 @@ import numpy as np
 import pandas as pd
 
 
-def reshape_matrices(I, Ir):
-    pos_I, pos_Ir = np.where(I == 1), np.where(Ir == 1)
-    I = np.vstack((pos_I[0], pos_I[1], pos_I[2])).T
-    Ir = np.vstack((pos_Ir[0], pos_Ir[1], pos_Ir[2])).T
-    return I, Ir
+def get_matrices(path, *matrices):
+    mats = []
+    for matrix in matrices:
+        mats.append(np.load(f"{path}/{matrix}.npy"))
+    return [m for m in mats]
 
 
-def return_dataframes(I, Ir):
-    I_df = pd.DataFrame((I[:, 0], I[:, 1], I[:, 2])).T
-    Ir_df = pd.DataFrame((Ir[:, 0], Ir[:, 1], Ir[:, 2])).T
-    I_df.columns, Ir_df.columns = ["X", "Y", "Month"], ["X", "Y", "Month"]
-    return I_df, Ir_df
+def reshape_matrices(*matrices):
+    mats = []
+    for matrix in matrices:
+        pos_I = np.where(matrix == 1)
+        mats.append(np.vstack((pos_I[0], pos_I[1], pos_I[2])).T)
+    return [m for m in mats]
+
+
+def return_dataframes(*matrices):
+    mats = []
+    for matrix in matrices:
+        I_df = pd.DataFrame((matrix[:, 0], matrix[:, 1], matrix[:, 2])).T
+        I_df.columns = ["X", "Y", "Month"]
+        mats.append(I_df)
+    return [m for m in mats]
+
+def get_ecosys_data(path, *files):
+    data = []
+    for file in files:
+        data.append(pd.read_pickle(f"{path}/{file}.pkl"))
+    return [d for d in data]
 
 
 def merge_matrix_and_ecosys_data(sampling_matrix, ecosys_data):

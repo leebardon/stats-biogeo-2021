@@ -34,7 +34,6 @@ def pres_abs_summary(gams, darwin):
     darwin_pres = [
         (darwin[g][(darwin[g] > CUTOFF) & (gams[g] > CUTOFF)]) for g in F_GROUPS
     ]
-    breakpoint()
     gams_abs = [(gams[g][(gams[g] < CUTOFF)]) for g in F_GROUPS]
     darwin_abs = [(darwin[g][(darwin[g] < CUTOFF)]) for g in F_GROUPS]
     summary = summary_df(

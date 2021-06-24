@@ -44,8 +44,8 @@ def build_combined_surface_df(all_surface_data, col_names):
 def add_grid_coords(ecosys):
     x_deg, y_deg = get_degrees_columns(ecosys)
     ecosys.rename({"X": "x_deg", "Y": "y_deg"}, axis=1, inplace=True)
-    ecosys["X"] = ((2 * x_deg) / 5 + 0.5).astype(int) - 1
-    ecosys["Y"] = ((y_deg + 92) / 2).astype(int) - 1
+    ecosys["X"] = ((2 * x_deg) / 5 + 0.5).astype(int)
+    ecosys["Y"] = ((y_deg + 92) / 2).astype(int)
     save_degrees_coords(ecosys)
     return ecosys
 

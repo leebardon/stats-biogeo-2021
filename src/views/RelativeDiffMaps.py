@@ -133,3 +133,26 @@ class DiffMapSettings:
             "Dino": [-15.0, 15.0],
             "Zoo": [-85.0, 85.0],
         }
+
+class DiffMapSettingsTest:
+    def __init__(self):
+        # [scaling present and future map to whichever has the wider range, for direct comparison]
+
+        self.obvs = {
+            "Pro": [-20.0, 20.0],
+            "Pico": [-15.5, 15.5],
+            "Cocco": [-20.0, 20.0],
+            "Diazo": [-10, 10],
+            "Diatom": [-42.0, 42.0],
+            "Dino": [-25.0, 25.0],
+            "Zoo": [-150.0, 150.0],
+        }
+        self.rand = {
+            "Pro": [-8.5, 8.5],
+            "Pico": [-7.5, 7.5],
+            "Cocco": [-15.0, 15.0],
+            "Diazo": [-7.0, 7.0],
+            "Diatom": [-25.0, 25.0],
+            "Dino": [-15.0, 15.0],
+            "Zoo": [-85.0, 85.0],
+        }
