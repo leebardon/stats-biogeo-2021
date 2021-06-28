@@ -1,4 +1,4 @@
-# Analysing Data from MIT's Darwin Model
+## How predictable is plankton biogeography using statistical learning methods?
 
 **NOTE**: _This package is a work in progress (as of 22nd Mar 2021). This message will be removed when v.1.0 development is complete._
 
