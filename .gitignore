@@ -3,7 +3,6 @@ docs/site/
 
 # Large datafiles
 /notebooks/*
-/data/*
 /results/*
 /data/imported/*
 /data/raw/*

@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -21,7 +21,7 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	@conda env update --file environment-dev.yaml
+	@conda env update --file environment-dev.yml
 
 # Delete unnecessary python compiled files
 clean:
@@ -49,9 +49,6 @@ else
 		echo ">>> FAILED!! Conda not found. Please download and run command again." 
 endif
 
-
-test_environment:
-	@$(PYTHON_VERSION) test_environment.py
 
 #################################################################################
 # PROJECT RULES                                                                 #
