@@ -1,6 +1,6 @@
 import xarray as xr
 import os
-from subprocess import run
+import sys
 from time import sleep
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
@@ -38,7 +38,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem obtaining measurements .netcdf dataset ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Decoding bytes objects and coercing to floats...")
@@ -50,7 +50,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem Decoding bytes objects and coercing to floats...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Drop erroneous data (Year > 2.008e+03 ; Day > 9.96e+30)...")
@@ -62,7 +62,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem dropping erroneous data......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Adding 'Months' columns and saving processed dataset...")
@@ -82,7 +82,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem adding months column......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Obtaining vectors of ocean measurements' lon, lat & time (mon 1 -> 264)...")
@@ -99,7 +99,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem obtaining vectors of ocean measurements......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Obtaining vectors of Darwin cell centre's lon, lat & time (mon 1 -> 264)...")
@@ -112,7 +112,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem obtaining vectors of Darwin cell centres......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Generating and saving sampling matrices...")
@@ -141,7 +141,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem generating sampling matrices......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Generating and saving sample distribution plots...")
@@ -179,7 +179,6 @@ with alive_bar(4) as bar:
 
     except:
         print(" \n ERROR: Problem generating plots......")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

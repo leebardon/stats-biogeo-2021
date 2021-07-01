@@ -36,20 +36,21 @@ lint:
 ## Set up python interpreter environment
 create_environment:
 ifeq (True,$(HAS_CONDA))
-		echo ">>> Creating conda virtual environment."
+		@echo ">>> Creating conda virtual environment."
 ifeq (3,$(findstring 3,$(PYTHON_VERSION)))
-	conda create --name $(PROJECT_NAME) python=3
+	@conda create --name $(PROJECT_NAME) python=3
 else
-	conda create --name $(PROJECT_NAME) python=2.7
+	@conda create --name $(PROJECT_NAME) python=2.7
 endif
 
 else
-		echo ">>> FAILED!! Conda not found. Please download and run command again." 
+		@echo ">>> FAILED!! Conda not found. Please download and run command again."
 endif
 
 setup:
 	@python setup.py install
 	@conda env update --file environment-dev.yml
+	@rm -rf ./build ./dist ./*egg-info
 
 
 #################################################################################

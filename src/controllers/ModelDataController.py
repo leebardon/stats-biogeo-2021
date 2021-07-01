@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from subprocess import run
+import sys
 from time import sleep
 from alive_progress import alive_bar, config_handler
 from pathlib import Path
@@ -49,11 +49,14 @@ with alive_bar(2) as bar:
         print(
             f" \n ERROR: Please add raw Darwin ecosystem data into: {RAW}/ecosystem...!"
         )
-        run(["python", f"{ROOT}/runscript.py"])
 
     finally:
-        ecosys_interim_df = pd.read_pickle(f"{INTERIM}/ecosys_interim_p.pkl")
-        ecosys_interim_df_fut = pd.read_pickle(f"{INTERIM}/ecosys_interim_f.pkl")
+        try:
+            ecosys_interim_df = pd.read_pickle(f"{INTERIM}/ecosys_interim_p.pkl")
+            ecosys_interim_df_fut = pd.read_pickle(f"{INTERIM}/ecosys_interim_f.pkl")
+
+        except:
+            sys.exit(1)
 
 
 print("Mapping lat and lon degrees to grid coords...")
@@ -76,7 +79,7 @@ with alive_bar(2) as bar:
 
     except:
         print(f" \n ERROR: Problem mapping lat and lon degrees to grid coords... ")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Extracting surface physical data from Darwin model, removing land (x == 0)...")
@@ -141,7 +144,6 @@ with alive_bar(4) as bar:
 
     except:
         print(f" \n ERROR: Please add SST, SSS, and PAR data into: {RAW}/physical...!")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(f"\n --Completed, returning to main menu-- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

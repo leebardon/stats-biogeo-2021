@@ -1,6 +1,6 @@
 import os
+import sys
 from time import sleep
-from subprocess import run
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models.correlations import Correlations
@@ -68,7 +68,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem retrieving plankton and predictors sample sets...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating distance correlations...")
@@ -107,7 +107,7 @@ with alive_bar(4) as bar:
 
     except:
         print(" \n ERROR: Problem calc. distance correlations...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating changes in correlations over time...")
@@ -137,7 +137,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem calc. changes in dist. correlations over time...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating Pearson's correlation coefficients...")
@@ -176,7 +176,7 @@ with alive_bar(4) as bar:
 
     except:
         print(" \n ERROR: Problem calc. Pearson's correlations...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating log transformed Pearson's correlation coefficients...")
@@ -219,7 +219,7 @@ with alive_bar(4) as bar:
 
     except:
         print(" \n ERROR: Problem calc. log-transform Pearson's...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating Spearman's Rank correlations...")
@@ -262,7 +262,7 @@ with alive_bar(4) as bar:
 
     except:
         print(" \n ERROR: Problem calc. Spearman's correlations...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting Distance Correlation heatmaps...")
@@ -287,7 +287,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plotting distance corr. heatmaps...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting correlation heatmap differences over time...")
@@ -310,7 +310,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plotting changes in dist. corr. heatmaps...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting Pearson's Correlation heatmaps...")
@@ -331,7 +331,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plotting Pearson's heatmaps...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting log transformed Pearson's Correlation heatmaps...")
@@ -352,7 +352,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plotting log-transform Pearson' heatmaps...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting Spearman's Correlation heatmaps...")
@@ -373,7 +373,6 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plotting Spearmman's heatmaps...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

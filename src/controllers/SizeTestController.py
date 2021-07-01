@@ -1,8 +1,8 @@
 import os
+import sys
 import numpy as np
 import pandas as pd
 from time import sleep
-from subprocess import run
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models import Save, SaveST
@@ -39,7 +39,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem seeding random matrices...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Obtaining Darwin ecosystem and physical data...")
@@ -59,7 +59,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem retrieving ecosys and physical data...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Merging randomly-sampled test matrices with ecosystem data...")
@@ -80,7 +80,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem merging matrices with ecosystem data ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Building plankton and predictor training sets for sample size tests...")
@@ -101,7 +101,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem plankton and predictor training sets ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Fitting GAMs to test samples...")
@@ -120,7 +120,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem fitting GAMs ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Making predictions (1987-2008)...")
@@ -140,7 +140,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem making predictions (1987-2008) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Making predictions (2079-2100)...")
@@ -171,7 +171,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem making predictions (2079-2100) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Applying cutoff, calculating false pos, neg, sensitivity, specificity ...")
@@ -238,7 +238,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem w/ cutoff, false pos, neg, sens., spec. ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating mean and median size test biomasses (1987-2008)...")
@@ -255,7 +255,7 @@ with alive_bar(2) as bar:
         print(
             " \n ERROR: Problem w/ mean and median size test biomasses (1987-2008)..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating mean and median size test biomasses (2079-2100)...")
@@ -284,7 +284,7 @@ with alive_bar(2) as bar:
         print(
             " \n ERROR: Problem w/ mean and median size test biomasses (2079-2100)..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calc. mean and median ratios (1987-2008)...")
@@ -317,7 +317,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem calc. mean and median ratios (1987-2008)...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calc. mean and median ratios (2079-2100)...")
@@ -349,7 +349,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem calc. mean and median ratios (2079-2100)...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating R^2 values...")
@@ -367,7 +367,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem calc. r-squared values...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Producing summary tables...")
@@ -426,7 +426,6 @@ with alive_bar(5) as bar:
 
     except:
         print(" \n ERROR: Problem producing summary csv files...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)
