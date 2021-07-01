@@ -1,17 +1,21 @@
-# Analysing Data from MIT's Darwin Model
+# Using MIT's Darwin Model as a testbed for statistical learning models
 
-**NOTE**: _This package is a work in progress (as of 22nd Mar 2021). This message will be removed when v.1.0 development is complete._
-
-This package contains a series of analytical tools to extract and data from output from MIT's Darwin marine ecosystem model, powered by the MITgcm. It applies machine-leaning (ML) models to a subset of historical Darwin ocean data, and assesses how well the ML models can predict the simulated ocean's plankton biogeography in future, as a response to climate change.
+This package contains a series of analytical tools to extract and data from output from MIT's Darwin marine ecosystem 
+model, embedded in MITgcm. It trains statistical learning models (GAMs) on a subset of historical Darwin ocean data, 
+sampled to mimic real-world observational data, and also on randomly-sampled datasets of various sizes. It quantifies 
+the effect of spatial bias and of training set sample size on the resulting predictions.
+Altogether, the program allows us to assess GAMs model skill in predicting the virtual ocean's plankton biogeography, 
+both in present-day spatial extrapolations, and by the end of the 21st century, as a response to climate change.
 
 ### STEP 1
 
 - Extracts and cleans surface data (Z=0) from Darwin output files (1987-2008, 2079-2100)
-- Builds a binary sampling matrix (BSM) using a publically-available ocean measurement dataset
+- Builds a binary sampling matrix (BSM) using a publicly-available ocean measurements dataset
 - Uses the BSM to sample Darwin model at real-life ocean-measurement locations
 - Builds an identically-sized BSM to sample the Darwin model at random locations
 - Plots a 3D matrix (Lat, Lon, Month) to visualise spatiotemporal distributions (pdf)
 - Plots histogram of measurements per month (pdf)
+- Builds a further 54 randomly-sampled training sets spanning 18 size classes (N=63 to N=11,557)
 
 ### STEP 2
 
@@ -25,53 +29,47 @@ This package contains a series of analytical tools to extract and data from outp
 ### STEP 3
 
 - Global biomass maps are plotted for qualitative comparison between target and GAMs predictions
+- Relative difference (%) maps between Darwin 'truth' and GAMs predictions are plotted for 1987-2008 and 2079-2100
 - Target and predictions are quantitatively compared with a series of descriptive statistics
-- The above are repeated for each plankton functional group
+- The above analyses are repeated for each plankton functional group
+- Correlations using the Distance Correlation method, Pearson's, and Spearman's are calculated
+- Correlation heatmaps are produced
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+These instructions will get you a copy of the project up and running on your local machine for dev. or testing.
 
 ### Prerequisites
 
-First ensure that you are running a copy of python3 on your local machine, with pip package manager. Install dependency management package:
+First, please ensure that you have a copy of the conda package manager installed locally (miniconda is recommended).
+
+Fork and clone the project repository onto your local machine.
+
+
+### Create Environment
+
+From the root of the cloned project, run:
 
 ```
-pip install pipenv
+make create_environment
 ```
 
-### Project Setup
+This will create a virtual environment for the project, to install project dependencies, and minimise the possibility
+of conflicts with other elements of your system. You will be prompted to activate - go ahead and do so :)
 
-Clone the project down locally and install in editable state from the root folder (containing setup.py file) and run:
-
-```
-pip install -e .
-```
-
-Change directory into the main project folder (ML_Biogeography_2021) and install dependencies:
+Next, inform your python interpreter of the structure of the project, so it understands which internal components should
+be treated as callable modules:
 
 ```
-pipenv install
+make setup
 ```
 
-Activate the environment:
+Finally, install the project dependencies:
 
 ```
-pipenv shell
+make requirements
 ```
-
-## Running the tests
-
-TBC
-
-## Built With
-
-- [Pipenv](https://pypi.org/project/pipenv/) - Dependency Management
-- [PyGam](https://pygam.readthedocs.io/en/latest/) - building Generalized Additive Models in Python
-
-<!-- ## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. -->
 
 ## Authors
 
