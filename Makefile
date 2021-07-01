@@ -21,7 +21,7 @@ endif
 
 ## Install Python Dependencies
 #requirements:
-#	@conda env update --file environment-dev.yml
+#	@conda env update --file environment-dev_1.yml
 
 # Delete unnecessary python compiled files
 clean:
