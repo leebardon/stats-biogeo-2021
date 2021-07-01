@@ -229,6 +229,7 @@ class ScatterSettings:
             "Zoo": [8.36, 8.36],
         }
 
+
 class ScatterSettingsTest:
     def __init__(self):
         # [xlim, ylim]

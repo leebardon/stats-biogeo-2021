@@ -1,10 +1,10 @@
-
 import numpy as np
 import pandas as pd
 import itertools
 from src.models.gams import AnalyseGams
 
 CUTOFF = 1.001e-5
+
 
 def pres_abs_summary(gams, darwin, CELLS, ptype, fut=""):
     total = len(darwin["Pro"])
@@ -16,13 +16,25 @@ def pres_abs_summary(gams, darwin, CELLS, ptype, fut=""):
         GROUPS = [f"diatoms{fut}_{i}" for i in np.arange(18)]
         darwin = list(itertools.repeat(darwin["Diatom"], 18))
 
-    true_pos = [AnalyseGams.true_positive(gams[g], darwin[i]) for i, g in enumerate(GROUPS)]
-    true_neg = [AnalyseGams.true_negative(gams[g], darwin[i]) for i, g in enumerate(GROUPS)]
-    false_pos = [AnalyseGams.false_positive(gams[g], darwin[i]) for i, g in enumerate(GROUPS)]
-    false_neg = [AnalyseGams.false_negative(gams[g], darwin[i]) for i, g in enumerate(GROUPS)]
-    gams_pres = [(gams[g][(gams[g] > CUTOFF) & (darwin[i] > CUTOFF)]) for i, g in enumerate(GROUPS)]
+    true_pos = [
+        AnalyseGams.true_positive(gams[g], darwin[i]) for i, g in enumerate(GROUPS)
+    ]
+    true_neg = [
+        AnalyseGams.true_negative(gams[g], darwin[i]) for i, g in enumerate(GROUPS)
+    ]
+    false_pos = [
+        AnalyseGams.false_positive(gams[g], darwin[i]) for i, g in enumerate(GROUPS)
+    ]
+    false_neg = [
+        AnalyseGams.false_negative(gams[g], darwin[i]) for i, g in enumerate(GROUPS)
+    ]
+    gams_pres = [
+        (gams[g][(gams[g] > CUTOFF) & (darwin[i] > CUTOFF)])
+        for i, g in enumerate(GROUPS)
+    ]
     darwin_pres = [
-        (darwin[i][(darwin[i] > CUTOFF) & (gams[g] > CUTOFF)]) for i, g in enumerate(GROUPS)
+        (darwin[i][(darwin[i] > CUTOFF) & (gams[g] > CUTOFF)])
+        for i, g in enumerate(GROUPS)
     ]
     gams_abs = [(gams[g][(gams[g] < CUTOFF)]) for g in GROUPS]
     darwin_abs = [(darwin[i][(darwin[i] < CUTOFF)]) for i, g in enumerate(GROUPS)]
@@ -57,7 +69,6 @@ def calc_ratios(mean_gams, med_gams, mean_dar, med_dar):
         mean_ratios.append(round((mean_gams[i] - mean_dar) / mean_dar, 2))
         med_ratios.append(round((med_gams[i] - med_dar) / med_dar, 2))
     return mean_ratios, med_ratios
-
 
 
 def pres_abs_summary_df(
@@ -96,7 +107,9 @@ def pres_abs_summary_df(
         summary["True Neg."][i] = len(true_neg[i])
         summary["False Pos."][i] = len(false_pos[i])
         summary["False Neg."][i] = len(false_neg[i])
-        summary["Sensitivity"][i] = AnalyseGams.sensitivity(true_pos[i], gams_abs[i], total)
+        summary["Sensitivity"][i] = AnalyseGams.sensitivity(
+            true_pos[i], gams_abs[i], total
+        )
         summary["Specificity"][i] = AnalyseGams.specificity(true_neg[i], gams_abs[i])
         summary["Balanced Acc."][i] = (
             summary["Sensitivity"][i] + summary["Specificity"][i]
@@ -120,6 +133,7 @@ def return_summary(cutoffs_df, means_ratios, meds_ratios, rsq):
     final_summary["Medians Ratios"] = meds_ratios
     final_summary["r-squared"] = [round(r, 2) for r in rsq]
     return final_summary
+
 
 def return_combined_df(dfs):
     return pd.concat(

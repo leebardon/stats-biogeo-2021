@@ -2,19 +2,13 @@ docs/site/
 .idea/*
 
 # Large datafiles
-/data_test/*
-/results_test/*
+/notebooks/*
+/data/*
+/results/*
 /data/imported/*
+/data/raw/*
 /data/interim/*
 /data/processed/*
-/data/old_processed/*
-/data/raw/*
-/old_results/all_plots/*
-/old_results/analysis_output/*
-/old_results/gams_output/*
-/results_test1/all_plots/*
-/results_test1/analysis_output/*
-/results_test1/gams_output/*
 /results/all_plots/*
 /results/analysis_output/*
 /results/gams_output/*

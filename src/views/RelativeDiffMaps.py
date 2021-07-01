@@ -1,29 +1,18 @@
 import cartopy
 import os, sys
-import numpy as np
 import pandas as pd
-import xarray as xr
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
-import matplotlib.ticker as mticker
 import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-import matplotlib as mp
 from pathlib import Path
-from netCDF4 import Dataset as NCF
 from matplotlib.axes import Axes
 from cartopy.mpl.geoaxes import GeoAxes
-from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-
-GeoAxes._pcolormesh_patched = Axes.pcolormesh
-
+from cartopy.mpl.gridliner import LATITUDE_FORMATTER
 
 from src.views import Maps
 
-
+GeoAxes._pcolormesh_patched = Axes.pcolormesh
 base_path = Path(os.path.abspath(__file__)).parents[2] / "all_outputs"
-# MAP_DATA_SAVE = base_path / "map_plotting_data"
-# REL_DIFF_SAVE = base_path / "all_plots" / "relative_diff_maps"
 
 
 def generate_diff_maps(darwin, gams, coords, savepath, maptitle, settings):
@@ -44,8 +33,6 @@ def rel_diff_maps(rel_diffs_da, savepath, f_group, maptitle, settings):
     lat = rel_diffs_da["lat"].data
     lon = rel_diffs_da["lon"].data
     biomass = rel_diffs_da.data
-    # vmin = np.percentile(biomass, 5)
-    # vmax = np.percentile(biomass, 95)
     vmin = settings[f_group][0]
     vmax = settings[f_group][1]
     plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, f_group, maptitle)
@@ -114,30 +101,6 @@ def plot_diff_map(lon, lat, biomass, vmin, vmax, savepath, filename, maptitle):
 class DiffMapSettings:
     def __init__(self):
         # [scaling present and future map to whichever has the wider range, for direct comparison]
-
-        self.obvs = {
-            "Pro": [-17.0, 17.0],
-            "Pico": [-15.5, 15.5],
-            "Cocco": [-12.0, 12.0],
-            "Diazo": [-8.5, 8.5],
-            "Diatom": [-42.0, 42.0],
-            "Dino": [-17.0, 17.0],
-            "Zoo": [-125.0, 125.0],
-        }
-        self.rand = {
-            "Pro": [-8.5, 8.5],
-            "Pico": [-7.5, 7.5],
-            "Cocco": [-15.0, 15.0],
-            "Diazo": [-7.0, 7.0],
-            "Diatom": [-25.0, 25.0],
-            "Dino": [-15.0, 15.0],
-            "Zoo": [-85.0, 85.0],
-        }
-
-class DiffMapSettingsTest:
-    def __init__(self):
-        # [scaling present and future map to whichever has the wider range, for direct comparison]
-
         self.obvs = {
             "Pro": [-20.0, 20.0],
             "Pico": [-15.5, 15.5],

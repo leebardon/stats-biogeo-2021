@@ -53,6 +53,7 @@ class ChoiceOption(click.Option):
             "Train GAMs models and make predictions",
             "Analyse results from GAMs predictions",
             "Generate figures",
+            "Run sample size tests",
             "Exit",
         ],
         case_sensitive=False,
@@ -102,8 +103,14 @@ def cli(hash_type):
         print("-- done --")
         cli()
 
+    elif hash_type == "Run sample size tests":
+        print("\n Loading ... ")
+        run(["python", f"{controllers}/SizeTestController.py"])
+        print("-- done --")
+        cli()
+
     elif hash_type == "Exit":
-        print("\n", "Exiting program... byeeee", "\n")
+        print("\n", "Exiting program... bye! :) ", "\n")
 
 
 if __name__ == "__main__":
