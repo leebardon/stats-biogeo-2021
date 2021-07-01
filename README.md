@@ -74,6 +74,19 @@ Finally, install the project dependencies:
 make requirements
 ```
 
+### Run Program
+
+To run, ensure you're in the root directory (containing runscript.py) and enter:
+
+```
+python runscript.py
+```
+
+#### PLEASE NOTE
+
+This program has only been tested on Unix environments (Mac/Linux). It may not work on Windows.
+
+
 ## Authors
 
 - **Lee Bardon** - _Initial work_ - [teatauri](https://github.com/teatauri)
