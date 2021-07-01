@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements
+.PHONY: clean setup data lint requirements
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -20,8 +20,8 @@ endif
 #################################################################################
 
 ## Install Python Dependencies
-requirements: test_environment
-	@conda env update --file environment-dev.yml
+#requirements:
+#	@conda env update --file environment-dev.yml
 
 # Delete unnecessary python compiled files
 clean:
@@ -42,12 +42,14 @@ ifeq (3,$(findstring 3,$(PYTHON_VERSION)))
 else
 	conda create --name $(PROJECT_NAME) python=2.7
 endif
-		echo ">>> VIRTUAL ENVIRONMENT CREATED." 
-		echo ""
-		echo "PLEASE RUN:  conda activate $(PROJECT_NAME)"
+
 else
 		echo ">>> FAILED!! Conda not found. Please download and run command again." 
 endif
+
+setup:
+	@python setup.py install
+	@conda env update --file environment-dev.yml
 
 
 #################################################################################
