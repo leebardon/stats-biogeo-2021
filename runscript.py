@@ -1,4 +1,4 @@
-import os, sys
+import os
 import click
 from pathlib import Path
 from subprocess import run
