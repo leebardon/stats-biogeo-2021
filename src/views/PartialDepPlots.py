@@ -47,8 +47,6 @@ def plot_pdp(gam_p, gam_f, func_group, path):
             ax.set_ylabel(y_label, fontsize=20)
         ax.set_xlabel(labels[i], fontsize=18)
 
-
-
     plt.savefig(
         f"{path}/{func_group}.pdf",
         format="pdf",

@@ -3,8 +3,6 @@ import pickle
 import numpy as np
 import pandas as pd
 
-# ADD SOMETHING TO SAVE OUTPUT FILE DETAILING E.G. SHAPE, MIN AND MAX X/Y
-
 
 def check_dir_exists(path):
     if not os.path.exists(path):
