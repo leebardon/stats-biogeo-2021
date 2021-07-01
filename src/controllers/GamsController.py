@@ -1,5 +1,5 @@
 import os
-from subprocess import run
+import sys
 from time import sleep
 from alive_progress import alive_bar, config_handler
 from pathlib import Path
@@ -49,9 +49,10 @@ with alive_bar(1) as bar:
         )
         bar()
         sleep(2)
+
     except:
         print(" \n ERROR: Problem retrieving training sets ....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Fitting GAMs to sampled Darwin datasets (1987-2008) ...")
@@ -70,32 +71,40 @@ with alive_bar(2) as bar:
         )
         bar()
         sleep(2)
+
     except:
-        print(" \n ERROR: Problem fitting GAMs ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        print(" \n ERROR: Problem fitting GAMs 1987-2008 ...")
+        sys.exit(1)
 
 
 print("Fitting GAMs on 2079-2100 samples to assess stability of relationships...")
 with alive_bar(2) as bar:
-    gams_f, gams_rf = TrainGams.fit_gams(
-        *[
-            [plank_cut_f, predictors_f],
-            [plank_cut_rf, predictors_rf],
-        ]
-    )
-    bar()
-    sleep(2)
-    Save.save_gams(
-        Save.check_dir_exists(f"{RESULTS}/fitted_models"),
-        **{
-            "gams": gams,
-            "gams_r": gams_r,
-            "gams_f": gams_f,
-            "gams_rf": gams_rf,
-        },
-    )
-    bar()
-    sleep(2)
+    try:
+        gams_f, gams_rf = TrainGams.fit_gams(
+            *[
+                [plank_cut_f, predictors_f],
+                [plank_cut_rf, predictors_rf],
+            ]
+        )
+        bar()
+        sleep(2)
+        Save.save_gams(
+            Save.check_dir_exists(f"{RESULTS}/fitted_models"),
+            **{
+                "gams": gams,
+                "gams_r": gams_r,
+                "gams_f": gams_f,
+                "gams_rf": gams_rf,
+            },
+        )
+        bar()
+        sleep(2)
+
+    except:
+        print(
+            " \n ERROR: Problem fitting GAMs 2079-2100 (relationship change type) ..."
+        )
+        sys.exit(1)
 
 
 print("Generating partial dependency plots...")
@@ -120,7 +129,7 @@ with alive_bar(2) as bar:
         sleep(2)
     except:
         print(" \n ERROR: Problem plotting PDP's ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Predicting Darwin biogeography (1987-2008) from ocean measurements (1987-2008)")
@@ -134,7 +143,7 @@ with alive_bar(1) as bar:
         sleep(60)
     except:
         print(" \n ERROR: Problem making predictions (spatial, from measurements) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Predicting Darwin biogeography (1987-2008) from random samples (1987-2008) ")
@@ -147,7 +156,7 @@ with alive_bar(1) as bar:
         sleep(60)
     except:
         print(" \n ERROR: Problem making predictions (spatial, from random) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Predicting Darwin biogeography (2079-2100) from ocean measurements (1987-2008) ")
@@ -160,7 +169,7 @@ with alive_bar(1) as bar:
         sleep(60)
     except:
         print(" \n ERROR: Problem making predictions (temporal, from measurements) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Predicting Darwin biogeography (2079-2100) from random samples (1987-2008) ")
@@ -171,21 +180,21 @@ with alive_bar(2) as bar:
         )
         bar()
         sleep(60)
+
+        Save.save_predictions(
+            Save.check_dir_exists(f"{RESULTS}/predictions"),
+            **{
+                "predictions": predictions,
+                "predictions_r": predictions_r,
+                "predictions_f": predictions_f,
+                "predictions_rf": predictions_rf,
+            },
+        )
+        bar()
+        sleep(2)
+
     except:
         print(" \n ERROR: Problem making predictions (temporal, from random) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    Save.save_predictions(
-        Save.check_dir_exists(f"{RESULTS}/predictions"),
-        **{
-            "predictions": predictions,
-            "predictions_r": predictions_r,
-            "predictions_f": predictions_f,
-            "predictions_rf": predictions_rf,
-        },
-    )
-    bar()
-    sleep(2)
-
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

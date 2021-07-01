@@ -1,7 +1,7 @@
 import os
+import sys
 from time import sleep
 from pathlib import Path
-from subprocess import run
 from alive_progress import alive_bar, config_handler
 from src.models.gams import AnalyseGams
 from src.models import Save
@@ -50,7 +50,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem getting GAMs predictions or Darwin data ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Getting ecosystem sample sets to assess presence and absence...")
@@ -68,7 +68,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem getting ecosystem sample sets...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Applying cutoff, calculating false pos, neg, sensitivity, specificity ...")
@@ -107,7 +107,7 @@ with alive_bar(5) as bar:
 
     except:
         print(" \n ERROR: Problem applying cutoff, false pos, neg, sens., spec....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Assessing presence-absence balance in training sets...")
@@ -122,7 +122,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem assessing presence-absence balance in training sets...."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating mean and median biomasses for each functional group (1987-2008)...")
@@ -140,7 +140,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem calc. mean and median biomasses (1987-2008)....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating mean and median biomasses for each functional group (2079-2100)...")
@@ -173,7 +173,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem calc. mean and median biomasses (2079-2100)....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating biases (mean and median ratios) (1987-2008)...")
@@ -192,7 +192,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem calc. biases (1987-2008)....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating biases (mean and median ratios) (2079-2100)...")
@@ -224,7 +224,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem calc. biases (2079-2100)....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculating R^2 values...")
@@ -242,7 +242,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem calc. r-squared ....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Producing summary tables...")
@@ -292,7 +292,6 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem producing summary csv files....")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

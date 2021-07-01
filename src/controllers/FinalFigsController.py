@@ -1,6 +1,6 @@
 import os
+import sys
 from time import sleep
-from subprocess import run
 from pathlib import Path
 from alive_progress import alive_bar, config_handler
 from src.models import Save
@@ -74,7 +74,7 @@ with alive_bar(3) as bar:
 
     except:
         print(" \n ERROR: Problem retrieving predictions and darwin surface data...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Setting all values below cutoff equal to 1e-5 ...")
@@ -94,7 +94,7 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem applying cutoffs ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculate annual means and plotting maps - Darwin Model Ocean (1987-2008)...")
@@ -116,7 +116,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (Darwin 1987-2008) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print(
@@ -137,7 +137,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (GAMs meas. 1987-2008) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 print(
     "Calculate annual means and plotting maps - GAMs Predictions from random (1987-2008)..."
@@ -157,7 +157,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (GAMs rand. 1987-2008) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Calculate annual means and plotting maps - Darwin Model Ocean (2079-2100)...")
@@ -179,7 +179,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (Darwin 2079-2100) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print(
@@ -200,7 +200,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (GAMs meas. 2079-2100) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print(
@@ -221,7 +221,7 @@ with alive_bar(1) as bar:
         print(
             " \n ERROR: Problem calc. annual means and plotting maps (GAMs rand. 2079-2100) ..."
         )
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting 1987-2008 Mean Relative Difference Maps (%)...")
@@ -254,7 +254,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem with mean rel diff maps (1987-2008) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting 2079-2100 Mean Relative Difference Maps (%)...")
@@ -286,7 +286,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem with mean rel diff maps (2079-2100) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting scatter plots (1987-2008)...")
@@ -322,7 +322,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem with scatter plots (1987-2008) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting scatter plots (2079-2100)...")
@@ -357,7 +357,7 @@ with alive_bar(2) as bar:
 
     except:
         print(" \n ERROR: Problem with scatter plots (2079-2100) ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
 
 print("Plotting comparative r^2, balanced acc. and means ratios bar chart...")
@@ -375,7 +375,6 @@ with alive_bar(1) as bar:
 
     except:
         print(" \n ERROR: Problem with summary barplot ...")
-        run(["python", f"{ROOT}/runscript.py"])
+        sys.exit(1)
 
-    print(" \n -- COMPLETED, returning to main menu -- ")
-    run(["python", f"{ROOT}/runscript.py"])
+    sys.exit(1)

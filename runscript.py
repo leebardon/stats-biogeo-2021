@@ -1,4 +1,4 @@
-import os, sys
+import os
 import click
 from pathlib import Path
 from subprocess import run
@@ -64,49 +64,49 @@ def cli(hash_type):
     if hash_type == "Build sampling matrices from ocean measurements":
         print("\n Loading ... ")
         run(["python", f"{controllers}/OceanMeasurementsController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Extract Darwin surface data and build dataframes":
         print("\n Loading ... ")
         run(["python", f"{controllers}/ModelDataController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Create samples from Darwin Model output":
         print("\n Loading ... ")
         run(["python", f"{controllers}/ModelSamplingController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Build training sets for GAMs":
         print("\n Loading ... ")
         run(["python", f"{controllers}/TrainingSetController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Train GAMs models and make predictions":
         print("\n Loading ... ")
         run(["python", f"{controllers}/GamsController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Analyse results from GAMs predictions":
         print("\n Loading ... ")
         run(["python", f"{controllers}/AnalysisController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Generate figures":
         print("\n Loading ... ")
         run(["python", f"{controllers}/FinalFigsController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Run sample size tests":
         print("\n Loading ... ")
         run(["python", f"{controllers}/SizeTestController.py"])
-        print("-- done --")
+        print("\n -- done -- \n")
         cli()
 
     elif hash_type == "Exit":
