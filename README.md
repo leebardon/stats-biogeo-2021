@@ -89,7 +89,7 @@ This program has only been tested on Unix environments (Mac/Linux). It may not w
 
 ## Authors
 
-- **Lee Bardon** - _Initial work_ - [teatauri](https://github.com/teatauri)
+- **Lee Bardon** - _Initial work_ - [leebardon](https://github.com/leebardon)
 
 ## License
 
