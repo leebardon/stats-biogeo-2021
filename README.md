@@ -1,5 +1,8 @@
 ## How predictable is plankton biogeography using statistical learning methods?
 
+In support of the following publication:
+Bardon, L. R., Ward, B. A., Dutkiewicz, S., & Cael, B. B. (2021). Testing the skill of a species distribution model using a 21st century virtual ecosystem. Geophysical Research Letters, 48, e2021GL093455. https://doi.org/10.1029/2021GL093455
+
 
 This package contains a series of analytical tools to extract and data from output from MIT's Darwin marine ecosystem 
 model, embedded in MITgcm. It trains statistical learning models (GAMs) on a subset of historical Darwin ocean data, 
