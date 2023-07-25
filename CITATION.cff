@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: StatsBG
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Lee
+    family-names: Bardon
+    email: leerbardon@gmail.com
+    affiliation: University of Southern California
+    orcid: 'https://orcid.org/0000-0001-5470-903X'
+identifiers:
+  - type: doi
+    value: 10.1029/2021GL093455
+    description: Code base associated with above DOI.
+abstract: >-
+  This package contains a series of analytical tools to
+  extract and data from output from MIT's Darwin marine
+  ecosystem model, embedded in MITgcm. It trains statistical
+  learning models (GAMs) on a subset of historical Darwin
+  ocean data, sampled to mimic real-world observational
+  data, and also on randomly-sampled datasets of various
+  sizes. It quantifies the effect of spatial bias and of
+  training set sample size on the resulting predictions.
+  Altogether, the program allows us to assess GAMs model
+  skill in predicting the virtual ocean's plankton
+  biogeography, both in present-day spatial extrapolations,
+  and by the end of the 21st century, as a response to
+  climate change.
+license: MIT
