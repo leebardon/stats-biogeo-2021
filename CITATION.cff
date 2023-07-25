@@ -14,6 +14,7 @@ identifiers:
   - type: doi
     value: 10.1029/2021GL093455
     description: Code base associated with above DOI.
+url: "https://github.com/leebardon/stats-biogeo-2021"
 abstract: >-
   This package contains a series of analytical tools to
   extract and data from output from MIT's Darwin marine
